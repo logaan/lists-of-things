@@ -1,0 +1,17 @@
+# lists-of-things
+
+Install datomic to local mvn using:
+
+    mvn install:install-file -DgroupId=com.datomic -DartifactId=datomic -Dfile=datomic-0.1.3164.jar -DpomFile=pom.xml
+
+FIXME: write description
+
+## Usage
+
+FIXME: write
+
+## License
+
+Copyright (C) 2012 FIXME
+
+Distributed under the Eclipse Public License, the same as Clojure.
