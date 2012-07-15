@@ -58,12 +58,21 @@
 "Queries"
 
 (fact
+  (q '[:find ?n
+       :in $ ?query
+       :where [(fulltext $ :thing/name ?query)
+               [[?e ?n]]]]
+     (db conn)
+     "Bambi")
+  => #{["Bambi"]})
+
+(fact
   (q '[:find ?name
        :where [?e :thing/name "Disney"]
               [?e :thing/children ?c]
               [?c :thing/name ?name]]
      (db conn))
-  => #{["Cinderella"], ["Bambi"], ["Pokahontas"]})
+  => #{["Cinderella"] ["Bambi"] ["Pokahontas"]})
 
 (fact
   (q '[:find ?name
@@ -105,7 +114,7 @@
               [?d :thing/name ?n]]
      (db conn)
      descendant)
-  => #{["Cinderella"], ["Disney"], ["Bambi"], ["Pokahontas"]})
+  => #{["Cinderella"] ["Disney"] ["Bambi"] ["Pokahontas"]})
 
 "Teardown"
 
