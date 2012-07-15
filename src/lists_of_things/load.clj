@@ -1,67 +1,110 @@
 (ns lists-of-things.load
-  (:use [datomic.api :only [db q] :as d]
-        [clojure.pprint]))
+  (:use [datomic.api :only [db q] :as d]))
 
-(def uri "datomic:mem://lists_of_things")      
+(def uri "datomic:mem://lists_of_things")
 
-(d/create-database uri)
+(defn create []
+  (d/create-database uri))
 
-(def conn (d/connect uri))
+(defn connect []
+  (d/connect "datomic:mem://lists_of_things"))
 
-(def lists-of-things-schema
-  [
-   {:db/id #db/id[:db.part/db] ; no idea what this means
-    :db/ident :thing/name
-    :db/valueType :db.type/string ; check max length
-    :db/cardinality :db.cardinality/one
-    :db/fulltext true
-    :db/doc "A thing's name"
-    :db.install/_attribute :db.part/db} ; no idea what this means either
+(defn load-schema [conn]
+  (.get (d/transact conn [
+     {:db/id #db/id[:db.part/db]
+      :db/ident :thing/name
+      :db/valueType :db.type/string
+      :db/cardinality :db.cardinality/one
+      :db/fulltext true
+      :db/doc "A thing's name"
+      :db.install/_attribute :db.part/db}
 
-   {:db/id #db/id[:db.part/db] ; no idea what this means
-    :db/ident :thing/children
-    :db/valueType :db.type/ref
-    :db/cardinality :db.cardinality/many
-    :db/doc "A thing's child things"
-    :db.install/_attribute :db.part/db} ; no idea what this means either
-  ])
+     {:db/id #db/id[:db.part/db]
+      :db/ident :thing/children
+      :db/valueType :db.type/ref
+      :db/cardinality :db.cardinality/many
+      :db/doc "A thing's child things"
+      :db.install/_attribute :db.part/db}
+    ])))
 
-; Returns true or errors. Not interesting.
-(.get (d/transact conn lists-of-things-schema))
-
-(def movies
+(defn load-test-data [conn]
   (let [bambi      {:db/id          (d/tempid :db.part/user)
                     :thing/name     "Bambi"}
         pokahontas {:db/id          (d/tempid :db.part/user)
                     :thing/name     "Pokahontas"}
         cinderella {:db/id          (d/tempid :db.part/user)
                     :thing/name     "Cinderella"}
+        disney     {:db/id          (d/tempid :db.part/user)
+                    :thing/name     "Disney"
+                    :thing/children (map :db/id [bambi pokahontas cinderella])}
         movies     {:db/id          (d/tempid :db.part/user)
                     :thing/name     "Movies"
-                    :thing/children (map :db/id [bambi pokahontas cinderella])}]
-    [bambi pokahontas cinderella movies]))
+                    :thing/children (map :db/id [disney])}]
 
-; Returns true or errors. Not interesting.
-@(d/transact conn movies)
+    @(d/transact conn [bambi pokahontas cinderella disney movies])))
 
-; This grabs a snapshop of the database
-(def tdb (db conn))
+(defn retract [entity conn]
+  @(d/transact conn `[[:db.fn/retractEntity ~entity]]))
 
-; Query database
-(def all-entities-with-thing-names
-   (q '[:find ?d :where [?d :thing/name]] tdb))
 
-; Could this be using @(d/entity ...) instead?
-(def thing-names
-  (map #(get (d/entity tdb (first %1)) :thing/name)
-       all-entities-with-thing-names))
+"Setup"
 
-thing-names
+(create)
+(def conn (connect))
+(load-schema conn)
+(load-test-data conn)
 
-(def all-the-things
-  (q '[:find ?name ?children
-       :where [?thing :thing/name ?name]
-              [?thing :thing/children ?children]] tdb))
+"Queries"
 
-all-the-things
+; (children "Disney") => ["Bambi" "Pokahontas" "Cinderella"]
+(q '[:find ?name
+     :where [?e :thing/name "Disney"]
+            [?e :thing/children ?c]
+            [?c :thing/name ?name]]
+   (db conn))
+
+; (parents "Pokahontas") => "Disney"
+(q '[:find ?name
+     :where [?e :thing/name "Pokahontas"]
+            [?p :thing/children ?e]
+            [?p :thing/name ?name]]
+   (db conn))
+
+; (ancestors "Pokahontas") => ["Disney" "Movies"]
+(def ancestor
+  '[[[ancestor ?descendant ?ancestor]
+     [?ancestor :thing/children ?descendant]]
+    [[ancestor ?descendant ?ancestor]
+     [?parent :thing/children ?descendant]
+     [ancestor ?parent ?ancestor]]])
+
+(q '[:find ?n
+     :in $ %
+     :where [?e :thing/name "Pokahontas"]
+            [ancestor ?e ?a]
+            [?a :thing/name ?n]]
+   (db conn)
+   ancestor)
+
+; (descendants "Movies") => ["Disney" "Bambi" "Pokahontas" "Cinderella"]
+(def descendant
+  '[[[descendant ?ancestor ?descendant]
+     [?ancestor :thing/children ?descendant]]
+    [[descendant ?ancestor ?descendant]
+     [?ancestor :thing/children ?child]
+     [descendant ?child ?descendant]]])
+
+(q '[:find ?n
+     :in $ %
+     :where [?e :thing/name "Movies"]
+            [descendant ?e ?d]
+            [?d :thing/name ?n]]
+   (db conn)
+   descendant)
+
+"Teardown"
+
+(def all-things
+  (map first (q '[:find ?e :where [?e :thing/name]] (db conn))))
+(map #(retract % conn) all-things)
 
