@@ -1,5 +1,6 @@
 (ns lists-of-things.load
-  (:use [datomic.api :only [db q] :as d]))
+  (:use [datomic.api :only [db q] :as d]
+        midje.sweet))
 
 (def uri "datomic:mem://lists_of_things")
 
@@ -56,21 +57,22 @@
 
 "Queries"
 
-; (children "Disney") => ["Bambi" "Pokahontas" "Cinderella"]
-(q '[:find ?name
-     :where [?e :thing/name "Disney"]
-            [?e :thing/children ?c]
-            [?c :thing/name ?name]]
-   (db conn))
+(fact
+  (q '[:find ?name
+       :where [?e :thing/name "Disney"]
+              [?e :thing/children ?c]
+              [?c :thing/name ?name]]
+     (db conn))
+  => #{["Cinderella"], ["Bambi"], ["Pokahontas"]})
 
-; (parents "Pokahontas") => "Disney"
-(q '[:find ?name
-     :where [?e :thing/name "Pokahontas"]
-            [?p :thing/children ?e]
-            [?p :thing/name ?name]]
-   (db conn))
+(fact
+  (q '[:find ?name
+       :where [?e :thing/name "Pokahontas"]
+              [?p :thing/children ?e]
+              [?p :thing/name ?name]]
+     (db conn))
+  => #{["Disney"]})
 
-; (ancestors "Pokahontas") => ["Disney" "Movies"]
 (def ancestor
   '[[[ancestor ?descendant ?ancestor]
      [?ancestor :thing/children ?descendant]]
@@ -78,15 +80,16 @@
      [?parent :thing/children ?descendant]
      [ancestor ?parent ?ancestor]]])
 
-(q '[:find ?n
-     :in $ %
-     :where [?e :thing/name "Pokahontas"]
-            [ancestor ?e ?a]
-            [?a :thing/name ?n]]
-   (db conn)
-   ancestor)
+(fact
+  (q '[:find ?n
+       :in $ %
+       :where [?e :thing/name "Pokahontas"]
+              [ancestor ?e ?a]
+              [?a :thing/name ?n]]
+     (db conn)
+     ancestor)
+  => #{["Disney"] ["Movies"]})
 
-; (descendants "Movies") => ["Disney" "Bambi" "Pokahontas" "Cinderella"]
 (def descendant
   '[[[descendant ?ancestor ?descendant]
      [?ancestor :thing/children ?descendant]]
@@ -94,13 +97,15 @@
      [?ancestor :thing/children ?child]
      [descendant ?child ?descendant]]])
 
-(q '[:find ?n
-     :in $ %
-     :where [?e :thing/name "Movies"]
-            [descendant ?e ?d]
-            [?d :thing/name ?n]]
-   (db conn)
-   descendant)
+(fact
+  (q '[:find ?n
+       :in $ %
+       :where [?e :thing/name "Movies"]
+              (descendant ?e ?d)
+              [?d :thing/name ?n]]
+     (db conn)
+     descendant)
+  => #{["Cinderella"], ["Disney"], ["Bambi"], ["Pokahontas"]})
 
 "Teardown"
 
