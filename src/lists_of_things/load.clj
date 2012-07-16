@@ -116,9 +116,23 @@
      descendant)
   => #{["Cinderella"] ["Disney"] ["Bambi"] ["Pokahontas"]})
 
+"Creation"
+
+(let [logan-id (d/tempid :db.part/user)]
+  @(d/transact conn [
+    [:db/add logan-id :thing/name "Logan"]
+    {:db/id (d/tempid :db.part/user) :thing/name "Pei Shi" :thing/children [logan-id]}]))
+
+(q '[:find ?name ?child-name
+     :where [?e :thing/name ?name]
+            [?e :thing/children ?child]
+            [?child :thing/name ?child-name]]
+   (db conn))
+
 "Teardown"
 
 (def all-things
   (map first (q '[:find ?e :where [?e :thing/name]] (db conn))))
+
 (map #(retract % conn) all-things)
 
