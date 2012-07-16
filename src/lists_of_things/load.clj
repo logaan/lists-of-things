@@ -129,6 +129,17 @@
             [?child :thing/name ?child-name]]
    (db conn))
 
+"Orphans"
+
+(defn orphan? [db entity-id]
+  (nil? (get (d/entity db entity-id) :thing/_children)))
+
+(q '[:find ?name
+     :where
+     [?e :thing/name ?name]
+     [(lists-of-things.load/orphan? $ ?e)]]
+   (db conn))
+
 "Teardown"
 
 (def all-things
