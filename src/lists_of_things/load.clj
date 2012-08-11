@@ -2,14 +2,6 @@
   (:use [datomic.api :only [db q] :as d]
         midje.sweet))
 
-(def uri "datomic:mem://lists_of_things")
-
-(defn create []
-  (d/create-database uri))
-
-(defn connect []
-  (d/connect "datomic:mem://lists_of_things"))
-
 (defn load-schema [conn]
   (.get (d/transact conn [
      {:db/id #db/id[:db.part/db]
@@ -50,8 +42,9 @@
 
 "Setup"
 
-(create)
-(def conn (connect))
+(def uri "datomic:mem://lists_of_things")
+(d/create-database uri)
+(def conn (d/connect uri))
 (load-schema conn)
 (load-test-data conn)
 
