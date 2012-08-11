@@ -6,6 +6,4 @@
 /.lein-failures
 /checkouts
 /.lein-deps-sum
-*.un~
-*.swp
-.DS_Store
+/.lein-plugins
