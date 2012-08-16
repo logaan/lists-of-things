@@ -1,12 +1,16 @@
-(ns lists_of_things.web
+(ns lists-of-things.web
   (:use compojure.core
         hiccup.core
         [datomic.api :only [db q] :as d])
   (:require [compojure.handler :as handler]
-            [compojure.route   :as route]))
+            [compojure.route   :as route]
+            [lists-of-things.seed :as seed]))
 
 (def uri "datomic:mem://lists_of_things")
+(d/create-database uri)
 (def conn (d/connect uri))
+@(d/transact conn seed/schema)
+@(d/transact conn seed/test-data)
 
 (defn orphan? [db entity-id]
   (nil? (get (d/entity db entity-id) :thing/_children)))
@@ -30,7 +34,7 @@
               (q '[:find ?name
                    :where
                    [?e :thing/name ?name]
-                   [(lists-of-things.load/orphan? $ ?e)]]
+                   [(lists-of-things.db/orphan? $ ?e)]]
                  (db conn)))))))
 
   (GET "/things/new" [] (template
