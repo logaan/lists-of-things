@@ -1,7 +1,7 @@
 (defproject lists-of-things "1.0.0-SNAPSHOT"
   :description "FIXME: write description"
 
-  :ring {:handler lists_of_things.web/app}
+  :ring {:handler lists-of-things.web/app}
 
   :dependencies [[org.clojure/clojure "1.4.0"]
                  [com.datomic/datomic "0.1.3164"]

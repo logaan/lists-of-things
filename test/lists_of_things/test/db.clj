@@ -15,18 +15,11 @@
   (names (apply (partial q query db) args) db))
 
 ; Setup
-(def uri "datomic:mem://lists_of_things")
-
-(d/create-database uri)
-
-(def conn (d/connect uri))
-
-@(d/transact conn seed/schema)
+(def conn
+  (seed/seed "datomic:mem://lists_of_things_test"))
 
 ; Creation and deletion
 (db/create conn {:thing/name "Logan"})
-
-(fact (query-for-names (d/db conn) db/all) => #{"Logan"})
 
 (for [[eid] (q db/search (d/db conn) "Logan")]
   (db/destroy conn eid))

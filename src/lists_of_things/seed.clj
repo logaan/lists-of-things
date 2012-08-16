@@ -33,3 +33,9 @@
 
     [bambi pokahontas cinderella disney movies]))
 
+(defn seed [uri]
+  (let [res  (d/create-database uri)
+        conn (d/connect uri)]
+    @(d/transact conn schema)
+    @(d/transact conn test-data)
+    conn))
