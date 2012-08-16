@@ -19,11 +19,22 @@
 
 (d/create-database uri)
 
+(def conn (d/connect uri))
+
+@(d/transact conn seed/schema)
+
+; Creation and deletion
+(db/create conn {:thing/name "Logan"})
+
+(fact (query-for-names (d/db conn) db/all) => #{"Logan"})
+
+(for [[eid] (q db/search (d/db conn) "Logan")]
+  (db/destroy conn eid))
+
+; Queries
 (def data-db
-  (-> uri d/connect d/db
-      (d/with (concat seed/schema seed/test-data))))
- 
-; Tests
+  (d/with (d/db conn) seed/test-data))
+
 (fact (query-for-names data-db db/search "Bambi")
   => #{"Bambi"})
 

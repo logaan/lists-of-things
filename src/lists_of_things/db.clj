@@ -1,27 +1,13 @@
-; Is it possible to get this to the point that it doesn't need datomic.api?
 (ns lists-of-things.db
   (:use [datomic.api :only [q] :as d])
   (:refer-clojure :exclude [parents ancestors descendants]))
 
-; Creation
-; 
-; (let [logan-id (d/tempid :db.part/user)]
-;   @(d/transact conn [
-;     [:db/add logan-id :thing/name "Logan"]
-;     {:db/id (d/tempid :db.part/user) :thing/name "Pei Shi" :thing/children [logan-id]}]))
-; 
-; (q '[:find ?name ?child-name
-;      :where [?e :thing/name ?name]
-;             [?e :thing/children ?child]
-;             [?child :thing/name ?child-name]]
-;    (db conn))
-; 
+(defn create [conn thing]
+  @(d/transact conn [(merge {:db/id (d/tempid :db.part/user)} thing)]))
 
-; Deletion
-(defn retract [conn eid]
+(defn destroy [conn eid]
   @(d/transact conn `[[:db.fn/retractEntity ~eid]]))
 
-; Absolute listings
 (def all
   '[:find ?e
     :where [?e :thing/name]])
@@ -39,7 +25,6 @@
     :where [?e :thing/name]
            [(lists-of-things.db/orphan? $ ?e)]])
 
-; Relative listings
 (def children
   '[:find ?c
     :in $ ?parent-name
