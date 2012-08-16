@@ -6,6 +6,8 @@
         midje.sweet)
   (:require [lists-of-things.seed :as seed]))
 
+; Make sure this blows away the db first. Or inserts the data as a "what if"
+; kinda deal.
 (def uri "datomic:mem://lists_of_things")
 (d/create-database uri)
 (def conn (d/connect uri))
@@ -13,36 +15,41 @@
 @(d/transact conn seed/test-data)
 (def db (d/db conn))
 
-(def search
-  '[:find ?n
-    :in $ ?query
-    :where [(fulltext $ :thing/name ?query)
-           [[?e ?n]]]])
+(defn element->name [db element]
+  (->> element first (d/entity db) :thing/name))
 
-; Should be changed both in implementation and test to return entities not just
-; names.
-(fact (q search db "Bambi")
-  => #{["Bambi"]})
+(defn names [elements db]
+  (into #{} (map (partial element->name db) elements)))
+
+(defn query-for-names [db query & args]
+  (names (apply (partial q query db) args) db))
+
+(def search
+  '[:find ?e
+    :in $ ?query
+    :where [(fulltext $ :thing/name ?query) [[?e]]]])
+
+
+(fact (query-for-names db search "Bambi")
+  => #{"Bambi"})
 
 (def children
-  '[:find ?name
+  '[:find ?c
     :in $ ?parent-name
-    :where [?e :thing/name ?parent-name]
-           [?e :thing/children ?c]
-           [?c :thing/name ?name]])
+    :where [?p :thing/name ?parent-name]
+           [?p :thing/children ?c]])
 
-(fact (q children db "Disney")
-  => #{["Cinderella"] ["Bambi"] ["Pokahontas"]})
+(fact (query-for-names db children "Disney")
+  => #{"Cinderella" "Bambi" "Pokahontas"})
 
 (def parents
-  '[:find ?name
+  '[:find ?p
     :in $ ?child-name
-    :where [?e :thing/name ?child-name]
-           [?p :thing/children ?e]
-           [?p :thing/name ?name]])
+    :where [?c :thing/name ?child-name]
+           [?p :thing/children ?c]])
 
-(fact (q parents db "Pokahontas")
-  => #{["Disney"]})
+(fact (query-for-names db parents "Pokahontas")
+  => #{"Disney"})
 
 (def ancestor
   '[[[ancestor ?descendant ?ancestor]
@@ -59,35 +66,34 @@
      [descendant ?child ?descendant]]])
 
 (def ancestors
-  '[:find ?n
+  '[:find ?a
     :in $ % ?name
     :where [?e :thing/name ?name]
-           [ancestor ?e ?a]
-           [?a :thing/name ?n]])
+           [ancestor ?e ?a]])
 
 (def descendants
-  '[:find ?n
+  '[:find ?d
     :in $ % ?name
     :where [?e :thing/name ?name]
-           [descendant ?e ?a]
-           [?a :thing/name ?n]])
+           [descendant ?e ?d]])
 
-(fact (q ancestors db ancestor "Pokahontas")
-  => #{["Disney"] ["Movies"]})
+(fact (query-for-names db ancestors ancestor "Pokahontas")
+  => #{"Disney" "Movies"})
 
-(fact (q descendants db descendant "Movies")
-  => #{["Cinderella"] ["Disney"] ["Bambi"] ["Pokahontas"]})
+(fact (query-for-names db descendants descendant "Movies")
+  => #{"Cinderella" "Disney" "Bambi" "Pokahontas"})
 
 (defn orphan? [db entity-id]
   (nil? (get (d/entity db entity-id) :thing/_children)))
 
+; Seems wrong that this needs something like name
 (def orphans
-  '[:find ?name
-    :where [?e :thing/name ?name]
+  '[:find ?e
+    :where [?e :thing/name]
            [(lists-of-things.db/orphan? $ ?e)]])
 
-(fact (q orphans db)
-  => #{["Movies"]})
+(fact (query-for-names db orphans)
+  => #{"Movies"})
 
 ; "Creation"
 ; 
