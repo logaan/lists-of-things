@@ -25,6 +25,11 @@
     :where [?e :thing/name]
            [(lists-of-things.db/orphan? $ ?e)]])
 
+(def orphans-for-listing
+  '[:find ?orphan ?name
+    :where [?orphan :thing/name ?name]
+           [(lists-of-things.db/orphan? $ ?orphan)]])
+
 (def children
   '[:find ?c
     :in $ ?parent-name

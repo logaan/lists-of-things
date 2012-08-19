@@ -4,6 +4,23 @@
   (:require [lists-of-things.seed :as seed]
             [lists-of-things.db :as db]))
 
+; Data
+(def test-data
+  (let [bambi      {:db/id          (d/tempid :db.part/user)
+                    :thing/name     "Bambi"}
+        pokahontas {:db/id          (d/tempid :db.part/user)
+                    :thing/name     "Pokahontas"}
+        cinderella {:db/id          (d/tempid :db.part/user)
+                    :thing/name     "Cinderella"}
+        disney     {:db/id          (d/tempid :db.part/user)
+                    :thing/name     "Disney"
+                    :thing/children (map :db/id [bambi pokahontas cinderella])}
+        movies     {:db/id          (d/tempid :db.part/user)
+                    :thing/name     "Movies"
+                    :thing/children (map :db/id [disney])}]
+
+    [bambi pokahontas cinderella disney movies]))
+
 ; Utility
 (defn element->name [db [eid]]
   (:thing/name (d/entity db eid)))
@@ -21,12 +38,12 @@
 ; Creation and deletion
 (db/create conn {:thing/name "Logan"})
 
-(for [[eid] (q db/search (d/db conn) "Logan")]
-  (db/destroy conn eid))
+(mapv (fn [[eid]] (db/destroy conn eid))
+      (q db/search (d/db conn) "Logan"))
 
 ; Queries
 (def data-db
-  (d/with (d/db conn) seed/test-data))
+  (d/with (d/db conn) test-data))
 
 (fact (query-for-names data-db db/search "Bambi")
   => #{"Bambi"})
@@ -45,4 +62,6 @@
 
 (fact (query-for-names data-db db/orphans)
   => #{"Movies"})
+
+(q db/orphans-for-listing data-db)
 
