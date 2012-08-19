@@ -10,6 +10,56 @@ FIXME: write description
 
 FIXME: write
 
+## Roadmap
+
+Replaces reminders
+- Things
+  - Create
+  - List orphans
+  - Delete thing
+  - Edit thing
+
+Replaces emailing myself
+- Content
+  - Create
+  - List
+  - Delete
+  - Edit
+
+Replaces mind maps
+- Children
+  - List
+  - Create
+  - Move
+  - Add to new parent
+  - Remove from parent
+
+Replaces the hit list
+- Simulates tagging
+- Simulates contexts
+- Sorting
+
+Replaces jira
+- Give permission to other users
+- Open multiple listings
+- 'Sort' things between listings
+- Simulates comments
+
+Explainations
+- Introduce
+  - Things
+  - Content
+  - Links
+  - Users
+- Replaces
+  - Workflows
+  - Tags
+  - Contexts
+  - Comments
+  - Attatchments
+  - Authorization?
+
+
 ## License
 
 Copyright (C) 2012 FIXME
