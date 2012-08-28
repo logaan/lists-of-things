@@ -5,6 +5,11 @@
 (defn create [conn thing]
   @(d/transact conn [(merge {:db/id (d/tempid :db.part/user)} thing)]))
 
+(defn create-child [conn parent-id thing]
+  (let [id (d/tempid :db.part/user)]
+    @(d/transact conn [(merge {:db/id id} thing)
+                       [:db/add parent-id :thing/children id]])))
+
 (defn destroy [conn eid]
   @(d/transact conn `[[:db.fn/retractEntity ~eid]]))
 
@@ -36,10 +41,16 @@
            [(lists-of-things.db/orphan? $ ?orphan)]])
 
 (def children
-  '[:find ?c
-    :in $ ?parent-name
-    :where [?p :thing/name ?parent-name]
-           [?p :thing/children ?c]])
+  '[:find ?children
+    :in $ ?parent
+    :where [?parent :thing/children ?children]])
+
+(def children-for-listing
+  '[:find ?child ?name ?child-count
+    :in $ ?parent
+    :where [?child :thing/name ?name]
+           [(lists-of-things.db/count-children $ ?child) ?child-count]
+           [?parent :thing/children ?child]])
 
 (def parents
   '[:find ?p

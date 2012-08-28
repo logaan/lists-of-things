@@ -20,7 +20,7 @@
        [:h1 "Lists of things!"]
        (seq body)]]))
 
-; Is there a library of helpers for inputs
+; Is there a library of helpers for inputs?
 (defn listed-thing [[id name child-count]]
   [:li
     [:a {:href (str "/things/" id)} name] " "
@@ -32,6 +32,18 @@
 (defn listed-things [things]
   [:ul
     (map listed-thing things)])
+
+; Move out to a views ns
+(defn new-page [parent-id]
+  (layout
+    [:h2 "Want a new thing?"]
+    [:form {:action "/things" :method "POST"}
+      [:input {:type "hidden" :name "parent-id" :value parent-id}]
+      [:p
+       [:label {:for "name"} "What's it called?"]
+        [:input#name {:name "name"}]]
+      [:p
+        [:input {:type "submit" :value "Make it happen"}]]]))
 
 ; Routes, controllers and views all munged together
 (defroutes app-routes
@@ -45,23 +57,35 @@
           (listed-things orphans)])))
 
   (GET "/things/new" []
-    (layout
-      [:h2 "Want a new thing?"]
-      [:form {:action "/things" :method "POST"}
-        [:p
-         [:label {:for "name"} "What's it called?"]
-          [:input#name {:name "name"}]]
-        [:p
-          [:input {:type "submit" :value "Make it happen"}]]]))
+    (new-page nil))
 
   (POST "/things" {params :params}
-    (lotsdb/create conn {:thing/name (params :name)})
+    (let [parent-id (params :parent-id)
+          name      (params :name)
+          thing     {:thing/name name}]
+
+      ; There's probably a more elegant way of doing this
+      (if (not (empty? parent-id))
+          (lotsdb/create-child conn (Long/parseLong parent-id) thing)
+          (lotsdb/create conn thing))
 
     (layout
       [:h2 "I've done it."]
-      [:p "I made your thing " [:strong (params :name)]]
-      [:p [:a {:href "/"} "Checkout your list of things"]]))
+      [:p "I made your thing " [:strong name]]
+      [:p [:a {:href "/"} "Checkout your list of things"]])))
+
+  (GET "/things/:id/children" [id]
+    (let [children (q lotsdb/children-for-listing (db conn) (Long/parseLong id))]
+
+      (layout
+        [:h2 "Its babies."]
+          [:div#new
+            [:a {:href (str "/things/" id "/new")} "New"]
+            (listed-things children)])))
   
+  (GET "/things/:id/new" [id]
+    (new-page id))
+
   (DELETE "/things/:id" [id]
     (lotsdb/destroy conn (Long/parseLong id))
 
