@@ -20,14 +20,19 @@
 (defn orphan? [db entity-id]
   (nil? (get (d/entity db entity-id) :thing/_children)))
 
+(defn count-children [db entity-id]
+  (if-let [children (get (d/entity db entity-id) :thing/children)]
+    (count children) 0))
+
 (def orphans
   '[:find ?e
     :where [?e :thing/name]
            [(lists-of-things.db/orphan? $ ?e)]])
 
 (def orphans-for-listing
-  '[:find ?orphan ?name
+  '[:find ?orphan ?name ?child-count
     :where [?orphan :thing/name ?name]
+           [(lists-of-things.db/count-children $ ?orphan) ?child-count]
            [(lists-of-things.db/orphan? $ ?orphan)]])
 
 (def children

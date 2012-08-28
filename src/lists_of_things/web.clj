@@ -21,9 +21,10 @@
        (seq body)]]))
 
 ; Is there a library of helpers for inputs
-(defn listed-thing [[id name]]
+(defn listed-thing [[id name child-count]]
   [:li
-    [:a {:href (str "/things/" id)} name]
+    [:a {:href (str "/things/" id)} name] " "
+    [:a {:href (str "/things/" id "/children")} (str child-count " children")]
     [:form {:action (str "/things/" id) :method "POST"}
       [:input {:type "hidden" :name "_method" :value "DELETE"}]
       [:input {:type "submit" :value "Delete"}]]])
