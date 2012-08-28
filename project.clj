@@ -4,7 +4,7 @@
   :ring {:handler lists-of-things.web/app}
 
   :dependencies [[org.clojure/clojure "1.4.0"]
-                 [com.datomic/datomic "0.1.3164"]
+                 [com.datomic/datomic-free "0.8.3438"]
                  [compojure "1.1.1"]
                  [hiccup "1.0.0"]]
   :dev-dependencies [[lein-marginalia "0.7.1"]

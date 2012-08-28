@@ -8,7 +8,7 @@
             [lists-of-things.db   :as lotsdb]))
 
 (def conn
-  (seed/seed "datomic:mem://lists_of_things"))
+  (seed/seed "datomic:free://localhost:4334/lists_of_things"))
 
 ; Helpers
 (defn layout [& body]

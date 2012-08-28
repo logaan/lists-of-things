@@ -1,8 +1,8 @@
 # lists-of-things
 
-Install datomic to local mvn using:
+Datomic is now using the free edition. It's on clojars so just lein deps.
 
-    mvn install:install-file -DgroupId=com.datomic -DartifactId=datomic -Dfile=datomic-0.1.3164.jar -DpomFile=pom.xml
+  ./bin/transactor config/samples/free-transactor-template.properties
 
 FIXME: write description
 
