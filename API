@@ -1,0 +1,54 @@
+Host the api at
+
+http://api.listsofthings.com/
+
+Not sure how to do pagination. Some ideas:
+
+GET /v1/things?offset=100&limit=50
+GET /v1/things?first=100&last=150
+GET /v1/things?page=3&perpage=50
+
+Not sure how to do descriptive urls. Names can change. Should I embed ids?
+Would mean that I can lazily setup redirection to the actual url. Gives 'moved'
+functionality cheaply. Though I guess now I've got a history type db... should
+be easier to do.
+
+GET /v1/things/moves-345678876
+GET /v1/things/345678876/moves
+
+Offer a way to limit fields
+
+GET /v1/things/123?fields=name,children
+GET /v1/things/123?fields=name,children,children.name,children.apiPath
+
+Have links in responses. Use javascript style names for attributes.
+
+{
+  "name": "Movies",
+  "children": [
+    {
+      "name": "Disney",
+      "apiPath": "/v1/things/847",
+      "uiPath": "/things/847"
+    }
+  ]
+)
+
+Maybe link to other pages from listings
+
+{
+  "things": [{...}, {...}, ...],
+  "previousPage": "/things?page=1,
+  "nextPage": "/things?page=3
+}
+
+Search is just a view of the collection. 'search' is more clear than 'q' and
+perhaps 'query' as well.
+
+GET /v1/things?search=bambi
+
+On errors use propper response codes. Unless someone asks not to
+
+GET /v1/things?suppress_response_codes=true
+
+Setup OAUTH 2.0. But how about js requests from the website?

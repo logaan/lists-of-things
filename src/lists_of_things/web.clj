@@ -74,9 +74,17 @@
       [:p "I made your thing " [:strong name]]
       [:p [:a {:href "/"} "Checkout your list of things"]])))
 
+  (GET "/things/:id" [id]
+    (let [thing (d/entity (db conn) (Long/parseLong id))]
+      (layout
+        [:h2 (:thing/name thing)]
+        [:form#new-content {:method "post" :action "/content"}
+          [:input {:type "hidden" :name "thing" :value id}]
+          [:textarea {:name "content" :placeholder "Write something"}]
+          [:input {:type "submit" :value "Create content"}]])))
+
   (GET "/things/:id/children" [id]
     (let [children (q lotsdb/children-for-listing (db conn) (Long/parseLong id))]
-
       (layout
         [:h2 "Its babies."]
           [:div#new

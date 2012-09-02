@@ -2,6 +2,9 @@
 
 Datomic is now using the free edition. It's on clojars so just lein deps.
 
+
+To start the transactor run:
+
   ./bin/transactor config/samples/free-transactor-template.properties
 
 FIXME: write description
@@ -14,12 +17,14 @@ FIXME: write
 
 Replaces reminders
 - Things
-  - Create
-  - List orphans
-  - Delete thing
+  x Create
+  x List orphans
+  x Delete thing
   - Edit thing
 
 Replaces emailing myself
+- Things
+  ~ Show
 - Content
   - Create
   - List
@@ -28,8 +33,8 @@ Replaces emailing myself
 
 Replaces mind maps
 - Children
-  - List
-  - Create
+  x List
+  x Create
   - Move
   - Add to new parent
   - Remove from parent
