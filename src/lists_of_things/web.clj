@@ -75,13 +75,28 @@
       [:p [:a {:href "/"} "Checkout your list of things"]])))
 
   (GET "/things/:id" [id]
-    (let [thing (d/entity (db conn) (Long/parseLong id))]
+    (let [thing-id (Long/parseLong id)
+          thing (d/entity (db conn) thing-id)
+          texts (q lotsdb/content (db conn) thing-id)]
       (layout
         [:h2 (:thing/name thing)]
-        [:form#new-content {:method "post" :action "/content"}
-          [:input {:type "hidden" :name "thing" :value id}]
-          [:textarea {:name "content" :placeholder "Write something"}]
+        (map (fn [[text]] [:p text]) texts)
+        [:form#new-content {:action "/content" :method "POST"}
+          [:input {:type "hidden" :name "thing-id" :value id}]
+          [:textarea {:name "text" :placeholder "Write something"}]
           [:input {:type "submit" :value "Create content"}]])))
+  
+  (POST "/content" {params :params}
+    (let [thing-id (params :thing-id)
+          text     (params :text)
+          content  {:content/text text}]
+
+      (lotsdb/create-content conn (Long/parseLong thing-id) content)
+      
+      (layout
+        [:h2 "Holy shit! Contenet?!"]
+        [:p "No way."]
+        [:p [:a {:href (str "/things/" thing-id)} "Back to thing"]])))
 
   (GET "/things/:id/children" [id]
     (let [children (q lotsdb/children-for-listing (db conn) (Long/parseLong id))]

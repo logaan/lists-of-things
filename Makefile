@@ -1,3 +1,4 @@
+default: work
 work:
 	screen lein vimclojure
 	screen make transactor

@@ -10,6 +10,11 @@
     @(d/transact conn [(merge {:db/id id} thing)
                        [:db/add parent-id :thing/children id]])))
 
+(defn create-content [conn thing-id content]
+  (let [id (d/tempid :db.part/user)]
+    @(d/transact conn [(merge {:db/id id} content)
+                       [:db/add thing-id :thing/content id]])))
+
 (defn destroy [conn eid]
   @(d/transact conn `[[:db.fn/retractEntity ~eid]]))
 
@@ -44,6 +49,12 @@
   '[:find ?children
     :in $ ?parent
     :where [?parent :thing/children ?children]])
+
+(def content
+  '[:find ?text
+    :in $ ?thing
+    :where [?thing :thing/content ?content]
+           [?content :content/text ?text]])
 
 (def children-for-listing
   '[:find ?child ?name ?child-count
