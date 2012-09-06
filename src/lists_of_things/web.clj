@@ -72,7 +72,8 @@
     (layout
       [:h2 "I've done it."]
       [:p "I made your thing " [:strong name]]
-      [:p [:a {:href "/"} "Checkout your list of things"]])))
+      [:p [:a {:href (str "/things/" parent-id "/children")} "Go to parent"]]
+      [:p [:a {:href "/"} "Checkout your orphans"]])))
 
   (GET "/things/:id" [id]
     (let [thing-id (Long/parseLong id)
