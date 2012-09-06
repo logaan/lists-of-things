@@ -34,6 +34,15 @@
   [:ul
     (map listed-thing things)])
 
+(defn listed-text-content [[id text]]
+  [:form {:action (str "/contents/" id) :method "POST"}
+    [:input {:type "hidden" :name "_method" :value "DELETE"}]
+    [:input {:type "submit" :value "Delete"}]
+    [:p.text.content text]])
+
+(defn listed-text-contents [content]
+  (map listed-text-content content))
+
 ; Move out to a views ns
 (defn new-page [parent-id]
   (layout
@@ -77,15 +86,15 @@
   (GET "/things/:id" [id]
     (let [thing-id (Long/parseLong id)
           thing (d/entity (db conn) thing-id)
-          texts (q lotsdb/content (db conn) thing-id)]
+          texts (q lotsdb/content-for-listing (db conn) thing-id)]
       (layout
         [:h2 (:thing/name thing)]
-        (map (fn [[text]] [:p text]) texts)
+        (listed-text-contents texts)
         [:form#new-content {:action "/content" :method "POST"}
           [:input {:type "hidden" :name "thing-id" :value id}]
           [:textarea {:name "text" :placeholder "Write something"}]
           [:input {:type "submit" :value "Create content"}]])))
-  
+
   (POST "/content" {params :params}
     (let [thing-id (params :thing-id)
           text     (params :text)
@@ -104,6 +113,13 @@
   
   (GET "/things/:id/new" [id]
     (new-page id))
+
+  (DELETE "/contents/:id" [id]
+    (lotsdb/destroy conn (Long/parseLong id))
+
+    (layout
+      [:h2 (str id " is gone.")]
+      [:p [:a {:href "/"} "Checkout your list of things"]]))
 
   (DELETE "/things/:id" [id]
     (lotsdb/destroy conn (Long/parseLong id))

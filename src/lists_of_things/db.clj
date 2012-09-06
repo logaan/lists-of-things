@@ -50,8 +50,8 @@
     :in $ ?parent
     :where [?parent :thing/children ?children]])
 
-(def content
-  '[:find ?text
+(def content-for-listing
+  '[:find ?content ?text
     :in $ ?thing
     :where [?thing :thing/content ?content]
            [?content :content/text ?text]])
