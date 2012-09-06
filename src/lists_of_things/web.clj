@@ -5,7 +5,8 @@
   (:require [compojure.handler :as handler]
             [compojure.route   :as route]
             [lists-of-things.seed :as seed]
-            [lists-of-things.db   :as lotsdb]))
+            [lists-of-things.db   :as lotsdb]
+            [ring.util.response   :as response]))
 
 (def conn
   (seed/seed "datomic:free://localhost:4334/lists_of_things"))
@@ -66,14 +67,12 @@
 
       ; There's probably a more elegant way of doing this
       (if (not (empty? parent-id))
-          (lotsdb/create-child conn (Long/parseLong parent-id) thing)
-          (lotsdb/create conn thing))
-
-    (layout
-      [:h2 "I've done it."]
-      [:p "I made your thing " [:strong name]]
-      [:p [:a {:href (str "/things/" parent-id "/children")} "Go to parent"]]
-      [:p [:a {:href "/"} "Checkout your orphans"]])))
+          (do
+            (lotsdb/create-child conn (Long/parseLong parent-id) thing)
+            (response/redirect (str "/things/" parent-id "/children")))
+          (do
+            (lotsdb/create conn thing)
+            (response/redirect "/")))))
 
   (GET "/things/:id" [id]
     (let [thing-id (Long/parseLong id)
@@ -93,11 +92,7 @@
           content  {:content/text text}]
 
       (lotsdb/create-content conn (Long/parseLong thing-id) content)
-      
-      (layout
-        [:h2 "Holy shit! Contenet?!"]
-        [:p "No way."]
-        [:p [:a {:href (str "/things/" thing-id)} "Back to thing"]])))
+      (response/redirect (str "/things/" thing-id))))
 
   (GET "/things/:id/children" [id]
     (let [children (q lotsdb/children-for-listing (db conn) (Long/parseLong id))]
