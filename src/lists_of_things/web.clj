@@ -1,6 +1,8 @@
 (ns lists-of-things.web
+  (:gen-class)
   (:use compojure.core
         hiccup.core
+        ring.adapter.jetty
         [datomic.api :only [db q] :as d])
   (:require [compojure.handler :as handler]
             [compojure.route   :as route]
@@ -8,8 +10,8 @@
             [lists-of-things.db   :as lotsdb]
             [ring.util.response   :as response]))
 
-(def conn
-  (seed/seed "datomic:free://localhost:4334/lists_of_things"))
+(def conn (atom nil))
+
 
 ; Helpers
 (defn layout [& body]
@@ -58,7 +60,7 @@
 ; Routes, controllers and views all munged together
 (defroutes app-routes
   (GET "/" []
-    (let [db      (db conn)
+    (let [db      (db @conn)
           orphans (q lotsdb/orphans-for-listing db)]
       (layout
         [:h2 "Here're all your things man"]
@@ -77,16 +79,16 @@
       ; There's probably a more elegant way of doing this
       (if (not (empty? parent-id))
           (do
-            (lotsdb/create-child conn (Long/parseLong parent-id) thing)
+            (lotsdb/create-child @conn (Long/parseLong parent-id) thing)
             (response/redirect (str "/things/" parent-id "/children")))
           (do
-            (lotsdb/create conn thing)
+            (lotsdb/create @conn thing)
             (response/redirect "/")))))
 
   (GET "/things/:id" [id]
     (let [thing-id (Long/parseLong id)
-          thing (d/entity (db conn) thing-id)
-          texts (q lotsdb/content-for-listing (db conn) thing-id)]
+          thing (d/entity (db @conn) thing-id)
+          texts (q lotsdb/content-for-listing (db @conn) thing-id)]
       (layout
         [:h2 (:thing/name thing)]
         (listed-text-contents texts)
@@ -100,11 +102,11 @@
           text     (params :text)
           content  {:content/text text}]
 
-      (lotsdb/create-content conn (Long/parseLong thing-id) content)
+      (lotsdb/create-content @conn (Long/parseLong thing-id) content)
       (response/redirect (str "/things/" thing-id))))
 
   (GET "/things/:id/children" [id]
-    (let [children (q lotsdb/children-for-listing (db conn) (Long/parseLong id))]
+    (let [children (q lotsdb/children-for-listing (db @conn) (Long/parseLong id))]
       (layout
         [:h2 "Its babies."]
           [:div#new
@@ -115,14 +117,14 @@
     (new-page id))
 
   (DELETE "/contents/:id" [id]
-    (lotsdb/destroy conn (Long/parseLong id))
+    (lotsdb/destroy @conn (Long/parseLong id))
 
     (layout
       [:h2 (str id " is gone.")]
       [:p [:a {:href "/"} "Checkout your list of things"]]))
 
   (DELETE "/things/:id" [id]
-    (lotsdb/destroy conn (Long/parseLong id))
+    (lotsdb/destroy @conn (Long/parseLong id))
 
     (layout
       [:h2 (str id " is gone.")]
@@ -133,4 +135,11 @@
 
 (def app
   (handler/site app-routes))
+
+(defn -main [& args]
+  (println "Holy shit I'm trying man geez..")
+  (reset! conn (seed/seed "datomic:free://localhost:4334/lists_of_things"))
+  (println "Got the db... now starting the server...")
+  (run-jetty app-routes {:port 3000}))
+
 

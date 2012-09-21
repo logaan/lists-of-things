@@ -1,12 +1,15 @@
 (defproject lists-of-things "1.0.0-SNAPSHOT"
   :description "FIXME: write description"
 
+  :main lists-of-things.web
+
   :ring {:handler lists-of-things.web/app}
 
   :dependencies [[org.clojure/clojure "1.4.0"]
                  [com.datomic/datomic-free "0.8.3438"]
                  [compojure "1.1.1"]
-                 [hiccup "1.0.0"]]
+                 [hiccup "1.0.0"]
+                 [ring/ring-jetty-adapter "1.1.3"]]
   :dev-dependencies [[lein-marginalia "0.7.1"]
                      [midje "1.4.0"]
                      [com.stuartsierra/lazytest "1.2.3"]
