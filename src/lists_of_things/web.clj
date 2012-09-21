@@ -24,7 +24,6 @@
        [:h1 "Lists of things"]
        (seq body)]]))
 
-; Is there a library of helpers for inputs?
 (defn link-to-thing [id name]
   [:a {:href (str "/things/" id)} name])
 
@@ -63,17 +62,17 @@
 (defn listed-text-contents [content]
   (map listed-text-content content))
 
-; Move out to a views ns
-(defn new-page [parent-id]
-  (layout
-    [:h2 "Want a new thing?"]
+(defn new-thing-form
+  ([]
+  (new-thing-form nil))
+  
+  ([parent-id]
     [:form {:action "/things" :method "POST"}
-      [:input {:type "hidden" :name "parent-id" :value parent-id}]
-      [:p
-       [:label {:for "name"} "What's it called?"]
-        [:input#name {:name "name"}]]
-      [:p
-        [:input {:type "submit" :value "Make it happen"}]]]))
+     [:input {:type "hidden" :name "parent-id" :value parent-id}]
+     [:p
+      [:label {:for "name"} "What's it called?"]
+      [:input#name {:name "name"}]
+      [:input {:type "submit" :value "Make it happen"}]]]))
 
 ; Routes, controllers and views all munged together
 (defroutes app-routes
@@ -83,12 +82,8 @@
       (layout
         [:h2 "Orphaned things"]
         [:div#orphans {:style "border: 1px solid black; padding: 1em;"}
-          [:div#new
-            [:a {:href "/things/new"} "Add new thing"]]
+          (new-thing-form)
           (table-of-things orphans)])))
-
-  (GET "/things/new" []
-    (new-page nil))
 
   (POST "/things" {params :params}
     (let [parent-id (params :parent-id)
@@ -137,13 +132,9 @@
               [:ul [:li [:a {:href "/"} "Orphans"]]]
               (listed-things parents))]
           [:div#children {:style "border: 1px solid black; padding: 1em; clear: both;"}
-            [:div#new
-              [:a {:href (str "/things/" id "/new")} "Add new child"]]
+            (new-thing-form thing-id)
             (table-of-things children)])))
   
-  (GET "/things/:id/new" [id]
-    (new-page id))
-
   (DELETE "/contents/:id" [id]
     (lotsdb/destroy @conn (Long/parseLong id))
 
