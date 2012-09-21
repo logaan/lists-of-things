@@ -63,6 +63,12 @@
            [(lists-of-things.db/count-children $ ?child) ?child-count]
            [?parent :thing/children ?child]])
 
+(def parents-for-listing
+  '[:find ?parent ?name
+    :in $ ?child
+    :where [?parent :thing/name ?name]
+           [?parent :thing/children ?child]])
+
 (def parents
   '[:find ?p
     :in $ ?child-name

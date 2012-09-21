@@ -17,23 +17,42 @@
   (html 
     [:html
       [:head
-        [:title "Lists of things!"]]
+        [:title "Lists of things"]
+        [:meta {:name "viewport"
+                :content "initial-scale=1.0,maximum-scale=1.0"}]]
       [:body
-       [:h1 "Lists of things!"]
+       [:h1 "Lists of things"]
        (seq body)]]))
 
 ; Is there a library of helpers for inputs?
-(defn listed-thing [[id name child-count]]
+(defn link-to-thing [id name]
+  [:a {:href (str "/things/" id)} name])
+
+(defn link-to-things-children [id name]
+  [:a {:href (str "/things/" id "/children")} name])
+
+(defn listed-thing [[id name]]
   [:li
-    [:a {:href (str "/things/" id)} name] " "
-    [:a {:href (str "/things/" id "/children")} (str child-count " children")]
-    [:form {:action (str "/things/" id) :method "POST"}
-      [:input {:type "hidden" :name "_method" :value "DELETE"}]
-      [:input {:type "submit" :value "Delete"}]]])
+    (link-to-things-children id name)])
 
 (defn listed-things [things]
-  [:ul
-    (map listed-thing things)])
+  [:ul {:style "display: inline; float: left;"}
+   (map listed-thing things)])
+
+(defn thing-row [[id name child-count]]
+  [:tr
+    [:td
+      (link-to-thing id name)]
+    [:td
+      [:a {:href (str "/things/" id "/children")} (str child-count " children")]]
+    [:td
+      [:form {:action (str "/things/" id) :method "POST"}
+        [:input {:type "hidden" :name "_method" :value "DELETE"}]
+        [:input {:type "submit" :value "Delete"}]]]])
+
+(defn table-of-things [things]
+  [:table {:style "width: 100%"}
+    (map thing-row things)])
 
 (defn listed-text-content [[id text]]
   [:form {:action (str "/contents/" id) :method "POST"}
@@ -62,10 +81,11 @@
     (let [db      (db @conn)
           orphans (q lotsdb/orphans-for-listing db)]
       (layout
-        [:h2 "Here're all your things man"]
-        [:div#new
-          [:a {:href "/things/new"} "New"]
-          (listed-things orphans)])))
+        [:h2 "Orphaned things"]
+        [:div#orphans {:style "border: 1px solid black; padding: 1em;"}
+          [:div#new
+            [:a {:href "/things/new"} "Add new thing"]]
+          (table-of-things orphans)])))
 
   (GET "/things/new" []
     (new-page nil))
@@ -105,12 +125,21 @@
       (response/redirect (str "/things/" thing-id))))
 
   (GET "/things/:id/children" [id]
-    (let [children (q lotsdb/children-for-listing (db @conn) (Long/parseLong id))]
+    (let [db       (db @conn)
+          thing-id (Long/parseLong id)
+          thing    (d/entity db thing-id)
+          children (q lotsdb/children-for-listing db thing-id)
+          parents  (q lotsdb/parents-for-listing  db thing-id)]
       (layout
-        [:h2 "Its babies."]
-          [:div#new
-            [:a {:href (str "/things/" id "/new")} "New"]
-            (listed-things children)])))
+        [:h2 (:thing/name thing)]
+          [:div#parents
+            (if (zero? (count parents))
+              [:ul [:li [:a {:href "/"} "Orphans"]]]
+              (listed-things parents))]
+          [:div#children {:style "border: 1px solid black; padding: 1em; clear: both;"}
+            [:div#new
+              [:a {:href (str "/things/" id "/new")} "Add new child"]]
+            (table-of-things children)])))
   
   (GET "/things/:id/new" [id]
     (new-page id))
