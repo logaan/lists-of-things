@@ -12,7 +12,6 @@
 
 (def conn (atom nil))
 
-
 ; Helpers
 (defn layout [& body]
   (html 
@@ -133,13 +132,11 @@
   (route/not-found
     (html [:h1 "Not found"])))
 
-(def app
-  (handler/site app-routes))
+(defn app [request]
+  (if (not @conn)
+    (reset! conn (seed/seed "datomic:free://localhost:4334/lists_of_things")))
+  ((handler/site app-routes) request))
 
 (defn -main [& args]
-  (println "Holy shit I'm trying man geez..")
-  (reset! conn (seed/seed "datomic:free://localhost:4334/lists_of_things"))
-  (println "Got the db... now starting the server...")
-  (run-jetty app-routes {:port 3000}))
-
+  (run-jetty app {:port 3000}))
 
