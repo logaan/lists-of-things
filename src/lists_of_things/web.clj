@@ -163,35 +163,3 @@
 (defn -main [& args]
   (run-jetty app {:port 3000}))
 
-
-
-; Graphing
-(require '[clojure.string :as str])
-
-(make-connection!)
-
-(defn label [thing]
-  (str (:db/id thing) " [label=\"" (:thing/name thing) "\"];"))
-
-(defn children [thing]
-  (str/join "\n"
-            (for [child (:thing/children thing)]
-              (str (:db/id thing) " -> " (:db/id child) ";"))))
-
-(defn dotify [thing]
-  (str (label thing) "\n" (children thing)))
-
-(defn things-to-digraph [things direction]
-  (str "digraph { \n"
-       "rankdir=" (name direction) "\n"
-       (str/join "\n" (map dotify things))
-       " }"))
-
-(defn draw-graph-of-all-things []
-  (let [db      (db @conn)
-        results (q '[:find ?eid :where [?eid :thing/name]] db)
-        things  (for [[eid] results] (d/entity db eid))]
-    (things-to-digraph things :LR)))
-
-; (spit "/Users/logaan/Desktop/lots.dot" (draw-graph-of-all-things))
-
