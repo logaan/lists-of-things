@@ -18,6 +18,10 @@
 (defn destroy [conn eid]
   @(d/transact conn `[[:db.fn/retractEntity ~eid]]))
 
+(defn move-thing [conn eid from to]
+  @(d/transact conn [[:db/retract from :thing/children eid]
+                     [:db/retract to   :thing/children eid]]))
+
 (def all
   '[:find ?e
     :where [?e :thing/name]])
