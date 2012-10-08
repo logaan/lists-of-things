@@ -1,0 +1,14 @@
+body { margin: 0; padding: 0; }
+h1 { font-size: 3em; margin: 0 0 0.4em 0; }
+
+.container { width: auto; display: inline; margin: 1em; }
+#browse { float: left; min-width: 40%; }
+#preview { float: left; max-width: 50%; }
+
+#parents { padding: 0px; font-size: small; }
+#parents li { float: left; display: inline; margin: -1em 1em 0 0; }
+
+#children { clear: both; padding-top: 1em; }
+#children td { padding: 0.5em; }
+
+.image {text-align: center;}

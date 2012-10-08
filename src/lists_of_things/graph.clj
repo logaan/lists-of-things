@@ -25,5 +25,13 @@
         things  (for [[eid] results] (d/entity db eid))]
     (things-to-digraph things)))
 
-; (make-connection!)
-; (spit "/Users/logaan/Desktop/lots.dot" (draw-graph-of-all-things))
+(make-connection!)
+
+(q '[:find ?i
+     :where [?eid ?a 17592186045536]
+            [?a :db/ident ?i]]
+   (db @conn))
+
+
+
+;(spit "/Users/logaan/Desktop/lots.dot" (draw-graph-of-all-things))
