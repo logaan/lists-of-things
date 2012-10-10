@@ -2,6 +2,7 @@
   (:use [datomic.api :only [q] :as d])
   (:refer-clojure :exclude [parents ancestors descendants]))
 
+; NOTE: Do these transact calls really need to be de-refd?
 (defn create [conn thing]
   @(d/transact conn [(merge {:db/id (d/tempid :db.part/user)} thing)]))
 
@@ -18,14 +19,6 @@
 (defn destroy [conn eid]
   @(d/transact conn `[[:db.fn/retractEntity ~eid]]))
 
-(defn move-thing [conn eid from to]
-  @(d/transact conn [[:db/retract from :thing/children eid]
-                     [:db/retract to   :thing/children eid]]))
-
-(def all
-  '[:find ?e
-    :where [?e :thing/name]])
-
 (def search
   '[:find ?e
     :in $ ?query
@@ -34,50 +27,10 @@
 (defn orphan? [db entity-id]
   (nil? (get (d/entity db entity-id) :thing/_children)))
 
-(defn count-children [db entity-id]
-  (if-let [children (get (d/entity db entity-id) :thing/children)]
-    (count children) 0))
-
 (def orphans
   '[:find ?e
     :where [?e :thing/name]
            [(lists-of-things.db/orphan? $ ?e)]])
-
-(def orphans-for-listing
-  '[:find ?orphan ?name ?child-count
-    :where [?orphan :thing/name ?name]
-           [(lists-of-things.db/count-children $ ?orphan) ?child-count]
-           [(lists-of-things.db/orphan? $ ?orphan)]])
-
-(def children
-  '[:find ?children
-    :in $ ?parent
-    :where [?parent :thing/children ?children]])
-
-(def content-for-listing
-  '[:find ?content ?text
-    :in $ ?thing
-    :where [?thing :thing/content ?content]
-           [?content :content/text ?text]])
-
-(def children-for-listing
-  '[:find ?child ?name ?child-count
-    :in $ ?parent
-    :where [?child :thing/name ?name]
-           [(lists-of-things.db/count-children $ ?child) ?child-count]
-           [?parent :thing/children ?child]])
-
-(def parents-for-listing
-  '[:find ?parent ?name
-    :in $ ?child
-    :where [?parent :thing/name ?name]
-           [?parent :thing/children ?child]])
-
-(def parents
-  '[:find ?p
-    :in $ ?child-name
-    :where [?c :thing/name ?child-name]
-           [?p :thing/children ?c]])
 
 (def ancestor
   '[[[ancestor ?descendant ?ancestor]

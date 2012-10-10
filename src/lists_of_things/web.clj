@@ -1,3 +1,4 @@
+; This namespace contains side effects
 (ns lists-of-things.web
   (:gen-class)
   (:use compojure.core
@@ -12,19 +13,22 @@
 
 (def conn (atom nil))
 
+(defn entities [db query]
+  (map (fn [[eid]] (d/entity db eid))
+       (q query db)))
+
 (defroutes app-routes
   (GET "/browse-and-preview" []
     browse-and-preview)
 
   (GET "/" []
-    (let [db      (db @conn)
-          orphans (q lotsdb/orphans-for-listing db)]
-      (home-page orphans)))
+      (home-page (entities (db @conn) lotsdb/orphans)))
 
-  (POST "/things" {params :params}
-    (let [parent-id (params :parent-id)
-          name      (params :name)
-          thing     {:thing/name name}]
+  (GET "/things/:id" [id]
+      (thing-page (d/entity (db @conn) (Long/parseLong id))))
+
+  (POST "/things" {{:keys [parent-id name]} :params}
+    (let [thing {:thing/name name}]
 
       ; There's probably a more elegant way of doing this
       (if (not (empty? parent-id))
@@ -35,30 +39,18 @@
             (lotsdb/create @conn thing)
             (response/redirect "/")))))
 
-  (POST "/content" {params :params}
-    (let [thing-id (params :thing-id)
-          text     (params :text)
-          content  {:content/text text}]
-
-      (lotsdb/create-content @conn (Long/parseLong thing-id) content)
-      (response/redirect (str "/things/" thing-id))))
-
-  (GET "/things/:id" [id]
-    (let [db       (db @conn)
-          thing-id (Long/parseLong id)
-          thing    (d/entity db thing-id)
-          children (q lotsdb/children-for-listing db thing-id)
-          parents  (q lotsdb/parents-for-listing  db thing-id)]
-      (thing-page thing-id thing children parents)))
-  
-  (DELETE "/contents/:id" [id]
+  (DELETE "/things/:id" [id]
     (lotsdb/destroy @conn (Long/parseLong id))
 
     (layout
       [:h2 (str id " is gone.")]
       [:p [:a {:href "/"} "Checkout your list of things"]]))
 
-  (DELETE "/things/:id" [id]
+  (POST "/content" {{:keys [thing-id text]} :params}
+      (lotsdb/create-content @conn (Long/parseLong thing-id) {:content/text text})
+      (response/redirect (str "/things/" thing-id)))
+
+  (DELETE "/contents/:id" [id]
     (lotsdb/destroy @conn (Long/parseLong id))
 
     (layout

@@ -12,25 +12,27 @@
        [:h1 "Lists of things"]
        (seq body)]]))
 
-(defn link-to-thing [id name]
-  [:a {:href (str "/things/" id)} name])
+(defn thing-path [thing]
+  (str "/things/" (:db/id thing)))
 
-(defn listed-thing [[id name]]
-  [:li
-    (link-to-thing id name)])
+(defn link-to-thing [thing]
+  [:a {:href (thing-path thing)} (:thing/name thing)])
+
+(defn listed-thing [thing]
+  [:li (link-to-thing thing)])
 
 (defn listed-things [things]
   [:ul {:style "display: inline; float: left;"}
    (map listed-thing things)])
 
-(defn thing-row [[id name child-count]]
+(defn thing-row [thing]
   [:tr
     [:td
-      (link-to-thing id name)]
+      (link-to-thing thing)]
     [:td
-      (link-to-thing id (str child-count " children"))]
+      (str (count (:thing/children thing)) " children")]
     [:td
-      [:form {:action (str "/things/" id) :method "POST"}
+      [:form {:action (thing-path thing) :method "POST"}
         [:input {:type "hidden" :name "_method" :value "DELETE"}]
         [:input {:type "submit" :value "Delete"}]]]])
 
@@ -38,14 +40,14 @@
   [:table {:style "width: 100%"}
     (map thing-row things)])
 
-(defn listed-text-content [[id text]]
-  [:form {:action (str "/contents/" id) :method "POST"}
+(defn listed-text-content [content]
+  [:form {:action (str "/contents/" (:db/id content)) :method "POST"}
     [:input {:type "hidden" :name "_method" :value "DELETE"}]
     [:input {:type "submit" :value "Delete"}]
-    [:p.text.content text]])
+    [:p.text.content (:content/text content)]])
 
-(defn listed-text-contents [content]
-  (map listed-text-content content))
+(defn listed-text-contents [contents]
+  (map listed-text-content contents))
 
 (defn new-thing-form
   ([]          (new-thing-form nil))
@@ -68,9 +70,6 @@
 (defn parent-item [title]
   [:li [:a {:href "#"} title]
    " ( " [:a {:href "#"} "Remove"] " ) "])
-
-(def not-found
-  (html [:h1 "Not found"]))
 
 (def browse-and-preview
   (html
@@ -120,6 +119,9 @@
            and crusty bread."]
        [:p [:strong "Yield: "] "6 servings"]]]]))
 
+(def not-found
+  (html [:h1 "Not found"]))
+
 (defn home-page [orphans]
   (layout
     [:h2 "Orphaned things"]
@@ -127,21 +129,21 @@
      (new-thing-form)
      (table-of-things orphans)]))
 
-(defn thing-page [thing-id thing children parents]
+(defn thing-page [thing]
   (layout
     [:h2 (:thing/name thing)]
     [:div#parents
-     (if (zero? (count parents))
+     (if (zero? (count (:thing/_children thing)))
        [:ul [:li [:a {:href "/"} "Orphans"]]]
-       (listed-things parents))]
+       (listed-things (:thing/_children thing)))]
     [:div#content
      [:ul
       (map (fn [content] [:li (:content/text content)]) (:thing/content thing))]
      [:form#new-content {:action "/content" :method "POST"}
-      [:input {:type "hidden" :name "thing-id" :value thing-id}]
+      [:input {:type "hidden" :name "thing-id" :value (:db/id thing)}]
       [:textarea {:name "text" :placeholder "Write something"}]
       [:input {:type "submit" :value "Create content"}]]]
     [:div#children {:style "border: 1px solid black; padding: 1em; clear: both;"}
-     (new-thing-form thing-id)
-     (table-of-things children)]))
+     (new-thing-form (:db/id thing))
+     (table-of-things (:thing/children thing))]))
 

@@ -5,7 +5,7 @@
 (ns lists-of-things.scratch
   (:use [datomic.api :only [q] :as datomic]
         clojure.pprint)
-  (:require [lists-of-things.seed :as seed]))
+  (:require [lists-of-things.helpers :as helpers]))
 
 (def conn (datomic/connect "datomic:free://localhost:4334/lists_of_things"))
 
@@ -30,4 +30,6 @@
 
 (count (:thing/children todo))
 (count (:thing/_children allen-keys))
+
+(spit "/Users/logaan/Desktop/thing-page.html" (helpers/thing-page todo))
 
