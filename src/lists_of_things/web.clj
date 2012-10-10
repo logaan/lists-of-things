@@ -27,12 +27,9 @@
 (defn link-to-thing [id name]
   [:a {:href (str "/things/" id)} name])
 
-(defn link-to-things-children [id name]
-  [:a {:href (str "/things/" id "/children")} name])
-
 (defn listed-thing [[id name]]
   [:li
-    (link-to-things-children id name)])
+    (link-to-thing id name)])
 
 (defn listed-things [things]
   [:ul {:style "display: inline; float: left;"}
@@ -43,7 +40,7 @@
     [:td
       (link-to-thing id name)]
     [:td
-      [:a {:href (str "/things/" id "/children")} (str child-count " children")]]
+      (link-to-thing id (str child-count " children"))]
     [:td
       [:form {:action (str "/things/" id) :method "POST"}
         [:input {:type "hidden" :name "_method" :value "DELETE"}]
@@ -154,22 +151,10 @@
       (if (not (empty? parent-id))
           (do
             (lotsdb/create-child @conn (Long/parseLong parent-id) thing)
-            (response/redirect (str "/things/" parent-id "/children")))
+            (response/redirect (str "/things/" parent-id)))
           (do
             (lotsdb/create @conn thing)
             (response/redirect "/")))))
-
-  (GET "/things/:id" [id]
-    (let [thing-id (Long/parseLong id)
-          thing (d/entity (db @conn) thing-id)
-          texts (q lotsdb/content-for-listing (db @conn) thing-id)]
-      (layout
-        [:h2 (:thing/name thing)]
-        (listed-text-contents texts)
-        [:form#new-content {:action "/content" :method "POST"}
-          [:input {:type "hidden" :name "thing-id" :value id}]
-          [:textarea {:name "text" :placeholder "Write something"}]
-          [:input {:type "submit" :value "Create content"}]])))
 
   (POST "/content" {params :params}
     (let [thing-id (params :thing-id)
@@ -177,9 +162,9 @@
           content  {:content/text text}]
 
       (lotsdb/create-content @conn (Long/parseLong thing-id) content)
-      (response/redirect (str "/things/" thing-id "/children"))))
+      (response/redirect (str "/things/" thing-id))))
 
-  (GET "/things/:id/children" [id]
+  (GET "/things/:id" [id]
     (let [db       (db @conn)
           thing-id (Long/parseLong id)
           thing    (d/entity db thing-id)
