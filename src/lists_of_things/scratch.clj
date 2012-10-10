@@ -7,7 +7,7 @@
         clojure.pprint)
   (:require [lists-of-things.seed :as seed]))
 
-(def conn (seed/seed "datomic:free://localhost:4334/lists_of_things"))
+(def conn (datomic/connect "datomic:free://localhost:4334/lists_of_things"))
 
 (def db (datomic/db conn))
 

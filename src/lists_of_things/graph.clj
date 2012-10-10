@@ -32,6 +32,4 @@
             [?a :db/ident ?i]]
    (db @conn))
 
-
-
 ;(spit "/Users/logaan/Desktop/lots.dot" (draw-graph-of-all-things))
