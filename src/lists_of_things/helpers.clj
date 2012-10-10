@@ -54,70 +54,28 @@
   ([parent-id] [:form {:action "/things" :method "POST"}
                 [:input {:type "hidden" :name "parent-id" :value parent-id}]
                 [:p
-                 [:label {:for "name"} "What's it called?"]
-                 [:input#name {:name "name"}]
-                 [:input {:type "submit" :value "Make it happen"}]]]))
+                 [:input#name {:name "name" :placeholder "New thing"}]
+                 [:input {:type "submit" :value "Create"}]]]))
 
-(defn child-row [title]
+(defn parent-item [parent]
+  [:li (link-to-thing parent)
+   " ( " [:a {:href "#"} "Remove"] " ) "])
+
+(defn parents-sans-one [child parent]
+  (filter #(not (= (:db/id %) (:db/id parent)))
+          (:thing/_children child)))
+
+(defn child-row [parent child]
   [:tr
    [:td [:input {:type "checkbox"}]]
    [:td
-    [:h3 title]
+    [:h3 (link-to-thing child)]
     [:ul#parents
-     [:li [:a {:href "#"} "Lorem ipsum"]]
-     [:li [:a {:href "#"} "Dolor sit amet"]]]]])
+     (map parent-item (parents-sans-one child parent))]]])
 
-(defn parent-item [title]
-  [:li [:a {:href "#"} title]
-   " ( " [:a {:href "#"} "Remove"] " ) "])
-
-(def browse-and-preview
-  (html
-    [:html
-     [:head
-      [:link {:rel "stylesheet" :type "text/css" :href
-              "browse-and-preview.css"}]]
-     [:body
-      [:div#browse.container
-       [:h1 "Recipes"]
-       [:ul#parents
-        (parent-item "Entertaining")
-        (parent-item "Food")
-        [:li.new [:a {:href "#"} [:em "Add"]]]]
-       [:table#children
-        (child-row "Paela")
-        (child-row "Chorizo pasta")
-        (child-row "Pasta bake")
-        (child-row "Chicken caesar salad")
-        (child-row "Chicken noodle soup")
-        (child-row "French toast")
-        (child-row "Bacon and eggs")]]
-      [:div#preview.container
-       [:h2 "Saganaki"]
-       [:p "Saganaki (Greek σαγανάκι, literally little frying pan) refers to
-           various dishes prepared in Greek cuisine and is named after the
-           single-serving frying pan in which it is cooked."]
-       [:div.image [:img {:src "http://www.seductionmeals.com/flaming_saganaki.jpg"}]]
-       [:p [:strong "Prep Time: "] "10 minutes"]
-       [:p [:strong "Cook Time: "] "15 minutes"]
-       [:p [:strong "Total Time: "] "25 minutes"]
-       [:h4 "Ingredients:"]
-       [:ul
-        [:li "1 pound (about 1/2 kg) of kefalotyri or kasseri cheese (or pecorino romano)"]
-        [:li "1/2 cup of olive oil"]
-        [:li "2/3 cup of flour for dredging"]
-        [:li "2-3 lemons, quartered"]]
-       [:h4 "Preparation:"]
-       [:p "Cut the cheese into slices or wedges that are 1/2 inch thick by 2
-           1/2 to 3 inches wide. Moisten each slice with cold water and
-           dredge in the flour. In a sagani (Greek pan used for this dish) or
-           a small heavy-bottomed frying pan (cast-iron works best), heat the
-           oil over medium-high heat, and sear each slice in 1 tablespoon of
-           oil until golden-brown on both sides. Serve hot with a last-minute
-           squeeze of fresh lemon juice."]
-       [:p "Serve with ouzo or wine, olives, vegetable mezethes, tomatoes,
-           and crusty bread."]
-       [:p [:strong "Yield: "] "6 servings"]]]]))
+(defn content-item [content]
+  [:li
+   [:p (:content/text content)]])
 
 (def not-found
   (html [:h1 "Not found"]))
@@ -130,20 +88,28 @@
      (table-of-things orphans)]))
 
 (defn thing-page [thing]
-  (layout
-    [:h2 (:thing/name thing)]
-    [:div#parents
-     (if (zero? (count (:thing/_children thing)))
-       [:ul [:li [:a {:href "/"} "Orphans"]]]
-       (listed-things (:thing/_children thing)))]
-    [:div#content
-     [:ul
-      (map (fn [content] [:li (:content/text content)]) (:thing/content thing))]
-     [:form#new-content {:action "/content" :method "POST"}
-      [:input {:type "hidden" :name "thing-id" :value (:db/id thing)}]
-      [:textarea {:name "text" :placeholder "Write something"}]
-      [:input {:type "submit" :value "Create content"}]]]
-    [:div#children {:style "border: 1px solid black; padding: 1em; clear: both;"}
-     (new-thing-form (:db/id thing))
-     (table-of-things (:thing/children thing))]))
+  (html
+    [:html
+     [:head
+      [:link {:rel "stylesheet" :type "text/css" :href
+              "/browse-and-preview.css"}]]
+     [:body
+      [:div#browse.container
+       [:h1 (:thing/name thing)]
+       [:ul#parents
+        (if (zero? (count (:thing/_children thing)))
+          [:li [:a {:href "/"} "Orphans"]]
+          (map parent-item (:thing/_children thing)))
+        [:li.new [:a {:href "#"} [:em "Add"]]]]
+       [:table#children
+        (map (partial child-row thing) (:thing/children thing))]
+       (new-thing-form (:db/id thing))]
+      [:div#preview.container
+       [:h2 (:thing/name thing)]
+       [:ul
+        (map content-item (:thing/content thing))]
+       [:form#new-content {:action "/content" :method "POST"}
+        [:input {:type "hidden" :name "thing-id" :value (:db/id thing)}]
+        [:textarea {:name "text" :placeholder "Write something"}]
+        [:input {:type "submit" :value "Create content"}]]]]]))
 

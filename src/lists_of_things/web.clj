@@ -13,19 +13,14 @@
 
 (def conn (atom nil))
 
-(defn entities [db query]
-  (map (fn [[eid]] (d/entity db eid))
-       (q query db)))
-
 (defroutes app-routes
-  (GET "/browse-and-preview" []
-    browse-and-preview)
-
   (GET "/" []
-      (home-page (entities (db @conn) lotsdb/orphans)))
+    (home-page (lotsdb/entities (db @conn) lotsdb/orphans)))
 
   (GET "/things/:id" [id]
-      (thing-page (d/entity (db @conn) (Long/parseLong id))))
+    (->> (Long/parseLong id)
+         (d/entity (db @conn))
+         thing-page))
 
   (POST "/things" {{:keys [parent-id name]} :params}
     (let [thing {:thing/name name}]
@@ -47,8 +42,8 @@
       [:p [:a {:href "/"} "Checkout your list of things"]]))
 
   (POST "/content" {{:keys [thing-id text]} :params}
-      (lotsdb/create-content @conn (Long/parseLong thing-id) {:content/text text})
-      (response/redirect (str "/things/" thing-id)))
+    (lotsdb/create-content @conn (Long/parseLong thing-id) {:content/text text})
+    (response/redirect (str "/things/" thing-id)))
 
   (DELETE "/contents/:id" [id]
     (lotsdb/destroy @conn (Long/parseLong id))

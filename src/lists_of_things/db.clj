@@ -19,6 +19,10 @@
 (defn destroy [conn eid]
   @(d/transact conn `[[:db.fn/retractEntity ~eid]]))
 
+(defn entities [db query]
+  (map (fn [[eid]] (d/entity db eid))
+       (q query db)))
+
 (def search
   '[:find ?e
     :in $ ?query
