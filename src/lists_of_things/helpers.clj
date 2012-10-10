@@ -122,3 +122,28 @@
        [:p "Serve with ouzo or wine, olives, vegetable mezethes, tomatoes,
            and crusty bread."]
        [:p [:strong "Yield: "] "6 servings"]]]]))
+
+(defn home-page [orphans]
+  (layout
+    [:h2 "Orphaned things"]
+    [:div#orphans {:style "border: 1px solid black; padding: 1em;"}
+     (new-thing-form)
+     (table-of-things orphans)]))
+
+(defn thing-page [thing-id thing children parents]
+  (layout
+    [:h2 (:thing/name thing)]
+    [:div#parents
+     (if (zero? (count parents))
+       [:ul [:li [:a {:href "/"} "Orphans"]]]
+       (listed-things parents))]
+    [:div#content
+     [:ul
+      (map (fn [content] [:li (:content/text content)]) (:thing/content thing))]
+     [:form#new-content {:action "/content" :method "POST"}
+      [:input {:type "hidden" :name "thing-id" :value thing-id}]
+      [:textarea {:name "text" :placeholder "Write something"}]
+      [:input {:type "submit" :value "Create content"}]]]
+    [:div#children {:style "border: 1px solid black; padding: 1em; clear: both;"}
+     (new-thing-form thing-id)
+     (table-of-things children)]))

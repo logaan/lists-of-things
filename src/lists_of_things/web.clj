@@ -20,11 +20,7 @@
   (GET "/" []
     (let [db      (db @conn)
           orphans (q lotsdb/orphans-for-listing db)]
-      (layout
-        [:h2 "Orphaned things"]
-        [:div#orphans {:style "border: 1px solid black; padding: 1em;"}
-          (new-thing-form)
-          (table-of-things orphans)])))
+      (home-page orphans)))
 
   (POST "/things" {params :params}
     (let [parent-id (params :parent-id)
@@ -54,22 +50,7 @@
           thing    (d/entity db thing-id)
           children (q lotsdb/children-for-listing db thing-id)
           parents  (q lotsdb/parents-for-listing  db thing-id)]
-      (layout
-        [:h2 (:thing/name thing)]
-          [:div#parents
-            (if (zero? (count parents))
-              [:ul [:li [:a {:href "/"} "Orphans"]]]
-              (listed-things parents))]
-          [:div#content
-           [:ul
-           (map (fn [content] [:li (:content/text content)]) (:thing/content thing))]
-          [:form#new-content {:action "/content" :method "POST"}
-            [:input {:type "hidden" :name "thing-id" :value id}]
-            [:textarea {:name "text" :placeholder "Write something"}]
-            [:input {:type "submit" :value "Create content"}]]]
-          [:div#children {:style "border: 1px solid black; padding: 1em; clear: both;"}
-            (new-thing-form thing-id)
-            (table-of-things children)])))
+      (thing-page thing-id thing children parents)))
   
   (DELETE "/contents/:id" [id]
     (lotsdb/destroy @conn (Long/parseLong id))
