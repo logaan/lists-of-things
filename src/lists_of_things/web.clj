@@ -1,4 +1,3 @@
-(remove-ns 'lists-of-things.web)
 (ns lists-of-things.web
   (:gen-class)
   (:use compojure.core

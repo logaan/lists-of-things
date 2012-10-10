@@ -48,16 +48,13 @@
   (map listed-text-content content))
 
 (defn new-thing-form
-  ([]
-  (new-thing-form nil))
-  
-  ([parent-id]
-    [:form {:action "/things" :method "POST"}
-     [:input {:type "hidden" :name "parent-id" :value parent-id}]
-     [:p
-      [:label {:for "name"} "What's it called?"]
-      [:input#name {:name "name"}]
-      [:input {:type "submit" :value "Make it happen"}]]]))
+  ([]          (new-thing-form nil))
+  ([parent-id] [:form {:action "/things" :method "POST"}
+                [:input {:type "hidden" :name "parent-id" :value parent-id}]
+                [:p
+                 [:label {:for "name"} "What's it called?"]
+                 [:input#name {:name "name"}]
+                 [:input {:type "submit" :value "Make it happen"}]]]))
 
 (defn child-row [title]
   [:tr
@@ -147,3 +144,4 @@
     [:div#children {:style "border: 1px solid black; padding: 1em; clear: both;"}
      (new-thing-form thing-id)
      (table-of-things children)]))
+
