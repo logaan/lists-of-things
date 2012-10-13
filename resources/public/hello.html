@@ -1,0 +1,48 @@
+<html>
+  <head>
+    <script type="text/javascript" src="js/main.js"></script>
+    <script type="text/javascript">goog.require('hello');</script>
+    <link rel="stylesheet" href="css/editor/demo.css">
+    <link rel="stylesheet" href="css/editor/button.css" />
+    <link rel="stylesheet" href="css/editor/dialog.css" />
+    <link rel="stylesheet" href="css/editor/linkbutton.css" />
+    <link rel="stylesheet" href="css/editor/menu.css">
+    <link rel="stylesheet" href="css/editor/menuitem.css">
+    <link rel="stylesheet" href="css/editor/menuseparator.css">
+    <link rel="stylesheet" href="css/editor/tab.css" />
+    <link rel="stylesheet" href="css/editor/tabbar.css" />
+    <link rel="stylesheet" href="css/editor/toolbar.css" />
+    <link rel="stylesheet" href="css/editor/colormenubutton.css" />
+    <link rel="stylesheet" href="css/editor/palette.css" />
+    <link rel="stylesheet" href="css/editor/colorpalette.css" />
+    <link rel="stylesheet" href="css/editor/editor/bubble.css" />
+    <link rel="stylesheet" href="css/editor/editor/dialog.css" />
+    <link rel="stylesheet" href="css/editor/editor/linkdialog.css" />
+    <link rel="stylesheet" href="css/editor/editortoolbar.css" />
+
+
+  <style>
+    #editMe {
+      width: 600px;
+      height: 300px;
+      background-color: white;
+      border: 1px solid grey;
+    }
+  </style>
+
+  </head>
+  <body>
+    <div id='toolbar' style='width:602px'></div>
+
+    <div id='editMe'></div>
+
+    <p>
+      <textarea id="fieldContents" style="height:100px;width:400px;"></textarea>
+    </p>
+
+    <script>
+      hello.setupEditor();
+    </script>
+
+  </body>
+</html>
