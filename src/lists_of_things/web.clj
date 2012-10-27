@@ -15,9 +15,8 @@
 
 (defroutes app-routes
   (GET "/" []
-    (-> {:thing/name      "Oprhans"
-         :thing/children  (lotsdb/entities (db @conn) lotsdb/orphans)}
-      thing-page))
+    (let [children (lotsdb/entities (db @conn) lotsdb/orphans)]
+      (thing-page {:thing/name "Oprhans" :thing/children children})))
 
   (GET "/things/:id" [id]
     (->> (Long/parseLong id)
