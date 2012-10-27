@@ -35,12 +35,9 @@
             (lotsdb/create @conn thing)
             (response/redirect "/")))))
 
-  (DELETE "/things/:id" [id]
+  (DELETE "/things/:id" {{:keys [parent-id id]} :params}
     (lotsdb/destroy @conn (Long/parseLong id))
-
-    (layout
-      [:h2 (str id " is gone.")]
-      [:p [:a {:href "/"} "Checkout your list of things"]]))
+    (response/redirect (if (empty? parent-id) "/" (str "/things/" parent-id))))
   
   (PUT "/things/:id" {{id "id" parent "parent"} :params}
     (lotsdb/add-parent @conn id parent)

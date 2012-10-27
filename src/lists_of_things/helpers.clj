@@ -40,7 +40,12 @@
    [:td
     [:h3 (link-to-thing child)]
     [:ul#parents
-     (map parent-item (parents-sans-one child parent))]]])
+     (map parent-item (parents-sans-one child parent))]]
+   [:td
+    [:form {:action (thing-path child) :method "POST"}
+     [:input {:type "hidden" :name "_method" :value "DELETE"}]
+     [:input {:type "hidden" :name "parent-id" :value (:db/id parent)}]
+     [:input {:type "submit" :value "Delete"}]]]])
 
 (defn content-item [content]
   [:li
