@@ -54,12 +54,21 @@
 (def not-found
   (html [:h1 "Not found"]))
 
+(def editor-stylesheets
+  (map #(vector :link {:rel "stylesheet" :href (str "/css/editor/" % ".css")})
+       ["demo" "button" "dialog" "linkbutton" "menu" "menuitem" "menuseparator"
+        "tab" "tabbar" "toolbar" "colormenubutton" "palette" "colorpalette"
+        "editor/bubble" "editor/dialog" "editor/linkdialog" "editortoolbar"]))
+
 (defn thing-page [thing]
   (html
     [:html
      [:head
+      editor-stylesheets
       [:link {:rel "stylesheet" :type "text/css" :href
-              "/browse-and-preview.css"}]]
+              "/browse-and-preview.css"}]
+      [:script {:type "text/javascript" :src "/js/main.js"}]
+      [:script {:type "text/javascript"} "goog.require('hello')"]]
      [:body
       [:div#browse.container
        [:h1 (:thing/name thing)]
@@ -77,6 +86,9 @@
         (map content-item (:thing/content thing))]
        [:form#new-content {:action "/content" :method "POST"}
         [:input {:type "hidden" :name "thing-id" :value (:db/id thing)}]
-        [:textarea {:name "text" :placeholder "Write something"}]
-        [:input {:type "submit" :value "Create content"}]]]]]))
+        [:div#toolbar]
+        [:div#editMe]
+        [:input {:type "hidden" :id "fieldContents" :name "text"}]
+        [:input {:type "submit" :value "Create content"}]]]
+      [:script {:type "text/javascript"} "hello.setupEditor()"]]]))
 

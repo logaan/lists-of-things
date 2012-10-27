@@ -16,7 +16,7 @@
 (defroutes app-routes
   (GET "/" []
     (let [children (lotsdb/entities (db @conn) lotsdb/orphans)]
-      (thing-page {:thing/name "Oprhans" :thing/children children})))
+      (thing-page {:thing/name "Orphans" :thing/children children})))
 
   (GET "/things/:id" [id]
     (->> (Long/parseLong id)
@@ -39,7 +39,7 @@
     (lotsdb/destroy @conn (Long/parseLong id))
     (response/redirect (if (empty? parent-id) "/" (str "/things/" parent-id))))
   
-  (PUT "/things/:id" {{id "id" parent "parent"} :params}
+  (PUT "/things/:id" {{:keys [id parent]} :params}
     (lotsdb/add-parent @conn id parent)
     
     (layout
