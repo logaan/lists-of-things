@@ -18,37 +18,6 @@
 (defn link-to-thing [thing]
   [:a {:href (thing-path thing)} (:thing/name thing)])
 
-(defn listed-thing [thing]
-  [:li (link-to-thing thing)])
-
-(defn listed-things [things]
-  [:ul {:style "display: inline; float: left;"}
-   (map listed-thing things)])
-
-(defn thing-row [thing]
-  [:tr
-    [:td
-      (link-to-thing thing)]
-    [:td
-      (str (count (:thing/children thing)) " children")]
-    [:td
-      [:form {:action (thing-path thing) :method "POST"}
-        [:input {:type "hidden" :name "_method" :value "DELETE"}]
-        [:input {:type "submit" :value "Delete"}]]]])
-
-(defn table-of-things [things]
-  [:table {:style "width: 100%"}
-    (map thing-row things)])
-
-(defn listed-text-content [content]
-  [:form {:action (str "/contents/" (:db/id content)) :method "POST"}
-    [:input {:type "hidden" :name "_method" :value "DELETE"}]
-    [:input {:type "submit" :value "Delete"}]
-    [:p.text.content (:content/text content)]])
-
-(defn listed-text-contents [contents]
-  (map listed-text-content contents))
-
 (defn new-thing-form
   ([]          (new-thing-form nil))
   ([parent-id] [:form {:action "/things" :method "POST"}
@@ -79,13 +48,6 @@
 
 (def not-found
   (html [:h1 "Not found"]))
-
-(defn home-page [orphans]
-  (layout
-    [:h2 "Orphaned things"]
-    [:div#orphans {:style "border: 1px solid black; padding: 1em;"}
-     (new-thing-form)
-     (table-of-things orphans)]))
 
 (defn thing-page [thing]
   (html
