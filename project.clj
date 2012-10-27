@@ -22,7 +22,5 @@
 
   :cljsbuild {
     :builds [{:source-path "src-cljs"
-              :compiler {:output-to "resources/public/js/main.js"
-                         :optimizations :whitespace
-                         :pretty-print true}}]})
+              :compiler {:optimizations :advanced :output-to "resources/public/js/main.js"}}]})
 
