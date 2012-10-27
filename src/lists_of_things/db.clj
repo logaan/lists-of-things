@@ -3,8 +3,12 @@
   (:refer-clojure :exclude [parents ancestors descendants]))
 
 ; NOTE: Do these transact calls really need to be de-refd?
+; NOTE: Could we just move the transact call out into the controller? Just make
+; these methods return transaction data.. That'd make this module purely
+; functional.
 (defn create [conn thing]
-  @(d/transact conn [(merge {:db/id (d/tempid :db.part/user)} thing)]))
+  (let [id (d/tempid :db.part/user)]
+    @(d/transact conn [(merge {:db/id id} thing)])))
 
 (defn create-child [conn parent-id thing]
   (let [id (d/tempid :db.part/user)]
@@ -17,12 +21,27 @@
                        [:db/add thing-id :thing/content id]])))
 
 (defn destroy [conn eid]
-  @(d/transact conn `[[:db.fn/retractEntity ~eid]]))
+  @(d/transact conn [[:db.fn/retractEntity eid]]))
 
+(defn add-parent [conn child-id parent-id]
+  @(d/transact conn [[:db/add parent-id :thing/children child-id]]))
+
+(defn change-parent [conn child-id old-parent-id new-parent-id]
+  @(d/transact conn [[:db/retract old-parent-id :thing/children child-id]
+                     [:db/add     new-parent-id :thing/children child-id]]))
+
+(defn remove-parent [conn child-id parent-id]
+  @(d/transact conn [[:db/retract parent-id :thing/children child-id]]))
+
+;; Helper
 (defn entities [db query]
   (map (fn [[eid]] (d/entity db eid))
        (q query db)))
 
+(defn id-of-created [transaction]
+  (first (vals (:tempids transaction))))
+
+;; Queries
 (def search
   '[:find ?e
     :in $ ?query

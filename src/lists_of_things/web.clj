@@ -40,6 +40,12 @@
     (layout
       [:h2 (str id " is gone.")]
       [:p [:a {:href "/"} "Checkout your list of things"]]))
+  
+  (PUT "/things/:id" {{id "id" parent "parent"} :params}
+    (lotsdb/add-parent @conn id parent)
+    
+    (layout
+      [:h2 "added parent"]))
 
   (POST "/content" {{:keys [thing-id text]} :params}
     (lotsdb/create-content @conn (Long/parseLong thing-id) {:content/text text})

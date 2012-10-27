@@ -5,7 +5,8 @@
 (ns lists-of-things.scratch
   (:use [datomic.api :only [q] :as datomic]
         clojure.pprint)
-  (:require [lists-of-things.helpers :as helpers]))
+  (:require [lists-of-things.helpers :as helpers]
+            [lists-of-things.db :as db]))
 
 (def conn (datomic/connect "datomic:free://localhost:4334/lists_of_things"))
 
@@ -20,16 +21,38 @@
 (def things
   (map (partial datomic/entity db) thing-ids))
 
-(defn thing-info [thing]
-  [(:db/id thing)
-   (:thing/name thing)
-   (count (:thing/children thing))])
+(def todo-id 17592186045461)
 
-(def todo       (datomic/entity db 17592186045461))
-(def allen-keys (datomic/entity db 17592186045470))
+(def todo (datomic/entity db todo-id))
 
-(count (:thing/children todo))
-(count (:thing/_children allen-keys))
+(def allen-keys-id 17592186045470)
 
-(spit "/Users/logaan/Desktop/thing-page.html" (helpers/thing-page todo))
+(def allen-keys (datomic/entity db allen-keys-id))
+
+; (spit "/Users/logaan/Desktop/thing-page.html" (helpers/thing-page todo))
+
+;; Parent lifecycle
+(def monkey-wrench-eid
+  (db/id-of-created (db/create conn {:thing/name "Monkey Wrench"})))
+
+(defn parent-names [eid]
+  (map :thing/name
+       (:thing/_children
+         (datomic/entity (datomic/db conn) eid))))
+
+(parent-names monkey-wrench-eid)
+
+(db/add-parent conn monkey-wrench-eid allen-keys-id)
+
+(parent-names monkey-wrench-eid)
+
+(db/change-parent conn monkey-wrench-eid allen-keys-id todo-id)
+
+(parent-names monkey-wrench-eid)
+
+(db/remove-parent conn monkey-wrench-eid todo-id)
+
+(parent-names monkey-wrench-eid)
+
+(db/destroy conn monkey-wrench-eid)
 
