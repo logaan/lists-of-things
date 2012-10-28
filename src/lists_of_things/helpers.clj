@@ -72,6 +72,12 @@
      [:body
       [:div#browse.container
        [:h1 (:thing/name thing)]
+       [:h3 "Edit"]
+       [:form#edit-thing {:action (thing-path thing) :method "POST"}
+        [:input {:type "hidden" :name "_method" :value "PUT"}]
+        [:input {:type "hidden" :name "old-name" :value (:thing/name thing)}]
+        [:input {:name "new-name" :value (:thing/name thing)}]
+        [:input {:type "submit"}]]
        [:ul#parents
         (if (zero? (count (:thing/_children thing)))
           [:li [:a {:href "/"} "Orphans"]]
