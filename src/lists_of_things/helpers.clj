@@ -82,6 +82,12 @@
        (new-thing-form (:db/id thing))]
       [:div#preview.container
        [:h2 (:thing/name thing)]
+       [:h3 "Edit"]
+       [:form#edit-thing {:action (thing-path thing) :method "POST"}
+        [:input {:type "hidden" :name "_method" :value "PUT"}]
+        [:input {:type "hidden" :name "old-name" :value (:thing/name thing)}]
+        [:input {:name "new-name" :value (:thing/name thing)}]
+        [:input {:type "submit"}]]
        [:ul
         (map content-item (:thing/content thing))]
        [:form#new-content {:action "/content" :method "POST"}

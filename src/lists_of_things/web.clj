@@ -39,11 +39,9 @@
     (lotsdb/destroy @conn (Long/parseLong id))
     (response/redirect (if (empty? parent-id) "/" (str "/things/" parent-id))))
   
-  (PUT "/things/:id" {{:keys [id parent]} :params}
-    (lotsdb/add-parent @conn id parent)
-    
-    (layout
-      [:h2 "added parent"]))
+  (PUT "/things/:id" {{:keys [id old-name new-name]} :params}
+    (lotsdb/edit-thing @conn (Long/parseLong id) old-name new-name)
+    (response/redirect (str "/things/" id)))
 
   (POST "/content" {{:keys [thing-id text]} :params}
     (lotsdb/create-content @conn (Long/parseLong thing-id) {:content/text text})
