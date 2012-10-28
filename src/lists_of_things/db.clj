@@ -15,6 +15,10 @@
     @(d/transact conn [(merge {:db/id id} thing)
                        [:db/add parent-id :thing/children id]])))
 
+(defn edit-thing [conn id old-name new-name]
+  @(d/transact conn [[:db/retract id :thing/name old-name]
+                     [:db/add     id :thing/name new-name]]))
+
 (defn create-content [conn thing-id content]
   (let [id (d/tempid :db.part/user)]
     @(d/transact conn [(merge {:db/id id} content)
