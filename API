@@ -1,3 +1,13 @@
+Think about the interface being seperate to the API. Have the interface be
+configurable in what it can be backed by. You set a base URL, or perhaps
+several. And lists of things becomes just one back end.
+
+Another back end could be maybe an MP3 collection. Or perhaps a filesystem. You
+could have optional parts of the interface like all of the modification stuff
+could dissapear.
+
+
+
 Host the api at
 
 http://api.listsofthings.com/
