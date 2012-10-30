@@ -51,7 +51,7 @@
   [:li
    [:p (:content/text content)]])
 
-(def not-found
+(def not-found-page
   (html [:h1 "Not found"]))
 
 (def editor-stylesheets

@@ -7,10 +7,10 @@
 
   :dependencies [[org.clojure/clojure "1.4.0"]
                  [com.datomic/datomic-free "0.8.3438"]
-                 [compojure "1.1.1"]
                  [hiccup "1.0.0"]
                  [midje "1.4.0"]
-                 [ring/ring-jetty-adapter "1.1.3"]]
+                 [ring "1.1.6"]
+                 [matchure "0.10.1"]]
   :dev-dependencies [[lein-marginalia "0.7.1"]
                      [com.stuartsierra/lazytest "1.2.3"]
                      [ring-mock "0.1.2"]]
