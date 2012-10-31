@@ -23,6 +23,10 @@
          (d/entity (db @conn))
          thing-page))
 
+  (GET "/search" {{:keys [query]} :params}
+    (let [results (lotsdb/entities (db @conn) lotsdb/search query)]
+      (search-results-page query results)))
+
   (POST "/things" {{:keys [parent-id name]} :params}
     (let [thing {:thing/name name}]
 

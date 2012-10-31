@@ -38,9 +38,9 @@
   @(d/transact conn [[:db/retract parent-id :thing/children child-id]]))
 
 ;; Helper
-(defn entities [db query]
+(defn entities [db query & params]
   (map (fn [[eid]] (d/entity db eid))
-       (q query db)))
+       (apply q (concat [query db] params))))
 
 (defn id-of-created [transaction]
   (first (vals (:tempids transaction))))

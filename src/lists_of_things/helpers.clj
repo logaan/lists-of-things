@@ -60,7 +60,7 @@
         "tab" "tabbar" "toolbar" "colormenubutton" "palette" "colorpalette"
         "editor/bubble" "editor/dialog" "editor/linkdialog" "editortoolbar"]))
 
-(defn thing-page [thing]
+(defn layout [& body]
   (html
     [:html
      [:head
@@ -70,31 +70,47 @@
       [:script {:type "text/javascript" :src "/js/main.js"}]
       [:script {:type "text/javascript"} "goog.require('hello')"]]
      [:body
-      [:div#browse.container
-       [:h1 (:thing/name thing)]
-       [:ul#parents
-        (if (zero? (count (:thing/_children thing)))
-          [:li [:a {:href "/"} "Orphans"]]
-          (map parent-item (:thing/_children thing)))
-        [:li.new [:a {:href "#"} [:em "Add"]]]]
-       [:table#children
-        (map (partial child-row thing) (:thing/children thing))]
-       (new-thing-form (:db/id thing))]
-      [:div#preview.container
-       [:h2 (:thing/name thing)]
-       [:h3 "Edit"]
-       [:form#edit-thing {:action (thing-path thing) :method "POST"}
-        [:input {:type "hidden" :name "_method" :value "PUT"}]
-        [:input {:type "hidden" :name "old-name" :value (:thing/name thing)}]
-        [:input {:name "new-name" :value (:thing/name thing)}]
-        [:input {:type "submit"}]]
-       [:ul
-        (map content-item (:thing/content thing))]
-       [:form#new-content {:action "/content" :method "POST"}
-        [:input {:type "hidden" :name "thing-id" :value (:db/id thing)}]
-        [:div#toolbar]
-        [:div#editMe]
-        [:input {:type "hidden" :id "fieldContents" :name "text"}]
-        [:input {:type "submit" :value "Create content"}]]]
-      [:script {:type "text/javascript"} "hello.setupEditor()"]]]))
+      [:form#search {:action "/search" :method "GET"}
+       [:input {:name "query" :placeholder "Search"}]]
+       body]]))
+
+(defn search-result [thing]
+  [:li
+   [:a {:href (thing-path thing)} (:thing/name thing)]])
+
+(defn search-results-page [query results]
+  (layout
+    [:h1 "Results for \"" query "\""]
+    [:ul#results
+     (map search-result results)]))
+
+(defn thing-page [thing]
+  (layout
+    [:div#browse.container
+     [:h1 (:thing/name thing)]
+     [:ul#parents
+      (if (zero? (count (:thing/_children thing)))
+        [:li [:a {:href "/"} "Orphans"]]
+        (map parent-item (:thing/_children thing)))
+      [:li.new [:a {:href "#"} [:em "Add"]]]]
+     [:table#children
+      (map (partial child-row thing) (:thing/children thing))]
+     (new-thing-form (:db/id thing))]
+    [:div#preview.container
+     [:h2 (:thing/name thing)]
+     [:h3 "Edit"]
+     [:form#edit-thing {:action (thing-path thing) :method "POST"}
+      [:input {:type "hidden" :name "_method" :value "PUT"}]
+      [:input {:type "hidden" :name "old-name" :value (:thing/name thing)}]
+      [:input {:name "new-name" :value (:thing/name thing)}]
+      [:input {:type "submit"}]]
+     [:ul
+      (map content-item (:thing/content thing))]
+     [:form#new-content {:action "/content" :method "POST"}
+      [:input {:type "hidden" :name "thing-id" :value (:db/id thing)}]
+      [:div#toolbar]
+      [:div#editMe]
+      [:input {:type "hidden" :id "fieldContents" :name "text"}]
+      [:input {:type "submit" :value "Create content"}]]]
+    [:script {:type "text/javascript"} "hello.setupEditor()"]))
 
