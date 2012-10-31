@@ -84,6 +84,61 @@
     [:ul#results
      (map search-result results)]))
 
+(defn preview-side [thing]
+  [:div#preview.container
+   [:h2 (:thing/name thing)]
+   [:h3 "Edit"]
+   [:form#edit-thing {:action (thing-path thing) :method "POST"}
+    [:input {:type "hidden" :name "_method" :value "PUT"}]
+    [:input {:type "hidden" :name "old-name" :value (:thing/name thing)}]
+    [:input {:name "new-name" :value (:thing/name thing)}]
+    [:input {:type "submit"}]]
+   [:ul
+    (map content-item (:thing/content thing))]
+   [:form#new-content {:action "/content" :method "POST"}
+    [:input {:type "hidden" :name "thing-id" :value (:db/id thing)}]
+    [:div#toolbar]
+    [:div#editMe]
+    [:input {:type "hidden" :id "fieldContents" :name "text"}]
+    [:input {:type "submit" :value "Create content"}]]
+   [:script {:type "text/javascript"} "hello.setupEditor()"]])
+
+(def introduction
+  [:div#introduction
+   [:h2 "Welcome to lists of things"]
+   [:p "This app is meant to store all your lists. Your shopping lists, recipes,
+       movies you want to see, restaurants you want to visit, things you need to
+       do (or have done), even what stock your business has or where all your cards
+       are on your project wall."]
+   [:p "Here are the rules:"]
+   [:ol
+    [:li "Things can many children"]
+    [:li "Things can have many parents"]
+    [:li "Things can be in many places at once"]
+    [:li "Things can have content"]]
+   [:p "And here's an example of those rules put to use"]
+    [:ul
+     [:li "Recipes"
+      [:ul
+       [:li "Paella"]
+       [:li "Bacon and Eggs"]
+       [:li "Chicken soup"]]]
+     [:li "Moves to see"
+      [:ul
+       [:li "Brave"]
+       [:li "FernGully"]]]
+     [:li "Tasks"
+      [:ul
+       [:li "Todo"
+        [:ul
+         [:li "Pump bike tyres"]
+         [:li "Wash dishes"]
+         [:li "Pay back mike"]]]
+       [:li "Done"
+        [:ul
+         [:li "Feed the cat"]
+         [:li "Visit the bank"]]]]]]])
+
 (defn thing-page [thing]
   (layout
     [:div#browse.container
@@ -96,21 +151,7 @@
      [:table#children
       (map (partial child-row thing) (:thing/children thing))]
      (new-thing-form (:db/id thing))]
-    [:div#preview.container
-     [:h2 (:thing/name thing)]
-     [:h3 "Edit"]
-     [:form#edit-thing {:action (thing-path thing) :method "POST"}
-      [:input {:type "hidden" :name "_method" :value "PUT"}]
-      [:input {:type "hidden" :name "old-name" :value (:thing/name thing)}]
-      [:input {:name "new-name" :value (:thing/name thing)}]
-      [:input {:type "submit"}]]
-     [:ul
-      (map content-item (:thing/content thing))]
-     [:form#new-content {:action "/content" :method "POST"}
-      [:input {:type "hidden" :name "thing-id" :value (:db/id thing)}]
-      [:div#toolbar]
-      [:div#editMe]
-      [:input {:type "hidden" :id "fieldContents" :name "text"}]
-      [:input {:type "submit" :value "Create content"}]]]
-    [:script {:type "text/javascript"} "hello.setupEditor()"]))
+    (if (:db/id thing)
+      (preview-side thing)
+      introduction)))
 
