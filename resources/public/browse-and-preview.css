@@ -1,9 +1,9 @@
 body { margin: 0; padding: 0; }
 h1 { font-size: 3em; margin: 0 0 0.4em 0; }
 
-.container { width: auto; display: inline; margin: 1em; }
-#browse { float: left; min-width: 40%; }
-#preview { float: left; max-width: 50%; }
+.container { width: 45%; display: inline-block; margin: 1em;
+float: left; }
+#introduction { border: 1px solid black; padding: 1em; }
 
 #parents { padding: 0px; font-size: small; }
 #parents li { float: left; display: inline; margin: -1em 1em 0 0; }

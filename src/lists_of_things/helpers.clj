@@ -104,7 +104,7 @@
    [:script {:type "text/javascript"} "hello.setupEditor()"]])
 
 (def introduction
-  [:div#introduction
+  [:div#introduction.container
    [:h2 "Welcome to lists of things"]
    [:p "This app is meant to store all your lists. Your shopping lists, recipes,
        movies you want to see, restaurants you want to visit, things you need to
@@ -116,28 +116,30 @@
     [:li "Things can have many parents"]
     [:li "Things can be in many places at once"]
     [:li "Things can have content"]]
-   [:p "And here's an example of those rules put to use"]
-    [:ul
-     [:li "Recipes"
-      [:ul
-       [:li "Paella"]
-       [:li "Bacon and Eggs"]
-       [:li "Chicken soup"]]]
-     [:li "Moves to see"
-      [:ul
-       [:li "Brave"]
-       [:li "FernGully"]]]
-     [:li "Tasks"
-      [:ul
-       [:li "Todo"
-        [:ul
-         [:li "Pump bike tyres"]
-         [:li "Wash dishes"]
-         [:li "Pay back mike"]]]
-       [:li "Done"
-        [:ul
-         [:li "Feed the cat"]
-         [:li "Visit the bank"]]]]]]])
+   [:p "And here's an example of those rules put to use:"]
+   [:ul
+    [:li "Recipes"
+     [:ul
+      [:li "Paella"]
+      [:li "Bacon and Eggs"]
+      [:li "Chicken soup"]]]
+    [:li "Moves to see"
+     [:ul
+      [:li "Brave"]
+      [:li "FernGully"]]]
+    [:li "Tasks"
+     [:ul
+      [:li "Todo"
+       [:ul
+        [:li "Pump bike tyres"]
+        [:li "Wash dishes"]
+        [:li "Pay back mike"]]]
+      [:li "Done"
+       [:ul
+        [:li "Feed the cat"]
+        [:li "Visit the bank"]]]]]]
+   [:p "As you can see it's pretty flexible and light weight. Give it a
+       try."]])
 
 (defn thing-page [thing]
   (layout
