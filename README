@@ -20,7 +20,7 @@ Replaces reminders
   x Create
   x List orphans
   x Delete thing
-  - Edit thing
+  x Edit thing
 
 Replaces emailing myself
 - Things
@@ -49,6 +49,7 @@ Replaces jira
 - Open multiple listings
 - 'Sort' things between listings
 - Simulates comments
+x Search
 
 Explainations
 - Introduce
