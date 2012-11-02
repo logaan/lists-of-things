@@ -13,6 +13,7 @@
 
 (def conn (atom nil))
 
+
 (defroutes app-routes
   (GET "/" []
     (let [children (lotsdb/entities (db @conn) lotsdb/orphans)]
@@ -66,10 +67,15 @@
 (defn make-connection! []
   (reset! conn (seed/seed "datomic:free://localhost:4334/lists_of_things")))
 
-(defn app [request]
-  (if (not @conn)
-    (make-connection!))
-  ((handler/site app-routes) request))
+(defn wrap-connection [handler]
+  (fn [request]
+    (if (not @conn)
+      (make-connection!))
+    (handler request)))
+
+(def app
+  (-> (handler/site app-routes)
+      wrap-connection))
 
 (defn -main [& args]
   (run-jetty app {:port 3000}))
