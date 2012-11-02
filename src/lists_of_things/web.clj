@@ -76,14 +76,16 @@
 (defn wrap-cache-control [handler]
   (fn [request]
     (let [response (handler request)]
-      (assoc-in response [:headers "Cache-Control"]
-                "172800"))))
+      (if (re-matches #"text/html" (get-in response [:headers "Content-Type"])) response
+        (assoc-in response [:headers "Cache-Control"]
+                  "172800")))))
 
 (defn wrap-expires [handler]
   (fn [request]
     (let [response (handler request)]
-      (assoc-in response [:headers "Expires"]
-                "Fri, 02 Dec 2012 15:05:49 GMT"))))
+      (if (re-matches #"text/html" (get-in response [:headers "Content-Type"])) response
+        (assoc-in response [:headers "Expires"]
+                  "Fri, 02 Dec 2012 15:05:49 GMT")))))
 
 
 (defn wrap-printer [handler]

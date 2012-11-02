@@ -16,7 +16,9 @@
   (str "/things/" (:db/id thing)))
 
 (defn link-to-thing [thing]
-  [:a {:href (thing-path thing)} (:thing/name thing)])
+  [:a {:href (thing-path thing)}
+   (str (:thing/name thing)
+        " ( " (count (:thing/children thing)) " )")])
 
 (defn new-thing-form
   ([]          (new-thing-form nil))
