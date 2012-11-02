@@ -73,17 +73,21 @@
       (make-connection!))
     (handler request)))
 
+(defn cacheable? [response]
+  (and (= (:status response) 200)
+       (re-matches #"text/html" (get-in response [:headers "Content-Type"]))))
+
 (defn wrap-cache-control [handler]
   (fn [request]
     (let [response (handler request)]
-      (if (re-matches #"text/html" (get-in response [:headers "Content-Type"])) response
+      (if (cacheable? response) response
         (assoc-in response [:headers "Cache-Control"]
                   "172800")))))
 
 (defn wrap-expires [handler]
   (fn [request]
     (let [response (handler request)]
-      (if (re-matches #"text/html" (get-in response [:headers "Content-Type"])) response
+      (if (cacheable? response) response
         (assoc-in response [:headers "Expires"]
                   "Fri, 02 Dec 2012 15:05:49 GMT")))))
 
