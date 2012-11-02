@@ -54,19 +54,11 @@
 (def not-found
   (html [:h1 "Not found"]))
 
-(def editor-stylesheets
-  (map #(vector :link {:rel "stylesheet" :href (str "/css/editor/" % ".css")})
-       ["demo" "button" "dialog" "linkbutton" "menu" "menuitem" "menuseparator"
-        "tab" "tabbar" "toolbar" "colormenubutton" "palette" "colorpalette"
-        "editor/bubble" "editor/dialog" "editor/linkdialog" "editortoolbar"]))
-
 (defn layout [& body]
   (html
     [:html
      [:head
-      editor-stylesheets
-      [:link {:rel "stylesheet" :type "text/css" :href
-              "/browse-and-preview.css"}]
+      [:link {:rel "stylesheet" :type "text/css" :href "/styles.css"}]
       [:script {:type "text/javascript" :src "/js/main.js"}]
       [:script {:type "text/javascript"} "goog.require('hello')"]]
      [:body

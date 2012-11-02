@@ -4,6 +4,7 @@
   (:use compojure.core
         lists-of-things.helpers
         ring.adapter.jetty
+        [ring.middleware gzip]
         [datomic.api :only [db q] :as d])
   (:require [compojure.handler :as handler]
             [compojure.route   :as route]
@@ -12,7 +13,6 @@
             [ring.util.response   :as response]))
 
 (def conn (atom nil))
-
 
 (defroutes app-routes
   (GET "/" []
@@ -73,9 +73,32 @@
       (make-connection!))
     (handler request)))
 
+(defn wrap-cache-control [handler]
+  (fn [request]
+    (let [response (handler request)]
+      (assoc-in response [:headers "Cache-Control"]
+                "172800"))))
+
+(defn wrap-expires [handler]
+  (fn [request]
+    (let [response (handler request)]
+      (assoc-in response [:headers "Expires"]
+                "Fri, 02 Dec 2012 15:05:49 GMT"))))
+
+
+(defn wrap-printer [handler]
+  (fn [request]
+    (println "Request: " request)
+    (let [response (handler request)]
+      (println "Response: " response)
+      response)))
+
 (def app
   (-> (handler/site app-routes)
-      wrap-connection))
+    wrap-cache-control
+    wrap-expires
+    wrap-gzip
+    wrap-connection))
 
 (defn -main [& args]
   (run-jetty app {:port 3000}))

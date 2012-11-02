@@ -10,7 +10,8 @@
                  [compojure "1.1.1"]
                  [hiccup "1.0.0"]
                  [midje "1.4.0"]
-                 [ring/ring-jetty-adapter "1.1.3"]]
+                 [ring/ring-jetty-adapter "1.1.3"]
+                 [org.clojars.mikejs/ring-gzip-middleware "0.1.0-SNAPSHOT"]]
   :dev-dependencies [[lein-marginalia "0.7.1"]
                      [com.stuartsierra/lazytest "1.2.3"]
                      [ring-mock "0.1.2"]]
@@ -22,5 +23,6 @@
 
   :cljsbuild {
     :builds [{:source-path "src-cljs"
-              :compiler {:optimizations :advanced :output-to "resources/public/js/main.js"}}]})
+              :compiler {:optimizations :advanced
+                         :output-to "resources/public/js/main.js"}}]})
 
