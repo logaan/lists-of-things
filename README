@@ -7,6 +7,10 @@ To start the transactor run:
 
   ./bin/transactor config/samples/free-transactor-template.properties
 
+Or checkout a copy from
+http://downloads.datomic.com/0.8.3438/datomic-free-0.8.3438.zip into the same
+directory as lists-of-things is checked out into.
+
 FIXME: write description
 
 ## Usage
