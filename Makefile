@@ -16,6 +16,7 @@ combine-css:
 	rm ./resources/public/styles.css
 	cat ./resources/public/browse-and-preview.css >> ./resources/public/styles.css
 	cat ./resources/public/css/common.css >> ./resources/public/styles.css
+	cat ./resources/public/css/autocomplete.css >> ./resources/public/styles.css
 	cat ./resources/public/css/editor/button.css >> ./resources/public/styles.css
 	cat ./resources/public/css/editor/colormenubutton.css >> ./resources/public/styles.css
 	cat ./resources/public/css/editor/colorpalette.css >> ./resources/public/styles.css

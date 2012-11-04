@@ -1,3 +1,4 @@
+; NOTE: This totes needs renaming
 (ns hello
   (:require [goog.dom :as dom]
             [goog.editor.Command :as Command]

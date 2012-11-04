@@ -61,8 +61,7 @@
     [:html
      [:head
       [:link {:rel "stylesheet" :type "text/css" :href "/styles.css"}]
-      [:script {:type "text/javascript" :src "/js/main.js"}]
-      [:script {:type "text/javascript"} "goog.require('hello')"]]
+      [:script {:type "text/javascript" :src "/js/main.js"}]]
      [:body
       [:form#search {:action "/search" :method "GET"}
        [:input {:name "query" :placeholder "Search"}]]
@@ -81,12 +80,17 @@
 (defn preview-side [thing]
   [:div#preview.container
    [:h2 (:thing/name thing)]
+   [:h3 "Add parent"]
+   [:form#add-parent {:action (thing-path thing) :method "Post"}
+    [:input {:type "text" :name "parent-name" :id "parent-name"
+             :placeholder "Parent's Name"}]
+    [:input {:type "submit" :value "Add"}]]
    [:h3 "Edit"]
    [:form#edit-thing {:action (thing-path thing) :method "POST"}
     [:input {:type "hidden" :name "_method" :value "PUT"}]
     [:input {:type "hidden" :name "old-name" :value (:thing/name thing)}]
     [:input {:name "new-name" :value (:thing/name thing)}]
-    [:input {:type "submit"}]]
+    [:input {:type "submit" :value "Edit"}]]
    [:ul
     (map content-item (:thing/content thing))]
    [:form#new-content {:action "/content" :method "POST"}
@@ -95,7 +99,7 @@
     [:div#editMe]
     [:input {:type "hidden" :id "fieldContents" :name "text"}]
     [:input {:type "submit" :value "Create content"}]]
-   [:script {:type "text/javascript"} "hello.setupEditor()"]])
+   [:script {:type "text/javascript"} "hello.setupEditor(); parentadd.setupAddParentInput();"]])
 
 (def introduction
   [:div#introduction.container
@@ -142,8 +146,7 @@
      [:ul#parents
       (if (zero? (count (:thing/_children thing)))
         [:li [:a {:href "/"} "Orphans"]]
-        (map parent-item (:thing/_children thing)))
-      [:li.new [:a {:href "#"} [:em "Add"]]]]
+        (map parent-item (:thing/_children thing)))]
      [:table#children
       (map (partial child-row thing) (:thing/children thing))]
      (new-thing-form (:db/id thing))]

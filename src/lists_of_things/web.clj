@@ -101,9 +101,9 @@
 
 (def app
   (-> (handler/site app-routes)
-    wrap-cache-control
-    wrap-expires
-    wrap-gzip
+    ; wrap-cache-control
+    ; wrap-expires
+    ; wrap-gzip
     wrap-connection))
 
 (defn -main [& args]
