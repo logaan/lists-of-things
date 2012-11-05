@@ -1,3 +1,5 @@
-["Foo",
- "Bar",
- "Baz"]
+[
+  {name: "Foo"},
+  {name:"Bar"},
+  {name:"Baz"}
+]
