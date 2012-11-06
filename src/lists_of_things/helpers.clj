@@ -60,6 +60,10 @@
   (html
     [:html
      [:head
+      [:script {:src "//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"}]
+      [:script {:src "/scripts/advanced.js"}]
+      [:script {:src "/scripts/wysihtml5-0.3.0.min.js"}]
+      [:script {:src "/scripts/mine.js"}]
       [:link {:rel "stylesheet" :type "text/css" :href "/styles.css"}]]
      [:body
       [:form#search {:action "/search" :method "GET"}
@@ -94,7 +98,10 @@
     (map content-item (:thing/content thing))]
    [:form#new-content {:action "/content" :method "POST"}
     [:input {:type "hidden" :name "thing-id" :value (:db/id thing)}]
-    [:textarea {:name "text"}]
+    [:div#wysihtml5-toolbar {:style "display: none;"}
+     [:a {:data-wysihtml5-command "bold"} "bold"]
+     [:a {:data-wysihtml5-command "italic"} "italic"]]
+    [:textarea#wysihtml5-textarea {:name "text"}]
     [:input {:type "submit" :value "Create content"}]]])
 
 (def introduction
