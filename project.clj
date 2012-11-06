@@ -16,13 +16,7 @@
                      [com.stuartsierra/lazytest "1.2.3"]
                      [ring-mock "0.1.2"]]
 
-  :plugins [[lein-ring "0.7.1"]
-            [lein-cljsbuild "0.1.9"]]
+  :plugins [[lein-ring "0.7.1"]]
 
-  :repositories {"stuartsierra-releases" "http://stuartsierra.com/maven2"}
-
-  :cljsbuild {
-    :builds [{:source-path "src-cljs"
-              :compiler {:optimizations :advanced
-                         :output-to "resources/public/js/main.js"}}]})
+  :repositories {"stuartsierra-releases" "http://stuartsierra.com/maven2"})
 

@@ -60,8 +60,7 @@
   (html
     [:html
      [:head
-      [:link {:rel "stylesheet" :type "text/css" :href "/styles.css"}]
-      [:script {:type "text/javascript" :src "/js/main.js"}]]
+      [:link {:rel "stylesheet" :type "text/css" :href "/styles.css"}]]
      [:body
       [:form#search {:action "/search" :method "GET"}
        [:input {:name "query" :placeholder "Search"}]]
@@ -95,11 +94,8 @@
     (map content-item (:thing/content thing))]
    [:form#new-content {:action "/content" :method "POST"}
     [:input {:type "hidden" :name "thing-id" :value (:db/id thing)}]
-    [:div#toolbar]
-    [:div#editMe]
-    [:input {:type "hidden" :id "fieldContents" :name "text"}]
-    [:input {:type "submit" :value "Create content"}]]
-   [:script {:type "text/javascript"} "hello.setupEditor(); parentadd.setupAddParentInput();"]])
+    [:textarea {:name "text"}]
+    [:input {:type "submit" :value "Create content"}]]])
 
 (def introduction
   [:div#introduction.container
