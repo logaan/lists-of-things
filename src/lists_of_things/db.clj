@@ -85,3 +85,4 @@
     :where [?e :thing/name ?name]
            [descendant ?e ?d]])
 
+

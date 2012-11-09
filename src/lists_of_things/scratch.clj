@@ -4,6 +4,7 @@
 
 (ns lists-of-things.scratch
   (:use [datomic.api :only [q] :as datomic]
+        midje.sweet
         clojure.pprint)
   (:require [lists-of-things.helpers :as helpers]
             [lists-of-things.db :as db]))

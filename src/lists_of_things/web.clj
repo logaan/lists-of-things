@@ -4,6 +4,7 @@
   (:use compojure.core
         lists-of-things.helpers
         ring.adapter.jetty
+        cheshire.core
         [ring.middleware gzip]
         [datomic.api :only [db q] :as d])
   (:require [compojure.handler :as handler]
@@ -27,6 +28,17 @@
   (GET "/search" {{:keys [query]} :params}
     (let [results (lotsdb/entities (db @conn) lotsdb/search query)]
       (search-results-page query results)))
+
+  (GET "/results" {{:keys [term]} :params}
+     (let [results (lotsdb/entities (db @conn) lotsdb/search (str term "*"))
+          formatted (map (fn [r] {"id"    (:db/id r)
+                                  "label" (:thing/name r)
+                                  "value" (:thing/name r)}) results)]
+     (generate-string formatted)))
+  
+  (POST "/things/:id/add-parent" {{:keys [parent-id id]} :params}
+    (lotsdb/add-parent @conn (Long/parseLong id) (Long/parseLong parent-id)) 
+    (response/redirect (str "/things/" id)))
 
   (POST "/things" {{:keys [parent-id name]} :params}
     (let [thing {:thing/name name}]

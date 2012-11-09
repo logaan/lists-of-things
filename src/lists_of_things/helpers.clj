@@ -60,11 +60,13 @@
   (html
     [:html
      [:head
-      [:script {:src "//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"}]
+      [:link {:rel "stylesheet" :type "text/css" :href "http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css"}] 
+      [:link {:rel "stylesheet" :type "text/css" :href "/styles.css"}] 
+      [:script {:src "http://code.jquery.com/jquery-1.8.2.js"}]
+      [:script {:src "http://code.jquery.com/ui/1.9.1/jquery-ui.js"}]
       [:script {:src "/scripts/advanced.js"}]
       [:script {:src "/scripts/wysihtml5-0.3.0.min.js"}]
-      [:script {:src "/scripts/mine.js"}]
-      [:link {:rel "stylesheet" :type "text/css" :href "/styles.css"}]]
+      [:script {:src "/scripts/mine.js"}]]
      [:body
       [:form#search {:action "/search" :method "GET"}
        [:input {:name "query" :placeholder "Search"}]]
@@ -84,7 +86,8 @@
   [:div#preview.container
    [:h2 (:thing/name thing)]
    [:h3 "Add parent"]
-   [:form#add-parent {:action (thing-path thing) :method "Post"}
+   [:form#add-parent {:action (str (thing-path thing) "/add-parent") :method "Post"}
+    [:input {:type "hidden" :name "parent-id" :id "parent-id"}]
     [:input {:type "text" :name "parent-name" :id "parent-name"
              :placeholder "Parent's Name"}]
     [:input {:type "submit" :value "Add"}]]
