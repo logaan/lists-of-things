@@ -25,12 +25,14 @@
   ([parent-id] [:form {:action "/things" :method "POST"}
                 [:input {:type "hidden" :name "parent-id" :value parent-id}]
                 [:p
-                 [:input#name {:name "name" :placeholder "New thing"}]
+                 [:input#name {:name "name" :placeholder "New thing" :autofocus true}]
                  [:input {:type "submit" :value "Create"}]]]))
 
-(defn parent-item [parent]
+(defn parent-item [thing parent]
   [:li (link-to-thing parent)
-   " ( " [:a {:href "#"} "Remove"] " ) "])
+   [:form {:action (str (thing-path thing) "/remove-parent") :method "POST"}
+     [:input {:type "hidden" :name "parent-id" :value (:db/id parent)}]
+     [:input {:type "Submit" :value "Remove"}]]])
 
 (defn parents-sans-one [child parent]
   (filter #(not (= (:db/id %) (:db/id parent)))
@@ -42,7 +44,7 @@
    [:td
     [:h3 (link-to-thing child)]
     [:ul#parents
-     (map parent-item (parents-sans-one child parent))]]
+     (map (partial parent-item child) (parents-sans-one child parent))]]
    [:td
     [:form {:action (thing-path child) :method "POST"}
      [:input {:type "hidden" :name "_method" :value "DELETE"}]
@@ -152,7 +154,7 @@
      [:ul#parents
       (if (zero? (count (:thing/_children thing)))
         [:li [:a {:href "/"} "Orphans"]]
-        (map parent-item (:thing/_children thing)))]
+        (map (partial parent-item thing) (:thing/_children thing)))]
      [:table#children
       (map (partial child-row thing) (:thing/children thing))]
      (new-thing-form (:db/id thing))]

@@ -39,6 +39,10 @@
   (POST "/things/:id/add-parent" {{:keys [parent-id id]} :params}
     (lotsdb/add-parent @conn (Long/parseLong id) (Long/parseLong parent-id)) 
     (response/redirect (str "/things/" id)))
+  
+  (POST "/things/:id/remove-parent" {{:keys [parent-id id]} :params}
+    (lotsdb/remove-parent @conn (Long/parseLong id) (Long/parseLong parent-id)) 
+    (response/redirect (str "/things/" id)))
 
   (POST "/things" {{:keys [parent-id name]} :params}
     (let [thing {:thing/name name}]

@@ -16,6 +16,7 @@
 
 (defn things-to-digraph [things]
   (str "digraph { \n"
+       "rankdir=\"LR\""
        (str/join "\n" (map dotify things))
        " }"))
 
@@ -32,4 +33,4 @@
             [?a :db/ident ?i]]
    (db @conn))
 
-;(spit "/Users/logaan/Desktop/lots.dot" (draw-graph-of-all-things))
+(spit "/Users/logaan/Desktop/lots.dot" (draw-graph-of-all-things))
