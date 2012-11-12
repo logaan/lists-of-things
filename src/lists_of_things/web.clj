@@ -15,10 +15,22 @@
 
 (def conn (atom nil))
 
+(defn format-for-output [thing]
+  {:id       (:db/id thing)
+   :name     (:thing/name thing)
+   :children (:thing/children thing)
+   :parents  (:thing/_children thing)})
+
 (defroutes app-routes
   (GET "/" []
     (let [children (lotsdb/entities (db @conn) lotsdb/orphans)]
       (thing-page {:thing/name "Orphans" :thing/children children})))
+
+  (GET "/orphans.js" {{:keys [callback]} :params} 
+    (let [children (lotsdb/entities (db @conn) lotsdb/orphans)
+          formatted (map format-for-output children)
+          json (generate-string {:name "Orphans" :children formatted})]
+      (str callback "(" json ")")))
 
   (GET "/things/:id" [id]
     (->> (Long/parseLong id)
@@ -115,11 +127,17 @@
       (println "Response: " response)
       response)))
 
+(defn wrap-access-control [handler]
+  (fn [request]
+    (let [response (handler request)]
+      (assoc-in response [:headers "Access-Control-Allow-Origin"] "*"))))
+
 (def app
   (-> (handler/site app-routes)
     ; wrap-cache-control
     ; wrap-expires
     ; wrap-gzip
+    wrap-access-control
     wrap-connection))
 
 (defn -main [& args]
