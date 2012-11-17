@@ -37,7 +37,7 @@
       (str callback "(" json ")")))
 
   ; Children aren't being correctly formatted
-  (GET "/things/:id" {{:keys [id callback]} :params} 
+  (GET "/thing/:id" {{:keys [id callback]} :params} 
     (str callback "("
       (->> (Long/parseLong id)
            (d/entity (db @conn))
@@ -46,10 +46,10 @@
            generate-string)
          ")"))
 
-  ; (GET "/things/:id" [id]
-  ;   (->> (Long/parseLong id)
-  ;        (d/entity (db @conn))
-  ;        thing-page))
+  (GET "/things/:id" [id]
+    (->> (Long/parseLong id)
+         (d/entity (db @conn))
+         thing-page))
 
   (GET "/search" {{:keys [query]} :params}
     (let [results (lotsdb/entities (db @conn) lotsdb/search query)]
