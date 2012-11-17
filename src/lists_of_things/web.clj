@@ -21,6 +21,10 @@
    :children (:thing/children thing)
    :parents  (:thing/_children thing)})
 
+(defn format-children [thing]
+  (update-in thing [:children]
+             (partial map format-for-output)))
+
 (defroutes app-routes
   (GET "/" []
     (let [children (lotsdb/entities (db @conn) lotsdb/orphans)]
@@ -32,10 +36,20 @@
           json (generate-string {:name "Orphans" :children formatted})]
       (str callback "(" json ")")))
 
-  (GET "/things/:id" [id]
-    (->> (Long/parseLong id)
-         (d/entity (db @conn))
-         thing-page))
+  ; Children aren't being correctly formatted
+  (GET "/things/:id" {{:keys [id callback]} :params} 
+    (str callback "("
+      (->> (Long/parseLong id)
+           (d/entity (db @conn))
+           format-for-output
+           format-children
+           generate-string)
+         ")"))
+
+  ; (GET "/things/:id" [id]
+  ;   (->> (Long/parseLong id)
+  ;        (d/entity (db @conn))
+  ;        thing-page))
 
   (GET "/search" {{:keys [query]} :params}
     (let [results (lotsdb/entities (db @conn) lotsdb/search query)]

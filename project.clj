@@ -14,10 +14,7 @@
                  [ring/ring-jetty-adapter "1.1.3"]
                  [org.clojars.mikejs/ring-gzip-middleware "0.1.0-SNAPSHOT"]]
   :dev-dependencies [[lein-marginalia "0.7.1"]
-                     [com.stuartsierra/lazytest "1.2.3"]
                      [ring-mock "0.1.2"]]
 
-  :plugins [[lein-ring "0.7.1"]]
-
-  :repositories {"stuartsierra-releases" "http://stuartsierra.com/maven2"})
+  :plugins [[lein-ring "0.7.1"]])
 
