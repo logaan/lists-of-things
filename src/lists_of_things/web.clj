@@ -15,36 +15,42 @@
 
 (def conn (atom nil))
 
-(defn format-for-output [thing]
+(defn rename [thing]
+  {:id       (:db/id thing)
+   :name     (:thing/name thing)})
+
+(defn rename-with-siblings [thing]
   {:id       (:db/id thing)
    :name     (:thing/name thing)
-   :children (:thing/children thing)
-   :parents  (:thing/_children thing)})
+   :parents  (map rename (:thing/_children thing))})
 
-(defn format-children [thing]
-  (update-in thing [:children]
-             (partial map format-for-output)))
+(defn rename-with-relations [thing]
+  {:id       (:db/id thing)
+   :name     (:thing/name thing)
+   :children (map rename-with-siblings (:thing/children thing))
+   :parents  (map rename (:thing/_children thing))})
+
+(defn jsonp [callback json]
+  (str callback "(" json ")"))
 
 (defroutes app-routes
   (GET "/" []
     (let [children (lotsdb/entities (db @conn) lotsdb/orphans)]
       (thing-page {:thing/name "Orphans" :thing/children children})))
 
-  (GET "/orphans.js" {{:keys [callback]} :params} 
+  (GET "/orphans.js" {{:keys [callback]} :params}
     (let [children (lotsdb/entities (db @conn) lotsdb/orphans)
           formatted (map format-for-output children)
           json (generate-string {:name "Orphans" :children formatted})]
       (str callback "(" json ")")))
 
   ; Children aren't being correctly formatted
-  (GET "/thing/:id" {{:keys [id callback]} :params} 
-    (str callback "("
+  (GET "/thing/:id" {{:keys [id callback]} :params}
       (->> (Long/parseLong id)
            (d/entity (db @conn))
-           format-for-output
-           format-children
-           generate-string)
-         ")"))
+           rename-with-relations
+           generate-string
+           (jsonp callback)))
 
   (GET "/things/:id" [id]
     (->> (Long/parseLong id)
@@ -61,13 +67,13 @@
                                   "label" (:thing/name r)
                                   "value" (:thing/name r)}) results)]
      (generate-string formatted)))
-  
+
   (POST "/things/:id/add-parent" {{:keys [parent-id id]} :params}
-    (lotsdb/add-parent @conn (Long/parseLong id) (Long/parseLong parent-id)) 
+    (lotsdb/add-parent @conn (Long/parseLong id) (Long/parseLong parent-id))
     (response/redirect (str "/things/" id)))
-  
+
   (POST "/things/:id/remove-parent" {{:keys [parent-id id]} :params}
-    (lotsdb/remove-parent @conn (Long/parseLong id) (Long/parseLong parent-id)) 
+    (lotsdb/remove-parent @conn (Long/parseLong id) (Long/parseLong parent-id))
     (response/redirect (str "/things/" id)))
 
   (POST "/things" {{:keys [parent-id name]} :params}
@@ -85,7 +91,7 @@
   (DELETE "/things/:id" {{:keys [parent-id id]} :params}
     (lotsdb/destroy @conn (Long/parseLong id))
     (response/redirect (if (empty? parent-id) "/" (str "/things/" parent-id))))
-  
+
   (PUT "/things/:id" {{:keys [id old-name new-name]} :params}
     (lotsdb/edit-thing @conn (Long/parseLong id) old-name new-name)
     (response/redirect (str "/things/" id)))
