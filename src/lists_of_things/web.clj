@@ -40,17 +40,21 @@
 
   (GET "/orphans.js" {{:keys [callback]} :params}
     (let [children (lotsdb/entities (db @conn) lotsdb/orphans)
-          formatted (map format-for-output children)
+          formatted (map rename-with-relations children)
           json (generate-string {:name "Orphans" :children formatted})]
-      (str callback "(" json ")")))
+      {:status  200
+       :headers {"Content-Type" "application/json"}
+       :body    (jsonp callback json)}))
 
   ; Children aren't being correctly formatted
   (GET "/thing/:id" {{:keys [id callback]} :params}
-      (->> (Long/parseLong id)
-           (d/entity (db @conn))
-           rename-with-relations
-           generate-string
-           (jsonp callback)))
+      {:status  200
+       :headers {"Content-Type" "application/json"}
+       :body    (->> (Long/parseLong id)
+                     (d/entity (db @conn))
+                     rename-with-relations
+                     generate-string
+                     (jsonp callback))})
 
   (GET "/things/:id" [id]
     (->> (Long/parseLong id)
