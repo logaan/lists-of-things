@@ -31,30 +31,36 @@
    :parents  (map rename (:thing/_children thing))})
 
 (defn jsonp [callback json]
-  (str callback "(" json ")"))
+  (str callback "(" (generate-string json) ")"))
 
-(defroutes app-routes
-  (GET "/" []
-    (let [children (lotsdb/entities (db @conn) lotsdb/orphans)]
-      (thing-page {:thing/name "Orphans" :thing/children children})))
-
-  (GET "/orphans.js" {{:keys [callback]} :params}
+(defroutes api-routes
+  (GET "/orphans" {{:keys [callback]} :params}
     (let [children (lotsdb/entities (db @conn) lotsdb/orphans)
           formatted (map rename-with-relations children)
-          json (generate-string {:name "Orphans" :children formatted})]
+          orphan {:name "Orphans" :children formatted}]
       {:status  200
        :headers {"Content-Type" "application/json"}
-       :body    (jsonp callback json)}))
+       :body    (jsonp callback orphan)}))
 
-  ; Children aren't being correctly formatted
-  (GET "/thing/:id" {{:keys [id callback]} :params}
+  (GET "/things/:id" [id callback]
       {:status  200
        :headers {"Content-Type" "application/json"}
        :body    (->> (Long/parseLong id)
                      (d/entity (db @conn))
                      rename-with-relations
-                     generate-string
                      (jsonp callback))})
+
+  (GET "/search" [query callback]
+   (let [results (lotsdb/entities (db @conn) lotsdb/search query)
+         tidied  (mapv rename-with-relations results)]
+      (jsonp callback tidied))))
+
+(defroutes app-routes
+  (context "/api" [] api-routes)
+
+  (GET "/" []
+    (let [children (lotsdb/entities (db @conn) lotsdb/orphans)]
+      (thing-page {:thing/name "Orphans" :thing/children children})))
 
   (GET "/things/:id" [id]
     (->> (Long/parseLong id)
@@ -143,7 +149,6 @@
         (assoc-in response [:headers "Expires"]
                   "Fri, 02 Dec 2012 15:05:49 GMT")))))
 
-
 (defn wrap-printer [handler]
   (fn [request]
     (println "Request: " request)
@@ -156,14 +161,21 @@
     (let [response (handler request)]
       (assoc-in response [:headers "Access-Control-Allow-Origin"] "*"))))
 
-(def app
-  (-> (handler/site app-routes)
-    ; wrap-cache-control
-    ; wrap-expires
-    ; wrap-gzip
-    wrap-access-control
-    wrap-connection))
+(def app (->
+  app-routes
+  handler/site
+  ; wrap-cache-control
+  ; wrap-expires
+  ; wrap-gzip
+  wrap-access-control
+  wrap-connection))
 
 (defn -main [& args]
   (run-jetty app {:port 3000}))
+
+(def request
+  {:request-method :get
+   :uri "/api/search"
+   :headers {}
+   :params {:callback "foo" :query "Brave"}})
 
