@@ -2,7 +2,7 @@
   (:use hiccup.core))
 
 (defn layout [& body]
-  (html 
+  (html
     [:html
       [:head
         [:title "Lists of things"]

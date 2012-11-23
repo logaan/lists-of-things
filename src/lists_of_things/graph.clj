@@ -21,16 +21,11 @@
        " }"))
 
 (defn draw-graph-of-all-things []
-  (let [db      (db @conn)
+  (let [conn     (d/connect "datomic:free://localhost:4334/lists_of_things")
+        db      (db conn)
         results (q '[:find ?eid :where [?eid :thing/name]] db)
         things  (for [[eid] results] (d/entity db eid))]
     (things-to-digraph things)))
 
-(make-connection!)
-
-(q '[:find ?i
-     :where [?eid ?a 17592186045536]
-            [?a :db/ident ?i]]
-   (db @conn))
-
 (spit "/Users/logaan/Desktop/lots.dot" (draw-graph-of-all-things))
+
