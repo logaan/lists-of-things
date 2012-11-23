@@ -31,32 +31,40 @@
    :parents  (map rename (:thing/_children thing))})
 
 (defn jsonp [callback json]
-  (str callback "(" (generate-string json) ")"))
+  (str callback "(" json ")"))
+
+(defn wrap-json [handler]
+  (fn [request]
+    (let [response (handler request)]
+      (assoc response :status 200
+                      :headers {"Content-Type" "application/json"}))))
+
+(defn wrap-jsonp [handler]
+  (fn [request]
+    (let [callback (:callback (:params request))
+          response (handler request)]
+      (update-in response [:body] (partial jsonp callback)))))
 
 (defroutes api-routes
-  (GET "/orphans" {{:keys [callback]} :params}
-    (let [children (lotsdb/entities (db @conn) lotsdb/orphans)
+  (GET "/orphans" []
+    (let [children  (lotsdb/entities (db @conn) lotsdb/orphans)
           formatted (map rename-with-relations children)
-          orphan {:name "Orphans" :children formatted}]
-      {:status  200
-       :headers {"Content-Type" "application/json"}
-       :body    (jsonp callback orphan)}))
+          orphan    {:name "Orphans" :children formatted}]
+       (generate-string orphan)))
 
-  (GET "/things/:id" [id callback]
-      {:status  200
-       :headers {"Content-Type" "application/json"}
-       :body    (->> (Long/parseLong id)
-                     (d/entity (db @conn))
-                     rename-with-relations
-                     (jsonp callback))})
+  (GET "/things/:id" [id]
+    (->> (Long/parseLong id)
+      (d/entity (db @conn))
+      rename-with-relations
+      generate-string))
 
-  (GET "/search" [query callback]
-   (let [results (lotsdb/entities (db @conn) lotsdb/search query)
-         tidied  (mapv rename-with-relations results)]
-      (jsonp callback tidied))))
+  (GET "/search" [query]
+    (let [results (lotsdb/entities (db @conn) lotsdb/search query)
+          tidied  (mapv rename-with-relations results)]
+       (generate-string tidied))))
 
 (defroutes app-routes
-  (context "/api" [] api-routes)
+  (context "/api" [] (-> api-routes wrap-json wrap-jsonp))
 
   (GET "/" []
     (let [children (lotsdb/entities (db @conn) lotsdb/orphans)]
