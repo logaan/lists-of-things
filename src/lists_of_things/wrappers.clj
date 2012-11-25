@@ -9,14 +9,11 @@
       (assoc response :status 200
                       :headers {"Content-Type" "application/json"}))))
 
-(defn jsonp [callback json]
-  (str callback "(" json ")"))
-
 (defn jsonp [handler]
   (fn [request]
     (let [callback (:callback (:params request))
           response (handler request)]
-      (update-in response [:body] (partial jsonp callback)))))
+      (update-in response [:body] #(str callback "(" % ")")))))
 
 (def conn (atom nil))
 
