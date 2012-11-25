@@ -27,7 +27,7 @@
   (fn [request]
     (if (not @conn)
       (make-connection!))
-    (handler (assoc request :conn @conn))))
+    (handler (assoc-in request [:params :conn] @conn))))
 
 (defn cacheable? [response]
   (and (= (:status response) 200)
