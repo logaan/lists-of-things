@@ -3,7 +3,7 @@
 
   :main lists-of-things.web
 
-  :ring {:handler lists-of-things.web/app}
+  :ring {:handler lists-of-things.web/app-controller}
 
   :dependencies [[org.clojure/clojure "1.4.0"]
                  [com.datomic/datomic-free "0.8.3438"]

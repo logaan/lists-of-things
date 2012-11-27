@@ -1,6 +1,7 @@
 ; This namespace contains side effects
 (ns lists-of-things.wrappers
-  (:require [lists-of-things.seed :as seed]
+  (:require [clojure.pprint :as pprint]
+            [lists-of-things.seed :as seed]
             [datomic.api :as d]))
 
 (defn json [handler]
@@ -46,9 +47,11 @@
 
 (defn printer [handler]
   (fn [request]
-    (println "Request: " request)
+    (println "Request")
+    (pprint/pprint request)
     (let [response (handler request)]
-      (println "Response: " response)
+      (println "Response")
+      (pprint/pprint response)
       response)))
 
 (defn access-control [handler]

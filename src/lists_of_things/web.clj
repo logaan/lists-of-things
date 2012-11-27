@@ -21,6 +21,7 @@
 
 (def interface-controller
   (-> interface/routes
+      wrappers/printer
       handler/site))
 
 (compojure/defroutes routes

@@ -8,12 +8,14 @@
 ; functional.
 (defn create [conn thing]
   (let [id (d/tempid :db.part/user)]
-    @(d/transact conn [(merge {:db/id id} thing)])))
+    @(d/transact conn [(merge {:db/id id} thing)])
+    id))
 
 (defn create-child [conn parent-id thing]
   (let [id (d/tempid :db.part/user)]
     @(d/transact conn [(merge {:db/id id} thing)
-                       [:db/add parent-id :thing/children id]])))
+                       [:db/add parent-id :thing/children id]])
+    id))
 
 (defn edit-thing [conn id old-name new-name]
   @(d/transact conn [[:db/retract id :thing/name old-name]
