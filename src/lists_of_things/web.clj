@@ -18,7 +18,6 @@
       wrappers/printer
       wrappers/json
       wrappers/jsonp
-      wrappers/access-control
       handler/api))
 
 (def interface-controller

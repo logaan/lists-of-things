@@ -54,8 +54,3 @@
       (pprint/pprint response)
       response)))
 
-(defn access-control [handler]
-  (fn [request]
-    (let [response (handler request)]
-      (assoc-in response [:headers "Access-Control-Allow-Origin"] "*"))))
-
