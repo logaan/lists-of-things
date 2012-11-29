@@ -15,13 +15,14 @@
 
 (def api-controller
   (-> api/routes
+      wrappers/printer
       wrappers/json
       wrappers/jsonp
-      wrappers/access-control))
+      wrappers/access-control
+      handler/api))
 
 (def interface-controller
   (-> interface/routes
-      wrappers/printer
       handler/site))
 
 (compojure/defroutes routes
