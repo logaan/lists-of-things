@@ -7,6 +7,18 @@ function Thing(thing) {
     parents:  ko.observableArray(thing.parents  || []),
     children: ko.observableArray(thing.children || []),
     contents: ko.observableArray(thing.contents || []),
+    rewind: function(model, event) {
+      var thing;
+
+      while(thing = page.history.pop()) {
+        if(thing.id() == model.id()) {
+          break;
+        }
+      };
+
+      page.listing(this);
+      page.preview(this);
+    },
     open: function(model, event) {
       var thingUrl = baseUrl + "/things/" + model.id() + "?callback=?";
 
@@ -21,8 +33,8 @@ function Thing(thing) {
           thing.children.push(Thing(value));
         });
 
+        page.history.push(page.listing());
         page.listing(thing);
-        page.history.push(thing);
         page.preview(thing);
       });
     },
@@ -111,7 +123,7 @@ jQuery(function() {
     page = Page({
       listing: thing,
       preview: thing
-    })
+    });
 
     ko.applyBindings(page);
   });

@@ -52,7 +52,7 @@
         <div class="span6">
 
           <p data-bind="foreach: history">
-            <a data-bind="text: name" href="#">History</a> &gt;
+            <a data-bind="text: name, click: rewind" href="#">History</a> &gt;
           </p>
 
           <h2 data-bind="text: listing().name">Listing name</h2>
