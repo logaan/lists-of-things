@@ -11,7 +11,9 @@
      [core :as compojure]
      [route :as route]]
     [ring.adapter
-     [jetty :as jetty]]))
+     [jetty :as jetty]]
+    [ring.middleware
+     [gzip :as gzip]]))
 
 (def api-controller
   (-> api/routes
@@ -28,7 +30,7 @@
   (route/resources "/")
   (route/not-found helpers/not-found))
 
-(def app-controller (-> routes handler/site wrappers/connection))
+(def app-controller (-> routes handler/site wrappers/connection gzip/wrap-gzip))
 
 (defn -main [& args]
   (jetty/run-jetty app-controller {:port 3000}))

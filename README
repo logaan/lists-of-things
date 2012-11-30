@@ -69,6 +69,56 @@ Explainations
   - Attatchments
   - Authorization?
 
+## TODO
+
+- Restore normal browser behavior
+  - Add history
+  - Have the api return urls in addition to ids
+  - Add links with meaningful hrefs to everything with an onclick
+  - Have bs-index served dynamically inline with history and urls
+- Display correct information
+  - Make parents appear in the preview pane when a thing is opened (not just
+    previewed)
+  - Show thing's content on load
+  - Shall all parents in listing except the current
+- Performance tuning
+  - Add expires headers
+  - Double check gzipping
+- Power usage
+  - navigation
+    - j and k shortcuts for movement up and down list
+    - h for back
+    - l and o for open current thing
+    - p for preview (consider automatic on selection)
+    - / for search
+    - leave arrow keys and space bar free for scrolling as normal
+  - editing
+    - escape to unfocus any current form field
+    - i to insert new child
+    - c for content
+    - e to change thing name
+    - d to delete
+    - u to undo
+    - a to add parent
+    - m to move from current parent to new
+    - r to remove current parent
+  - discoverability
+    - ? and link to show help
+    - underline appropriate character for edit/delete/add/move/remove
+- Round out operations
+  - Edit
+  - Delete
+  - Add parent
+  - Move parent
+  - Remove parent
+  - Search
+  - Sorting
+- Batch operations
+  - Allow multiple selection
+  - Update basic operations to act in batch
+- Auth
+  - User accounts with persona
+  - Share with user (via email)
 
 ## License
 
