@@ -20,7 +20,10 @@ function Thing(thing) {
       page.preview(this);
     },
     open: function(model, event) {
-      var thingUrl = baseUrl + "/things/" + model.id() + "?callback=?";
+      var thingPart = "/things/" + model.id();
+      var thingUrl = baseUrl + thingPart + "?callback=?";
+
+      history.pushState(null, null, thingPart);
 
       jQuery.getJSON(thingUrl, function(response) {
         // This stuff should be made recursive and moved out into a function
