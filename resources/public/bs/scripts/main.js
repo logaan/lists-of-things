@@ -12,7 +12,7 @@ function Thing(thing) {
 
       jQuery.getJSON(thingUrl, function(response) {
         // This stuff should be made recursive and moved out into a function
-        var thing = Thing({name: response.name});
+        var thing = Thing(response);
 
         $(response.children).each(function(index, value) {
           thing.children.push(Thing(value));
@@ -33,7 +33,10 @@ function Thing(thing) {
       jQuery.ajax({
         url: baseUrl + "/things",
         type: "post",
-        data: {name: this.name()},
+        data: {
+          "name":      this.name(),
+          "parent-id": page.listing().id()
+        },
         success: function (result) { console.log(result.message) }
       });
     }
