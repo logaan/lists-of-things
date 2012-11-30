@@ -12,7 +12,10 @@ function Thing(thing) {
 
       jQuery.getJSON(thingUrl, function(response) {
         // This stuff should be made recursive and moved out into a function
-        var thing = Thing(response);
+        var thing = Thing({
+          id: response.id,
+          name: response.name
+        });
 
         $(response.children).each(function(index, value) {
           thing.children.push(Thing(value));
@@ -94,7 +97,10 @@ jQuery(function() {
   var orphansUrl = baseUrl + "/orphans?callback=?";
 
   jQuery.getJSON(orphansUrl, function(response) {
-    var thing = Thing({name: response.name});
+    var thing = Thing({
+      id: response.id,
+      name: response.name
+    });
 
     $(response.children).each(function(index, value) {
       thing.children.push(Thing(value));
@@ -107,7 +113,6 @@ jQuery(function() {
 
     ko.applyBindings(page);
   });
-
 
 });
 
