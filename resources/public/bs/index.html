@@ -102,7 +102,7 @@
 
         <hr class="visible-phone" />
 
-        <div class="span6">
+        <div class="span6" data-bind="with: preview">
 
           <div class="btn-toolbar pull-right">
             <div class="btn-group">
@@ -117,10 +117,10 @@
             </div>
           </div>
 
-          <h3 data-bind="text: preview().name">Preview name</h3>
+          <h3 data-bind="text: name">Preview name</h3>
 
           <div class="row-fluid">
-            <div class="span12" data-bind="foreach: preview().parents">
+            <div class="span12" data-bind="foreach: parents">
               <span class="label">
                 <span data-bind="text: name">Parent name</span>
                 &nbsp;
@@ -131,13 +131,13 @@
 
           <p class="visible-phone">&nbsp;</p>
 
-          <div data-bind="foreach: preview().contents">
+          <div data-bind="foreach: contents">
             <div class="well" data-bind="html: text">
               Preview contents text
             </div>
           </div>
 
-          <form>
+          <form data-bind="submit: addContent">
             <div class="btn-toolbar">
               <div class="btn-group">
                 <button class="btn btn-small"><strong>B</strong></button>
@@ -152,7 +152,7 @@
               </div>
             </div>
 
-            <textarea rows="3" class="span12"></textarea>
+            <textarea id="contentarea" rows="3" class="span12"></textarea>
             <button type="submit" class="btn btn-primary pull-right">Add content</button>
           </form>
         </div>

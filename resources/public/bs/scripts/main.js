@@ -45,6 +45,13 @@ function Thing(thing) {
       $(event.currentTarget).addClass("selected");
       page.preview(model);
     },
+    addContent: function(element) {
+      var contentarea = $(element).find("#contentarea");
+      var content = contentarea.val();
+      contentarea.val("");
+      contentarea.focus();
+      this.contents.push({text: content});
+    },
     save: function() {
       jQuery.ajax({
         url: baseUrl + "/things",
@@ -75,9 +82,6 @@ function Page(page) {
 
       $("#new-thing-name", form).val("");
       $("#new-thing-name", form).focus();
-    },
-    addContent: function(content) {
-      this.content().preview.contents.push(content);
     }
   };
 }
