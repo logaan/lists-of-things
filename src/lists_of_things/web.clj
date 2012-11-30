@@ -17,12 +17,10 @@
   (-> api/routes
       wrappers/printer
       wrappers/json
-      wrappers/jsonp
-      handler/api))
+      wrappers/jsonp))
 
 (def interface-controller
-  (-> interface/routes
-      handler/site))
+  interface/routes)
 
 (compojure/defroutes routes
   interface-controller
@@ -30,7 +28,7 @@
   (route/resources "/")
   (route/not-found helpers/not-found))
 
-(def app-controller (-> routes wrappers/connection))
+(def app-controller (-> routes handler/site wrappers/connection))
 
 (defn -main [& args]
   (jetty/run-jetty app-controller {:port 3000}))

@@ -33,8 +33,7 @@ function Thing(thing) {
       jQuery.ajax({
         url: baseUrl + "/things",
         type: "post",
-        data: ko.toJSON(this),
-        contentType: "application/json",
+        data: {name: this.name()},
         success: function (result) { console.log(result.message) }
       });
     }
