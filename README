@@ -71,6 +71,13 @@ Explainations
 
 ## TODO
 
+- Refactor JS
+  - Wrapping recursively
+  - Opening current thing
+    - History
+    - List
+    - Preview
+    - Breadcrumbs
 - Restore normal browser behavior
   - Add history
   - Have the api return urls in addition to ids
