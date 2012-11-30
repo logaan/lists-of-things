@@ -51,14 +51,11 @@
 
         <div class="span6">
 
-          <h2 data-bind="text: listing().name">Listing name</h2>
-
-          <p>
-            <a href="#">Orphans</a> &gt;
-            <a href="#">Personal</a> &gt;
-            <a href="#">Financial</a> &gt;
-            <a href="#">Shopping</a>
+          <p data-bind="foreach: history">
+            <a data-bind="text: name" href="#">History</a> &gt;
           </p>
+
+          <h2 data-bind="text: listing().name">Listing name</h2>
 
           <ol class="unstyled" data-bind="foreach: listing().children" id="children">
             <li data-bind="click: select, event: { dblclick: open }">

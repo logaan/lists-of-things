@@ -22,6 +22,7 @@ function Thing(thing) {
         });
 
         page.listing(thing);
+        page.history.push(thing);
         page.preview(thing);
       });
     },
@@ -50,6 +51,7 @@ function Page(page) {
   return {
     listing: ko.observable(page.listing),
     preview: ko.observable(page.preview || page.listing),
+    history: ko.observableArray([]),
     addThing: function(form) {
       var thing = Thing({
         name: $("#new-thing-name", form).val()
