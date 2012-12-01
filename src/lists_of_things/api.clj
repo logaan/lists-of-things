@@ -5,6 +5,9 @@
             [cheshire.core            :as json]
             [lists-of-things.db       :as lotsdb]))
 
+(defn format-content [content]
+  {"text" (:content/text content)})
+
 (defn rename [thing]
   {:id       (:db/id thing)
    :name     (:thing/name thing)})
@@ -12,13 +15,15 @@
 (defn rename-with-siblings [thing]
   {:id       (:db/id thing)
    :name     (:thing/name thing)
-   :parents  (map rename (:thing/_children thing))})
+   :parents  (map rename (:thing/_children thing))
+   :contents (map format-content (:thing/content thing))})
 
 (defn rename-with-relations [thing]
   {:id       (:db/id thing)
    :name     (:thing/name thing)
    :children (map rename-with-siblings (:thing/children thing))
-   :parents  (map rename (:thing/_children thing))})
+   :parents  (map rename (:thing/_children thing))
+   :contents (map format-content (:thing/content thing))})
 
 (defroutes routes
   (GET "/orphans" [conn]
