@@ -8,7 +8,7 @@ function Thing(thing) {
     parentsWithout: function(parentToExclude) {
       var smallerParents = this.parents().slice(0);
       var index = smallerParents.indexOf(parentToExclude);
-      smallerParents.slice(index, 1);
+      smallerParents.splice(index, 1);
       return smallerParents;
     },
     children: ko.observableArray(thing.children || []),

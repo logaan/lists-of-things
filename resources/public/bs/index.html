@@ -69,7 +69,7 @@
 
               <div class="row-fluid">
                 <div class="span12">
-                  <ul class="unstyled pull-right" data-bind="foreach: parents">
+                  <ul class="unstyled pull-right" data-bind="foreach: parentsWithout(page.listing())">
                     <li class="pull-left">
                       <small>
                         <a href="#" data-bind="text: name">Child's parent name</a>
