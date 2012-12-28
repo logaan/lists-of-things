@@ -17,7 +17,6 @@
 
 (def api-controller
   (-> api/routes
-      wrappers/printer
       wrappers/json
       wrappers/jsonp))
 

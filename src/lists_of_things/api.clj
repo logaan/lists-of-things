@@ -1,5 +1,5 @@
 (ns lists-of-things.api
-  (:use [compojure.core :only [defroutes GET POST]]
+  (:use [compojure.core :only [defroutes GET POST DELETE]]
         [datomic.api :only [db entity] :as datomic])
   (:require [lists-of-things.wrappers :as wrappers]
             [cheshire.core            :as json]
@@ -42,6 +42,11 @@
     (let [results (lotsdb/entities (db conn) lotsdb/search query)
           tidied  (mapv rename-with-relations results)]
        (json/generate-string tidied)))
+
+  ; Is there something more sensible we can return here? An undo url?
+  (DELETE "/things/:id" [id conn]
+    (lotsdb/destroy conn (Long/parseLong id))
+    (json/generate-string {:success true}))
 
   ; Can you create things with :thing/_children?
   (POST "/things" [parent-id name conn]

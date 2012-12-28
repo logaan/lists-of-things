@@ -86,7 +86,7 @@ Explainations
 - Display correct information
   - Make parents appear in the preview pane when a thing is opened (not just
     previewed)
-  - Show thing's content on load
+  x Show thing's content on load
   - Shall all parents in listing except the current
 - Performance tuning
   - Add expires headers

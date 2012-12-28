@@ -5,6 +5,12 @@ function Thing(thing) {
     id:       ko.observable(thing.id),
     name:     ko.observable(thing.name),
     parents:  ko.observableArray(thing.parents  || []),
+    parentsWithout: function(parentToExclude) {
+      var smallerParents = this.parents().slice(0);
+      var index = smallerParents.indexOf(parentToExclude);
+      smallerParents.slice(index, 1);
+      return smallerParents;
+    },
     children: ko.observableArray(thing.children || []),
     contents: ko.observableArray(thing.contents || []),
     rewind: function(model, event) {
@@ -18,6 +24,21 @@ function Thing(thing) {
 
       page.listing(this);
       page.preview(this);
+    },
+    deletes: function() {
+      // Duplicated code
+      var thingPart = "/things/" + this.id();
+      var thingUrl = baseUrl + thingPart + "?callback=?";
+      var me = this;
+
+      jQuery.ajax(thingUrl, {
+        type: "DELETE",
+        dataType: "jsonp",
+        success: function(data, textSatus, jqXHR) {
+          page.listing().children.remove(me);
+          page.preview(page.listing());
+        }
+      });
     },
     open: function(model, event) {
       var thingPart = "/things/" + model.id();
