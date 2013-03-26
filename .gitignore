@@ -9,3 +9,4 @@
 /.lein-plugins
 /target
 /.lein-cljsbuild-compiler-0
+/.lein-repl-history

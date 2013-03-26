@@ -1,7 +1,7 @@
-default: ng db ring
+default: repl db ring
 
-ng:
-	screen -t "vimclojure" lein vimclojure
+repl:
+	screen -t "repl" lein repl
 db:
 	screen -t "datomic" make transactor
 ring:
