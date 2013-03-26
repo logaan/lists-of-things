@@ -1,5 +1,6 @@
 (ns lists-of-things.web
   (:gen-class)
+  (:use [compojure.core :only [defroutes GET POST DELETE PUT]])
   (:require
     [lists-of-things
      [api :as api]
@@ -23,7 +24,14 @@
 (def interface-controller
   interface/routes)
 
+(defroutes bootstrap
+  (GET "/bs/things" []
+    (slurp "resources/public/bs/index.html")) 
+  (GET "/bs/things/:id" [id]
+    (slurp "resources/public/bs/index.html")))
+
 (compojure/defroutes routes
+  bootstrap
   interface-controller
   (compojure/context "/api" [] api-controller)
   (route/resources "/")

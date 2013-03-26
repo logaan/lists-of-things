@@ -3,28 +3,22 @@ var baseUrl = "http://localhost:3000/api";
 function Thing(thing) {
   return {
     id:       ko.observable(thing.id),
+
     name:     ko.observable(thing.name),
+
     parents:  ko.observableArray(thing.parents  || []),
+
     parentsWithout: function(parentToExclude) {
       var smallerParents = this.parents().slice(0);
       var index = smallerParents.indexOf(parentToExclude);
       smallerParents.splice(index, 1);
       return smallerParents;
     },
+
     children: ko.observableArray(thing.children || []),
+
     contents: ko.observableArray(thing.contents || []),
-    rewind: function(model, event) {
-      var thing;
 
-      while(thing = page.history.pop()) {
-        if(thing.id() == model.id()) {
-          break;
-        }
-      };
-
-      page.listing(this);
-      page.preview(this);
-    },
     deletes: function() {
       // Duplicated code
       var thingPart = "/things/" + this.id();
@@ -40,29 +34,12 @@ function Thing(thing) {
         }
       });
     },
-    open: function(model, event) {
-      var thingPart = "/things/" + model.id();
-      var thingUrl = baseUrl + thingPart + "?callback=?";
 
-      history.pushState(null, null, thingPart);
-
-      jQuery.getJSON(thingUrl, function(response) {
-        // This stuff should be made recursive and moved out into a function
-        var thing = Thing({
-          id: response.id,
-          name: response.name,
-          contents: response.contents
-        });
-
-        $(response.children).each(function(index, value) {
-          thing.children.push(Thing(value));
-        });
-
-        page.history.push(page.listing());
-        page.listing(thing);
-        page.preview(thing);
-      });
+    open: function() {
+      var thingPart = this.id() ? "/bs/things/" + this.id() : "/bs/things";
+      Path.history.pushState({}, "", thingPart);
     },
+
     select: function(model, event) {
       // Perhaps this should be a css or style binding to a selected flag.
       // Makes some sense I guess. You could have multiple things selected.
@@ -70,6 +47,7 @@ function Thing(thing) {
       $(event.currentTarget).addClass("selected");
       page.preview(model);
     },
+
     addContent: function(element) {
       var contentarea = $(element).find("#contentarea");
       var content = contentarea.val();
@@ -77,6 +55,7 @@ function Thing(thing) {
       contentarea.focus();
       this.contents.push({text: content});
     },
+
     save: function() {
       jQuery.ajax({
         url: baseUrl + "/things",
@@ -94,8 +73,9 @@ function Thing(thing) {
 function Page(page) {
   return {
     listing: ko.observable(page.listing),
+
     preview: ko.observable(page.preview || page.listing),
-    history: ko.observableArray([]),
+
     addThing: function(form) {
       var thing = Thing({
         name: $("#new-thing-name", form).val()
@@ -111,28 +91,55 @@ function Page(page) {
   };
 }
 
-jQuery(function() {
+function setPreviewAndListing(thing) {
+  var preview = thing;
+  var listing = thing;
 
-  var orphansUrl = baseUrl + "/orphans?callback=?";
-
-  jQuery.getJSON(orphansUrl, function(response) {
-    var thing = Thing({
-      id: response.id,
-      name: response.name,
-      contents: response.contents
-    });
-
-    $(response.children).each(function(index, value) {
-      thing.children.push(Thing(value));
-    });
-
-    page = Page({
-      listing: thing,
-      preview: thing
-    });
-
+  if (typeof page === 'undefined') {
+    page = Page({listing: listing, preview: preview});
     ko.applyBindings(page);
+  } else {
+    page.listing(listing);
+    page.preview(preview);
+  }
+};
+
+function createThingFromResponse(response) {
+  var thing = Thing({
+    id:       response.id,
+    name:     response.name,
+    contents: response.contents
   });
 
+  $(response.children).each(function(index, value) {
+    thing.children.push(Thing(value));
+  });
+
+  return thing;
+};
+
+function loadThing(urlPart) {
+  var url = baseUrl + urlPart + "?callback=?";
+
+  jQuery.getJSON(url, function(response) {
+    setPreviewAndListing(createThingFromResponse(response));
+  });
+}
+
+Path.map("/bs/things").to(function(){
+  loadThing("/orphans");
+});
+
+Path.map("/bs/things/:thing_id").to(function(){
+  loadThing("/things/" + this.params.thing_id);
+});
+
+jQuery(function() {
+  Path.history.listen();
+
+  $("a").click(function(event){
+    Path.history.pushState({}, "", $(this).attr("href"));
+    event.preventDefault();
+  });
 });
 
