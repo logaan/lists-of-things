@@ -71,6 +71,13 @@ Explainations
 
 ## TODO
 
+- Remove html based interface
+  - Search
+  - Display parents of open node above listing
+  - Add parent in priview
+  - Remove parents in preview
+  - Save new content to db
+  - Edit name of thing
 - Refactor JS
   - Wrapping recursively
   - Opening current thing
@@ -79,15 +86,15 @@ Explainations
     - Preview
     - Breadcrumbs
 - Restore normal browser behavior
-  - Add history
+  x Add history
   - Have the api return urls in addition to ids
   - Add links with meaningful hrefs to everything with an onclick
-  - Have bs-index served dynamically inline with history and urls
-- Display correct information
-  - Make parents appear in the preview pane when a thing is opened (not just
+  x Have bs-index served dynamically inline with history and urls
+x Display correct information
+  x Make parents appear in the preview pane when a thing is opened (not just
     previewed)
   x Show thing's content on load
-  - Shall all parents in listing except the current
+  x Shall all parents in listing except the current
 - Performance tuning
   - Add expires headers
   - Double check gzipping
