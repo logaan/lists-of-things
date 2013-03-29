@@ -90,6 +90,7 @@ Explainations
   - Have the api return urls in addition to ids
   - Add links with meaningful hrefs to everything with an onclick
   x Have bs-index served dynamically inline with history and urls
+  - Use \# to represent which child should be selected
 x Display correct information
   x Make parents appear in the preview pane when a thing is opened (not just
     previewed)
@@ -133,6 +134,11 @@ x Display correct information
 - Auth
   - User accounts with persona
   - Share with user (via email)
+
+## Things to consider
+
+- Switch to coffee script
+- Split js into seperate files
 
 ## License
 
