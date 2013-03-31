@@ -1,5 +1,5 @@
 function Thing(thing) {
-  return {
+  var object = {
     id:       ko.observable(thing.id),
 
     name:     ko.observable(thing.name),
@@ -75,4 +75,18 @@ function Thing(thing) {
       });
     }
   };
+
+  ko.computed(function() {
+    var addParentPopover = this;
+
+    if(addParentPopover.query() != "") {
+      var params = {query: addParentPopover.query() + "*"};
+
+      $.getJSON('/api/search?callback=?', params, function(data) {
+        addParentPopover.results(data);
+      });
+    }
+  }, object.addParentPopover())
+
+  return object;
 };
