@@ -54,6 +54,15 @@ function Thing(thing) {
       this.contents.push({text: content});
     },
 
+    addParentPopover: ko.observable({
+      visible: ko.observable(false),
+      toggleVisibility: function() {
+        this.visible(!this.visible());
+      },
+      query: ko.observable(""),
+      results: ko.observableArray([])
+    }),
+
     save: function() {
       jQuery.ajax({
         url: baseUrl + "/things",
