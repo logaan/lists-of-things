@@ -109,7 +109,7 @@
                   <div class="popover-content">
                     <p><input data-bind="value: query, valueUpdate: 'afterkeydown'"></p>
                     <ul data-bind="foreach: results">
-                      <li data-bind="text: name"></li>
+                      <li><a href="#" data-bind="click: addAsParent, text: name">Result</a></li>
                     </ul>
                   </div>
                 </div>

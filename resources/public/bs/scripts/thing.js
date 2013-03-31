@@ -6,16 +6,16 @@ function Thing(thing) {
 
     parents:  ko.observableArray(thing.parents  || []),
 
+    children: ko.observableArray(thing.children || []),
+
+    contents: ko.observableArray(thing.contents || []),
+
     parentsWithout: function(parentToExclude) {
       var smallerParents = this.parents().slice(0);
       var index = smallerParents.indexOf(parentToExclude);
       smallerParents.splice(index, 1);
       return smallerParents;
     },
-
-    children: ko.observableArray(thing.children || []),
-
-    contents: ko.observableArray(thing.contents || []),
 
     deletes: function() {
       // Duplicated code
@@ -60,8 +60,17 @@ function Thing(thing) {
         this.visible(!this.visible());
       },
       query: ko.observable(""),
-      results: ko.observableArray([])
+      results: ko.observableArray([]),
+      select: function() {
+        console.log(this);
+      }
     }),
+
+    addAsParent: function() {
+      page.preview().parents.push(this);
+      page.preview().addParentPopover().visible(false);
+      return false;
+    },
 
     save: function() {
       jQuery.ajax({
@@ -82,8 +91,12 @@ function Thing(thing) {
     if(addParentPopover.query() != "") {
       var params = {query: addParentPopover.query() + "*"};
 
-      $.getJSON('/api/search?callback=?', params, function(data) {
-        addParentPopover.results(data);
+      $.getJSON('/api/search?callback=?', params, function(results) {
+        var things = $(results).map(function(index, result) {
+          return createThingFromResponse(result);
+        }).toArray();
+
+        addParentPopover.results(things);
       });
     }
   }, object.addParentPopover())
