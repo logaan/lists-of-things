@@ -18,18 +18,11 @@ function Thing(thing) {
     },
 
     deletes: function() {
-      // Duplicated code
-      var thingPart = "/things/" + this.id();
-      var thingUrl = baseUrl + thingPart + "?callback=?";
       var me = this;
 
-      jQuery.ajax(thingUrl, {
-        type: "DELETE",
-        dataType: "jsonp",
-        success: function(data, textSatus, jqXHR) {
-          page.listing().children.remove(me);
-          page.preview(page.listing());
-        }
+      api.remove(this.id(), function(data, textSatus, jqXHR) {
+        page.listing().children.remove(me);
+        page.preview(page.listing());
       });
     },
 
@@ -42,6 +35,7 @@ function Thing(thing) {
       // Perhaps this should be a css or style binding to a selected flag.
       // Makes some sense I guess. You could have multiple things selected.
       $("#children .selected").removeClass("selected");
+      // This seems to be throwing errors when we do a select on create.
       $(event.currentTarget).addClass("selected");
       page.preview(model);
     },
@@ -53,16 +47,9 @@ function Thing(thing) {
       contentarea.focus();
       this.contents.push({text: content});
 
-      jQuery.ajax({
-        url: baseUrl + "/content?callback=?",
-        dataType: "jsonp",
-        type: "post",
-        data: {
-          "thing-id": this.id(),
-          "text": content
-        },
-        success: function (result) { console.log(result) }
-      });
+      api.addContent(this.id(), content, function(result) {
+        console.log(result);
+      })
 
     },
 
@@ -81,31 +68,32 @@ function Thing(thing) {
     // Current thing is easily confused with this. This function should maybe
     // be being called on the currently selected thing instead of the parent
     // being added.
+    //
+    // If a thing is an orphan and is given a parent it should disapear from
+    // the orphan listing.
+    //
+    // If the parent is a sybling it's child count should be updated.
+    //
+    // The thing that has been given a parent should have it's parents updated.
     addAsParent: function() {
       var currentThing = page.preview();
       currentThing.parents.push(this);
       currentThing.addParentPopover().visible(false);
 
-      jQuery.ajax({
-        url: baseUrl + "/things/" + currentThing.id() + "/parents?callback=?",
-        dataType: "jsonp",
-        type: "post",
-        data: { "parent-id": this.id() },
-        success: function (result) { console.log(result) }
+      var childId = currentThing.id();
+      var parentId = this.id();
+
+      api.addParent(childId, parentId, function(result) {
+        console.log(result);
       });
 
       return false;
     },
 
+    // This doesn't pull back the id if the thing is newly saved.
     save: function() {
-      jQuery.ajax({
-        url: baseUrl + "/things",
-        type: "post",
-        data: {
-          "name":      this.name(),
-          "parent-id": page.listing().id()
-        },
-        success: function (result) { console.log(result.message) }
+      api.createThing(this.name(), page.listing().id(), function(result) {
+        console.log(result);
       });
     }
   };
@@ -114,9 +102,7 @@ function Thing(thing) {
     var addParentPopover = this;
 
     if(addParentPopover.query() != "") {
-      var params = {query: addParentPopover.query() + "*"};
-
-      $.getJSON('/api/search?callback=?', params, function(results) {
+      api.search(addParentPopover.query() + "*", function(results) {
         var things = $(results).map(function(index, result) {
           return createThingFromResponse(result);
         }).toArray();
