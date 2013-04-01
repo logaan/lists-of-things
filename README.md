@@ -1,20 +1,39 @@
 # lists-of-things
 
-Datomic is now using the free edition. It's on clojars so just lein deps.
+If you're anything like me you casually keep a bunch of lists. Some of them
+quickly get thrown away like shopping lists. Others grow over months like a
+your favorite movies, great places to eat or places to visit on your dream
+holiday.
 
+I keep some of these lists on paper, but then they're hard to share with
+friends or have people contribute. When I'm out and about I often email myself
+from my phone, but then all my ideas get dissorganised and forgotten. I even
+have a couple of todo apps that I fill up with work stuff, but they all have
+too many features and force me to follow their workflow.
 
-To start the transactor run:
+So I created Lists of Things. You can use it to keep all your lists in one
+place. It's a really flexible system that you can use to store your recipes or
+manage all your company's contacts and projects, or anything in between. You
+can create lists of any type of thing, like books, purchases, yoga positions
+or theme parks, and of course projects and tasks.
 
-  ./bin/transactor config/samples/free-transactor-template.properties
+You can share lists friends and collegues and they can work on them with you. I
+keep a list of things to do with my girlfriend that we both update when we get
+new ideas. My team at work has lists for work that's coming up, currently being
+worked on, waiting for approval, and totally complete. And we keep track of
+who's working on what by adding tasks to multiple lists.
 
-Or checkout a copy from
-http://downloads.datomic.com/0.8.3438/datomic-free-0.8.3438.zip into the same
-directory as lists-of-things is checked out into.
+I hope you'll give it a try and let me know what you think.
 
 ## Usage
 
-Run `make server` and `make datomic`, a browser window should appear. Then add
-things to your delight.
+1. Checkout this source
+2. Download datomic from
+http://downloads.datomic.com/0.8.3438/datomic-free-0.8.3438.zip into the same
+directory as lists-of-things is checked out into (not into the lists of things
+directory).
+3. Run `make server` and `make datomic`
+4. A browser window should appear showing lists of things.
 
 ## Roadmap
 
