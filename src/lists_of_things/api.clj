@@ -38,10 +38,6 @@
       rename-with-relations
       json/generate-string))
 
-  (POST "/things/:thing-id/parents" [thing-id parent-id conn]
-    (lotsdb/add-parent conn (Long/parseLong thing-id) (Long/parseLong parent-id))
-    (json/generate-string {:success true}))
-
   (GET "/search" [query conn]
     (let [results (lotsdb/entities (db conn) lotsdb/search query)
           tidied  (mapv rename-with-relations results)]
@@ -58,9 +54,19 @@
       (json/generate-string {:id
         (if (empty? parent-id)
           (lotsdb/create conn thing)
-          (lotsdb/create-child conn (Long/parseLong parent-id) thing))}))))
+          (lotsdb/create-child conn (Long/parseLong parent-id) thing))})))
 
-; (routes {:request-method :post 
+  ; Needs sensible return
+  (POST "/things/:thing-id/parents" [thing-id parent-id conn]
+    (lotsdb/add-parent conn (Long/parseLong thing-id) (Long/parseLong parent-id))
+    (json/generate-string {:success true}))
+
+  ; Needs sensible return
+  (POST "/content" [thing-id text conn]
+    (lotsdb/create-content conn (Long/parseLong thing-id) {:content/text text})
+    (json/generate-string {:success true})))
+
+; (routes {:request-method :post
 ;          :uri "/things/17592186047137/parents"
 ;          :params
 ;            {:conn (datomic/connect "datomic:free://localhost:4334/lists_of_things")

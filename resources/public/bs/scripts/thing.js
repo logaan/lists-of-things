@@ -52,6 +52,18 @@ function Thing(thing) {
       contentarea.val("");
       contentarea.focus();
       this.contents.push({text: content});
+
+      jQuery.ajax({
+        url: baseUrl + "/content?callback=?",
+        dataType: "jsonp",
+        type: "post",
+        data: {
+          "thing-id": this.id(),
+          "text": content
+        },
+        success: function (result) { console.log(result) }
+      });
+
     },
 
     addParentPopover: ko.observable({
