@@ -1,6 +1,6 @@
 api = {};
 
-api.remove = function (thingId, afterRemove) {
+api.remove = function(thingId, afterRemove) {
   var thingPart = "/things/" + thingId;
   var thingUrl = baseUrl + thingPart + "?callback=?";
 
@@ -11,7 +11,7 @@ api.remove = function (thingId, afterRemove) {
   });
 };
 
-api.addContent = function (thingId, content, afterRemove) {
+api.addContent = function(thingId, content, afterRemove) {
   jQuery.ajax({
     url: baseUrl + "/content?callback=?",
     dataType: "jsonp",
@@ -24,7 +24,7 @@ api.addContent = function (thingId, content, afterRemove) {
   });
 }
 
-api.addParent = function (childId, parentId, afterAdd) {
+api.addParent = function(childId, parentId, afterAdd) {
   jQuery.ajax({
     url: baseUrl + "/things/" + childId + "/parents?callback=?",
     dataType: "jsonp",
