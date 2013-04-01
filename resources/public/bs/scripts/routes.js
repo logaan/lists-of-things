@@ -1,4 +1,4 @@
-baseUrl = "http://localhost:3000/api";
+baseUrl = "/api";
 
 Path.map("/bs/things").to(function(){
   loadThing("/orphans");
