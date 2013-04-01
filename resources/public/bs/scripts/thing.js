@@ -66,9 +66,22 @@ function Thing(thing) {
       }
     }),
 
+    // Current thing is easily confused with this. This function should maybe
+    // be being called on the currently selected thing instead of the parent
+    // being added.
     addAsParent: function() {
-      page.preview().parents.push(this);
-      page.preview().addParentPopover().visible(false);
+      var currentThing = page.preview();
+      currentThing.parents.push(this);
+      currentThing.addParentPopover().visible(false);
+
+      jQuery.ajax({
+        url: baseUrl + "/things/" + currentThing.id() + "/parents?callback=?",
+        dataType: "jsonp",
+        type: "post",
+        data: { "parent-id": this.id() },
+        success: function (result) { console.log(result) }
+      });
+
       return false;
     },
 
