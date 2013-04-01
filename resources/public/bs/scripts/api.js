@@ -1,53 +1,49 @@
-api = {};
+(function() {
 
-api.remove = function(thingId, afterRemove) {
-  var thingPart = "/things/" + thingId;
-  var thingUrl = baseUrl + thingPart + "?callback=?";
+  api = {};
 
-  jQuery.ajax(thingUrl, {
-    type: "DELETE",
-    dataType: "jsonp",
-    success: afterRemove
-  });
-};
+  function callAPI(method, url, data, success) {
+    jQuery.ajax({
+      type:     method,
+      url:      baseUrl + url + "?callback=?",
+      data:     data,
+      success:  success,
+      dataType: "jsonp"
+    });
+  }
 
-api.addContent = function(thingId, content, afterRemove) {
-  jQuery.ajax({
-    url: baseUrl + "/content?callback=?",
-    dataType: "jsonp",
-    type: "post",
-    success: afterRemove,
-    data: {
-      "thing-id": thingId,
-      "text": content
-    }
-  });
-}
+  function post(url, data, success) {
+    callAPI("post", url, data, success);
+  }
 
-api.addParent = function(childId, parentId, afterAdd) {
-  jQuery.ajax({
-    url: baseUrl + "/things/" + childId + "/parents?callback=?",
-    dataType: "jsonp",
-    type: "post",
-    data: { "parent-id": parentId },
-    success: afterAdd
-  });
-}
+  function get(url, data, success) {
+    callAPI("get", url, data, success);
+  }
 
-api.createThing = function(name, parentId, afterCreate) {
-  jQuery.ajax({
-    url: baseUrl + "/things?callback=?",
-    dataType: "jsonp",
-    type: "post",
-    data: {
-      "name":      name,
-      "parent-id": parentId,
-    },
-    success: afterCreate
-  });
-}
+  function destroy(url, data, success) {
+    callAPI("delete", url, data, success);
+  }
 
-api.search = function(query, withResults) {
-  $.getJSON('/api/search?callback=?', {query: query}, withResults);
-}
+  api.remove = function(thingId, afterRemove) {
+    destroy("/things/" + thingId, {}, afterRemove);
+  };
+
+  api.addContent = function(thingId, content, afterRemove) {
+    post("/content", {"thing-id": thingId, "text": content}, afterRemove);
+  }
+
+  api.addParent = function(childId, parentId, afterAdd) {
+    var url = "/things/" + childId + "/parents";
+    post(url, {"parent-id": parentId}, afterAdd);
+  }
+
+  api.createThing = function(name, parentId, afterCreate) {
+    post("/things", {"name": name, "parent-id": parentId}, afterCreate);
+  }
+
+  api.search = function(query, withResults) {
+    get("/search", {query: query}, withResults);
+  }
+
+})();
 
