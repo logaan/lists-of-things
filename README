@@ -71,8 +71,6 @@ Explainations
 
 ## BUGS
 
-- parentsWithout(thing) might not be working properly. Instead just trancating
-  one parent more or less at random.
 - When the first static page load occurs you see it with no content for a
   moment before we ajax in the real content. This flicker should be avoided.
 
