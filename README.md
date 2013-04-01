@@ -1,4 +1,4 @@
-# lists-of-things
+# Lists of things
 
 If you're anything like me you casually keep a bunch of lists. Some of them
 quickly get thrown away like shopping lists. Others grow over months like a
