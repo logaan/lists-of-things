@@ -11,11 +11,10 @@ Or checkout a copy from
 http://downloads.datomic.com/0.8.3438/datomic-free-0.8.3438.zip into the same
 directory as lists-of-things is checked out into.
 
-FIXME: write description
-
 ## Usage
 
-FIXME: write
+Run `make server` and `make datomic`, a browser window should appear. Then add
+things to your delight.
 
 ## Roadmap
 
@@ -24,7 +23,7 @@ Replaces reminders
   x Create
   x List orphans
   x Delete thing
-  x Edit thing
+  - Edit thing
 
 Replaces emailing myself
 - Things
@@ -32,7 +31,7 @@ Replaces emailing myself
 - Text Content
   x Create
   x List
-  x Delete
+  - Delete
   - Edit
 
 Replaces mind maps
@@ -40,7 +39,7 @@ Replaces mind maps
   x List
   x Create
   - Move
-  - Add to new parent
+  x Add to new parent
   - Remove from parent
 
 Replaces the hit list
@@ -52,7 +51,7 @@ Replaces jira
 - Give permission to other users
 - Open multiple listings
 - 'Sort' things between listings
-- Simulates comments
+x Simulates comments
 x Search
 
 Explainations
@@ -96,11 +95,6 @@ Explainations
   - Add links with meaningful hrefs to everything with an onclick
   x Have bs-index served dynamically inline with history and urls
   - Use \# to represent which child should be selected
-x Display correct information
-  x Make parents appear in the preview pane when a thing is opened (not just
-    previewed)
-  x Show thing's content on load
-  x Shall all parents in listing except the current
 - Performance tuning
   - Add expires headers
   - Double check gzipping
@@ -125,14 +119,6 @@ x Display correct information
   - discoverability
     - ? and link to show help
     - underline appropriate character for edit/delete/add/move/remove
-- Round out operations
-  - Edit
-  - Delete
-  - Add parent
-  - Move parent
-  - Remove parent
-  - Search
-  - Sorting
 - Batch operations
   - Allow multiple selection
   - Update basic operations to act in batch
@@ -143,10 +129,11 @@ x Display correct information
 ## Things to consider
 
 - Switch to coffee script
-- Split js into seperate files
+- Switch to clojurescript
+x Split js into seperate files
 
 ## License
 
-Copyright (C) 2012 FIXME
+Copyright (C) 2012 Logan Campbell-McPherson
 
 Distributed under the Eclipse Public License, the same as Clojure.
