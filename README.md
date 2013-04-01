@@ -39,26 +39,26 @@ directory).
 
 Replaces reminders
 - Things
-  x Create
-  x List orphans
-  x Delete thing
+  - ~~Create~~
+  - ~~List orphans~~
+  - ~~Delete thing~~
   - Edit thing
 
 Replaces emailing myself
 - Things
-  x Show
+  - ~~Show~~
 - Text Content
-  x Create
-  x List
+  - ~~Create~~
+  - ~~List~~
   - Delete
   - Edit
 
 Replaces mind maps
 - Children
-  x List
-  x Create
+  - ~~List~~
+  - ~~Create~~
   - Move
-  x Add to new parent
+  - ~~Add to new parent~~
   - Remove from parent
 
 Replaces the hit list
@@ -70,8 +70,8 @@ Replaces jira
 - Give permission to other users
 - Open multiple listings
 - 'Sort' things between listings
-x Simulates comments
-x Search
+- ~~Simulates comments~~
+- ~~Search~~
 
 Explainations
 - Introduce
@@ -109,10 +109,10 @@ Explainations
     - Preview
     - Breadcrumbs
 - Restore normal browser behavior
-  x Add history
+  - ~~Add history~~
   - Have the api return urls in addition to ids
   - Add links with meaningful hrefs to everything with an onclick
-  x Have bs-index served dynamically inline with history and urls
+  - ~~Have bs-index served dynamically inline with history and urls~~
   - Use \# to represent which child should be selected
 - Performance tuning
   - Add expires headers
@@ -149,7 +149,7 @@ Explainations
 
 - Switch to coffee script
 - Switch to clojurescript
-x Split js into seperate files
+- ~~Split js into seperate files~~
 
 ## License
 
