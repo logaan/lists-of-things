@@ -1,10 +1,10 @@
-default: repl db ring
+default: repl datomic server
 
 repl:
 	screen -t "repl" lein repl
-db:
+datomic:
 	screen -t "datomic" make transactor
-ring:
+server:
 	screen -t "server" lein ring server
 
 transactor:
