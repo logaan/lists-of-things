@@ -12,37 +12,27 @@
     });
   }
 
-  function post(url, data, success) {
-    callAPI("post", url, data, success);
-  }
-
-  function get(url, data, success) {
-    callAPI("get", url, data, success);
-  }
-
-  function destroy(url, data, success) {
-    callAPI("delete", url, data, success);
-  }
-
   api.remove = function(thingId, afterRemove) {
-    destroy("/things/" + thingId, {}, afterRemove);
+    callAPI("delete", "/things/" + thingId, {}, afterRemove);
   };
 
   api.addContent = function(thingId, content, afterRemove) {
-    post("/content", {"thing-id": thingId, "text": content}, afterRemove);
+    var data = {"thing-id": thingId, "text": content};
+    callAPI("post", "/content", data, afterRemove);
   }
 
   api.addParent = function(childId, parentId, afterAdd) {
-    var url = "/things/" + childId + "/parents";
-    post(url, {"parent-id": parentId}, afterAdd);
+    var data = { "parent-id": parentId };
+    callAPI("post", "/things/" + childId + "/parents", data, afterAdd);
   }
 
   api.createThing = function(name, parentId, afterCreate) {
-    post("/things", {"name": name, "parent-id": parentId}, afterCreate);
+    var data = {"name": name, "parent-id": parentId};
+    callAPI("post", "/things", data, afterAdd);
   }
 
   api.search = function(query, withResults) {
-    get("/search", {query: query}, withResults);
+    callAPI("get", "/api/search", {query: query}, withResults);
   }
 
 })();
