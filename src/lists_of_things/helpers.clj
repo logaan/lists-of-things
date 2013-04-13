@@ -112,10 +112,11 @@
 (def introduction
   [:div#introduction.container
    [:h2 "Welcome to lists of things"]
-   [:p "This app is meant to store all your lists. Your shopping lists, recipes,
-       movies you want to see, restaurants you want to visit, things you need to
-       do (or have done), even what stock your business has or where all your cards
-       are on your project wall."]
+   [:p "This app is meant to store all your lists. Your shopping lists,
+       recipes, movies you want to see, restaurants you want to visit, things
+       you need to do (or have done), even what stock your business has or
+       where all your cards are on your project wall."]
+   [:p "There is a " [:a {:href "/bs/things"} "prettier ui"] "."]
    [:p "Here are the rules:"]
    [:ol
     [:li "Things can many children"]
