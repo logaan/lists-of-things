@@ -2,6 +2,7 @@
   (:gen-class)
   (:use [compojure.core :only [defroutes GET POST DELETE PUT]])
   (:require
+    [clj-http.lite.client :as http]
     [lists-of-things
      [api :as api]
      [helpers :as helpers]
@@ -25,6 +26,10 @@
   interface/routes)
 
 (defroutes bootstrap
+  (POST "/sign-in" [assertion]
+    (http/post "https://verifier.login.persona.org/verify"
+                 {:form-params {:assertion assertion
+                                :audience "http://localhost:3000"}}))
   (GET "/bs/things" []
     (slurp "resources/public/bs/index.html")) 
   (GET "/bs/things/:id" [id]
