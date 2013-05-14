@@ -1,10 +1,10 @@
 baseUrl = "/api";
 
-Path.map("/bs/things").to(function(){
+Path.map("/things").to(function(){
   loadThing("/orphans");
 });
 
-Path.map("/bs/things/:thing_id").to(function(){
+Path.map("/things/:thing_id").to(function(){
   loadThing("/things/" + this.params.thing_id);
 });
 

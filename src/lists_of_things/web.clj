@@ -6,8 +6,6 @@
     [cheshire.core :as json]
     [lists-of-things
      [api :as api]
-     [helpers :as helpers]
-     [interface :as interface]
      [wrappers :as wrappers]]
     [compojure
      [handler :as handler]
@@ -26,15 +24,14 @@
       wrappers/json
       wrappers/jsonp))
 
-(def interface-controller
-  interface/routes)
-
 (defn verify [assertion]
   (http/post "https://verifier.login.persona.org/verify"
              {:form-params {:assertion assertion
                             :audience "http://localhost:3000"}}))
 
 (defroutes bootstrap
+  (GET "/" []
+    (response/redirect "/things"))
   (POST "/sign-in" {session :session {assertion :assertion} :params} 
     (let [{body :body}    (verify assertion)
           {email "email"} (json/parse-string body)
@@ -42,17 +39,15 @@
       (assoc (response/response
                (str "Old" (:email session) "New" email))
              :session new-session)))
-  (GET "/bs/things" []
-    (slurp "resources/public/bs/index.html"))
-  (GET "/bs/things/:id" [id]
-    (slurp "resources/public/bs/index.html")))
+  (GET "/things" []
+    (slurp "resources/public/index.html"))
+  (GET "/things/:id" [id]
+    (slurp "resources/public/index.html")))
 
 (compojure/defroutes routes
   bootstrap
-  interface-controller
   (compojure/context "/api" [] api-controller)
-  (route/resources "/")
-  (route/not-found helpers/not-found))
+  (route/resources "/"))
 
 (def app-controller
   (-> routes
