@@ -1,0 +1,26 @@
+<a href="#" class="btn" id="signin">Sign In</a>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script src="https://login.persona.org/include.js"></script>
+<script>
+  jQuery(function() {
+    navigator.id.watch({
+      onlogin: function(assertion) {
+        jQuery.ajax({
+          type: "POST",
+          url: "/sign-in",
+          data: {assertion: assertion},
+          success: function(res, status, xhr) {
+            window.location = "/";
+          },
+          error: function(xhr, status, err) {
+            alert("Login failed. Click the button again I guess.");
+          }
+        });
+      },
+      onlogout: function() {
+        alert("You logged out.");
+      }
+    });
+    $("#signin").click(function() { navigator.id.request(); });
+  });
+</script>

@@ -15,7 +15,6 @@
   <body>
     <div class="container-fluid">
       <div>
-        <a href="#" class="btn" id="signin">Sign In</a>
         <a href="#" class="btn" id="signout">Sign Out</a>
       </div>
 
@@ -173,30 +172,32 @@
     <script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="https://raw.github.com/mtrpcic/pathjs/master/path.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/knockout/2.1.0/knockout-min.js"></script>
-    <script src="https://login.persona.org/include.js"></script>
     <script src="/scripts/thing.js"></script>
     <script src="/scripts/page.js"></script>
     <script src="/scripts/routes.js"></script>
     <script src="/scripts/api.js"></script>
+    <script src="https://login.persona.org/include.js"></script>
     <script>
       jQuery(function() {
         navigator.id.watch({
           onlogin: function(assertion) {
+            console.log("login");
+            // You should already be signed in :|
+          },
+          onlogout: function() {
+            console.log("logout");
             jQuery.ajax({
               type: "POST",
-              url: "/sign-in",
-              data: {assertion: assertion},
+              url: "/log-out",
               success: function(res, status, xhr) {
-                console.log(res);
+                window.location = "/";
               },
               error: function(xhr, status, err) {
-                console.log(err);
+                alert("Error :(");
               }
             });
-          },
-          onlogout: function() { console.log("Logged out"); }
+          }
         });
-        $("#signin").click(function() { navigator.id.request(); });
         $("#signout").click(function() { navigator.id.logout(); });
       });
     </script>

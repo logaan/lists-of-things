@@ -30,8 +30,10 @@
                             :audience "http://localhost:3000"}}))
 
 (defroutes bootstrap
-  (GET "/" []
-    (response/redirect "/things"))
+  (GET "/" {session :session}
+    (response/redirect (if (:email session) "/things" "/login.html")))
+  (POST "/log-out" []
+    (assoc (response/response "{ok: true}") :session nil))
   (POST "/sign-in" {session :session {assertion :assertion} :params} 
     (let [{body :body}    (verify assertion)
           {email "email"} (json/parse-string body)
