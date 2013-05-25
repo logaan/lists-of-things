@@ -27,7 +27,7 @@ function Thing(thing) {
     },
 
     open: function() {
-      var thingPart = this.id() ? "/bs/things/" + this.id() : "/bs/things";
+      var thingPart = this.id() ? "/things/" + this.id() : "/things";
       Path.history.pushState({}, "", thingPart);
     },
 
