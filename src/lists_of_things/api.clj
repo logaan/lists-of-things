@@ -57,7 +57,7 @@
           (lotsdb/create-child conn (Long/parseLong parent-id) thing))})))
 
   ; Needs sensible return
-  (GET "/things/:child-id/parents/:parent-id" [child-id parent-id conn]
+  (DELETE "/things/:child-id/parents/:parent-id" [child-id parent-id conn]
     (lotsdb/remove-parent conn (Long/parseLong child-id) (Long/parseLong parent-id))
     (json/generate-string {:success true}))
 

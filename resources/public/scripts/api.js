@@ -5,10 +5,9 @@
   function callAPI(method, url, data, success) {
     jQuery.ajax({
       type:     method,
-      url:      baseUrl + url + "?callback=?",
+      url:      baseUrl + url,
       data:     data,
-      success:  success,
-      dataType: "jsonp"
+      success:  success
     });
   }
 

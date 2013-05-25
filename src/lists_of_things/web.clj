@@ -21,8 +21,7 @@
 
 (def api-controller
   (-> #'api/routes
-      wrappers/json
-      wrappers/jsonp))
+      wrappers/json))
 
 (defn verify [assertion]
   (http/post "https://verifier.login.persona.org/verify"

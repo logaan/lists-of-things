@@ -44,8 +44,9 @@ function createThingFromResponse(response) {
   return thing;
 };
 
+// This should be using api.js
 function loadThing(urlPart) {
-  var url = baseUrl + urlPart + "?callback=?";
+  var url = baseUrl + urlPart;
 
   jQuery.getJSON(url, function(response) {
     setPreviewAndListing(createThingFromResponse(response));

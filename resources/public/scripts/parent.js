@@ -3,7 +3,7 @@ function Parent(parnt, childId) {
     name: parnt.name,
     id: parnt.id,
     removeAsParent: function() {
-      api.removeParent(parnt.id, childId, function() {
+      api.removeParent(childId, parnt.id, function() {
         console.log("success");
         // Remove this object from it's child
       });
