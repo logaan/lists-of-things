@@ -128,7 +128,9 @@
               <span class="label">
                 <span data-bind="text: name">Parent name</span>
                 &nbsp;
-                <i class="icon-remove-circle icon-white"></i>
+                <a href="#" data-bind="click: removeAsParent">
+                  <i class="icon-remove-circle icon-white"></i>
+                </a>
               </span>
             </div>
           </div>
@@ -171,6 +173,7 @@
     <script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/scripts/vendor/path.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/knockout/2.1.0/knockout-min.js"></script>
+    <script src="/scripts/parent.js"></script>
     <script src="/scripts/thing.js"></script>
     <script src="/scripts/page.js"></script>
     <script src="/scripts/routes.js"></script>

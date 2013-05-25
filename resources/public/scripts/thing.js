@@ -4,7 +4,11 @@ function Thing(thing) {
 
     name:     ko.observable(thing.name),
 
-    parents:  ko.observableArray(thing.parents  || []),
+    parents:  ko.observableArray(
+        thing.parents ? $(thing.parents).map(function(i, p) {
+          return Parent(p, thing.id);
+        }).toArray() : []
+    ),
 
     children: ko.observableArray(thing.children || []),
 
@@ -51,6 +55,10 @@ function Thing(thing) {
         console.log(result);
       })
 
+    },
+
+    removeAsParent: function() {
+      console.log("value");
     },
 
     addParentPopover: ko.observable({

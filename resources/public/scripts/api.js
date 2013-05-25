@@ -26,13 +26,17 @@
     callAPI("post", "/things/" + childId + "/parents", data, afterAdd);
   }
 
+  api.removeParent = function(childId, parentId, afterRemove) {
+    callAPI("delete", "/things/" + childId + "/parents/" + parentId, {}, afterRemove);
+  }
+
   api.createThing = function(name, parentId, afterCreate) {
     var data = {"name": name, "parent-id": parentId};
     callAPI("post", "/things", data, afterAdd);
   }
 
   api.search = function(query, withResults) {
-    callAPI("get", "/api/search", {query: query}, withResults);
+    callAPI("get", "/search", {query: query}, withResults);
   }
 
 })();

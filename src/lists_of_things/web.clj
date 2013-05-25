@@ -20,7 +20,7 @@
      [session :as session]]))
 
 (def api-controller
-  (-> api/routes
+  (-> #'api/routes
       wrappers/json
       wrappers/jsonp))
 
@@ -48,16 +48,16 @@
 
 (compojure/defroutes routes
   bootstrap
-  (compojure/context "/api" [] api-controller)
+  (compojure/context "/api" [] #'api-controller)
   (route/resources "/"))
 
 (def app-controller
-  (-> routes
+  (-> #'routes
       handler/site
       wrappers/connection
       gzip/wrap-gzip
       session/wrap-session))
 
 (defn -main [& args]
-  (jetty/run-jetty app-controller {:port 3000}))
+  (jetty/run-jetty #'app-controller {:port 3000}))
 
