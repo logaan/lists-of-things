@@ -7,7 +7,7 @@ function Thing(thing) {
 
   object.parents = ko.observableArray(
       thing.parents ? $(thing.parents).map(function(i, p) {
-        return Parent(p, thing.id);
+        return Parent(p, object);
       }).toArray() : []
   );
 

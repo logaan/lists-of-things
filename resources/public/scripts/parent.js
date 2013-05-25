@@ -1,11 +1,12 @@
-function Parent(parnt, childId) {
+function Parent(parnt, child) {
   return {
     name: parnt.name,
     id: parnt.id,
     removeAsParent: function() {
-      api.removeParent(childId, parnt.id, function() {
-        console.log("success");
-        // Remove this object from it's child
+      var me = this;
+
+      api.removeParent(child.id(), parnt.id, function() {
+        child.parents.remove(me);
       });
     }
   }
