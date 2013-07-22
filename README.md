@@ -142,7 +142,7 @@ Explainations
   - Allow multiple selection
   - Update basic operations to act in batch
 - Auth
-  - ~~User accounts with persona ~~
+  - ~~User accounts with persona~~
   - Share with user (via email)
 
 ## Things to consider
