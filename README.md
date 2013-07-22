@@ -94,12 +94,12 @@ Explainations
 
 ## TODO
 
-- Remove html based interface
+- ~~Remove html based interface~~
   - Search
   - Display parents of open node above listing
-  - Add parent in priview
-  - Remove parents in preview
-  - Save new content to db
+  - ~~Add parent in priview~~
+  - ~~Remove parents in preview~~
+  - ~~Save new content to db~~
   - Edit name of thing
 - Refactor JS
   - Wrapping recursively
@@ -142,12 +142,12 @@ Explainations
   - Allow multiple selection
   - Update basic operations to act in batch
 - Auth
-  - User accounts with persona
+  - ~~User accounts with persona ~~
   - Share with user (via email)
 
 ## Things to consider
 
-- Switch to coffee script
+- ~~Switch to coffee script~~
 - Switch to clojurescript
 - ~~Split js into seperate files~~
 
