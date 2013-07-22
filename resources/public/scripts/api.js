@@ -31,7 +31,7 @@
 
   api.createThing = function(name, parentId, afterCreate) {
     var data = {"name": name, "parent-id": parentId};
-    callAPI("post", "/things", data, afterAdd);
+    callAPI("post", "/things", data, afterCreate);
   }
 
   api.search = function(query, withResults) {
