@@ -5,6 +5,8 @@ function Thing(thing) {
 
   object.name = ko.observable(thing.name);
 
+  object.selected = ko.observable(thing.selected);
+
   object.parents = ko.observableArray(
       thing.parents ? $(thing.parents).map(function(i, p) {
         return Parent(p, object);
@@ -36,13 +38,9 @@ function Thing(thing) {
     Path.history.pushState({}, "", thingPart);
   };
 
-  object.select = function(model, event) {
-    // Perhaps this should be a css or style binding to a selected flag.
-    // Makes some sense I guess. You could have multiple things selected.
-    $("#children .selected").removeClass("selected");
-    // This seems to be throwing errors when we do a select on create.
-    $(event.currentTarget).addClass("selected");
-    page.preview(model);
+  // Where is this being called from?
+  object.select = function() {
+    this.selected(!this.selected());
   };
 
   object.addContent = function(element) {
