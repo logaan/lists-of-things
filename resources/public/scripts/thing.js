@@ -29,7 +29,6 @@ function Thing(thing) {
 
     api.remove(this.id(), function(data, textSatus, jqXHR) {
       page.listing().children.remove(me);
-      page.preview(page.listing());
     });
   };
 

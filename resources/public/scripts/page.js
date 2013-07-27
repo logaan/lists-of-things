@@ -22,11 +22,18 @@ function Page(args) {
       selected: true
     });
 
+    page.selectNone();
     page.listing().children.push(thing);
     thing.save();
 
     page.newThingName("");
   };
+
+  page.selectNone = function() {
+    _.each(page.listing().children(), function(child) {
+      child.selected(false);
+    });
+  }
 
   return page;
 }
