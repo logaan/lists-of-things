@@ -4,22 +4,17 @@ function NewChildOfListingThing(listingThing) {
   my.name = ko.observable("");
 
   my.addThing = function() {
-    // NOTE: Temporary ID. Should be pulled back from API.
-    var newThing = ChildOfListingThing(listingThing, {
-      name:     my.name(),
-      selected: false
-    });
+    api.createThing(my.name(), listingThing.id(), function(response) {
+      var newThing = ChildOfListingThing(listingThing, {
+        name:     my.name(),
+        id:       response.id,
+        selected: false
+      });
 
-    listingThing.selectNone();
-    listingThing.children.push(newThing);
-    my.save();
+      listingThing.selectNone();
+      listingThing.children.push(newThing);
 
-    my.name("");
-  };
-
-  my.save = function() {
-    api.createThing(my.name(), listingThing.id(), function(result) {
-      console.log(result);
+      my.name("");
     });
   };
 
