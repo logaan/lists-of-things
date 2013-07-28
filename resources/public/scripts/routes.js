@@ -30,9 +30,9 @@ function loadThing(urlPart) {
 
 var repository = ko.observable({});
 
-function addToRepository(id, thing) {
+function addToRepository(thing) {
   var val = repository();
-  val[id] = thing;
+  val[thing.id] = thing;
   repository(val);
 }
 
@@ -48,7 +48,7 @@ function getFromRepository(id) {
 function populateRepository(thing) {
   _.each(thing.parents,  populateRepository);
   _.each(thing.children, populateRepository);
-  addToRepository(thing.id, thing);
+  addToRepository(thing);
 }
 
 var listing;

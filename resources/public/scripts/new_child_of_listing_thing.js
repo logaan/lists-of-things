@@ -6,14 +6,17 @@ function NewChildOfListingThing(listingThing) {
   my.addThing = function() {
     var parentId = listingThing.id();
 
+    // NOTE: This should probably be creating the child with the parent already
+    // in it.
     api.createThing(my.name(), parentId).done(function(response) {
+      // NOTE: These three blocks could probably be a repository method.
       var newThing = {name: my.name(), id: response.id}
 
-      addToRepository(response.id, newThing);
+      addToRepository(newThing);
 
       var parent = getFromRepository(parentId)
       parent.children.push(newThing);
-      addToRepository(parentId, parent);
+      addToRepository(parent);
 
       my.name("");
     });
