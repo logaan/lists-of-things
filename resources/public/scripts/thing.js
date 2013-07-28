@@ -46,6 +46,10 @@ function Thing(thing) {
     this.selected(!this.selected());
   };
 
+  // NOTE: Add content shouldn't be using jquery for values. Instead each thing
+  // should have a newContent field which is bound to the content area. Add
+  // content will pull the information out of there and reset it. Like new
+  // thing name.
   object.addContent = function(element) {
     var contentarea = $(element).find("#contentarea");
     var content = contentarea.val();
