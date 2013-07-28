@@ -18,6 +18,8 @@ function Thing(thing) {
   // them into things. Just like the parents function above it.
   object.children = ko.observableArray(thing.children || []);
 
+  // NOTE: Contents will need to be moved into their own model once they
+  // support actions like editing and deleting.
   object.contents = ko.observableArray(thing.contents || []);
 
   object.parentsWithout = function(parentToExclude) {
