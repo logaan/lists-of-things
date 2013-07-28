@@ -5,7 +5,7 @@ function Parent(child, parnt) {
     removeAsParent: function() {
       var me = this;
 
-      api.removeParent(child.id(), parnt.id, function() {
+      api.removeParent(child.id(), parnt.id).done(function() {
         // NOTE: This should be removing from the repository.
         child.parents.remove(me);
       });

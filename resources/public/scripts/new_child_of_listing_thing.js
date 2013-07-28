@@ -4,7 +4,7 @@ function NewChildOfListingThing(listingThing) {
   my.name = ko.observable("");
 
   my.addThing = function() {
-    api.createThing(my.name(), listingThing.id(), function(response) {
+    api.createThing(my.name(), listingThing.id()).done(function(response) {
       var newThing = ChildOfListingThing(listingThing, {
         name:     my.name(),
         id:       response.id,

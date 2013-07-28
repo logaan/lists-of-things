@@ -43,7 +43,7 @@ function createThingFromResponse(response) {
 function loadThing(urlPart) {
   var url = baseUrl + urlPart;
 
-  jQuery.getJSON(url, function(response) {
+  jQuery.getJSON(url).done(function(response) {
     setPreviewAndListing(createThingFromResponse(response));
   });
 }

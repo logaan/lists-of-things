@@ -31,7 +31,7 @@ function Thing(args) {
   my.deletes = function() {
     var me = this;
 
-    api.remove(this.id(), function(data, textSatus, jqXHR) {
+    api.remove(this.id()).done(function(data, textSatus, jqXHR) {
       // NOTE: Will need to remove its self from the repository once the
       // listing is computed.
       page.listing().children.remove(me);
@@ -64,7 +64,7 @@ function Thing(args) {
     contentarea.focus();
     this.contents.push({text: content});
 
-    api.addContent(this.id(), content, function(result) {
+    api.addContent(this.id(), content).done(function(result) {
       console.log(result);
     })
   };
@@ -99,7 +99,7 @@ function Thing(args) {
     var childId = currentThing.id();
     var parentId = this.id();
 
-    api.addParent(childId, parentId, function(result) {
+    api.addParent(childId, parentId).done(function(result) {
       console.log(result);
     });
 
@@ -110,7 +110,7 @@ function Thing(args) {
     var addParentPopover = this;
 
     if(addParentPopover.query() != "") {
-      api.search(addParentPopover.query() + "*", function(results) {
+      api.search(addParentPopover.query() + "*").done(function(results) {
         var things = $(results).map(function(index, result) {
           return createThingFromResponse(result);
         }).toArray();

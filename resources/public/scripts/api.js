@@ -4,40 +4,39 @@
 
   // NOTE: Should drop all success arguments from this and instead just return
   // the deferred.
-  function callAPI(method, url, data, success) {
-    jQuery.ajax({
+  function callAPI(method, url, data) {
+    return jQuery.ajax({
       type:     method,
       url:      baseUrl + url,
-      data:     data,
-      success:  success
+      data:     data
     });
   }
 
-  api.remove = function(thingId, afterRemove) {
-    callAPI("delete", "/things/" + thingId, {}, afterRemove);
+  api.remove = function(thingId) {
+    return callAPI("delete", "/things/" + thingId, {});
   };
 
-  api.addContent = function(thingId, content, afterRemove) {
+  api.addContent = function(thingId, content) {
     var data = {"thing-id": thingId, "text": content};
-    callAPI("post", "/content", data, afterRemove);
+    return callAPI("post", "/content", data);
   }
 
-  api.addParent = function(childId, parentId, afterAdd) {
+  api.addParent = function(childId, parentId) {
     var data = { "parent-id": parentId };
-    callAPI("post", "/things/" + childId + "/parents", data, afterAdd);
+    return callAPI("post", "/things/" + childId + "/parents", data);
   }
 
-  api.removeParent = function(childId, parentId, afterRemove) {
-    callAPI("delete", "/things/" + childId + "/parents/" + parentId, {}, afterRemove);
+  api.removeParent = function(childId, parentId) {
+    return callAPI("delete", "/things/" + childId + "/parents/" + parentId, {});
   }
 
-  api.createThing = function(name, parentId, afterCreate) {
+  api.createThing = function(name, parentId) {
     var data = {"name": name, "parent-id": parentId};
-    callAPI("post", "/things", data, afterCreate);
+    return callAPI("post", "/things", data);
   }
 
-  api.search = function(query, withResults) {
-    callAPI("get", "/search", {query: query}, withResults);
+  api.search = function(query) {
+    return callAPI("get", "/search", {query: query});
   }
 
 })();
