@@ -53,16 +53,6 @@ function PreviewThing(raw) {
     }
   });
 
-  // Current thing is easily confused with this. This function should maybe
-  // be being called on the currently selected thing instead of the parent
-  // being added.
-  //
-  // If a thing is an orphan and is given a parent it should disapear from
-  // the orphan listing.
-  //
-  // If the parent is a sybling it's child count should be updated.
-  //
-  // The thing that has been given a parent should have it's parents updated.
   my.addAsParent = function() {
     var currentThing = page.preview();
     currentThing.parents.push(this);

@@ -4,14 +4,16 @@ function NewChildOfListingThing(listingThing) {
   my.name = ko.observable("");
 
   my.addThing = function() {
-    api.createThing(my.name(), listingThing.id()).done(function(response) {
-      addToRepository(response.id, {
-        name:     my.name(),
-        id:       response.id
-      });
+    var parentId = listingThing.id();
 
-      listingThing.selectNone();
-      listingThing.childrenIds.push(response.id);
+    api.createThing(my.name(), parentId).done(function(response) {
+      var newThing = {name: my.name(), id: response.id}
+
+      addToRepository(response.id, newThing);
+
+      var parent = getFromRepository(parentId)
+      parent.children.push(newThing);
+      addToRepository(parentId, parent);
 
       my.name("");
     });
