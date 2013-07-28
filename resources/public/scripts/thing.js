@@ -13,6 +13,9 @@ function Thing(thing) {
       }).toArray() : []
   );
 
+  // NOTE: This is taking in a list of children that have already been turned
+  // into things. Perhaps instead it should be iterating over them and turning
+  // them into things. Just like the parents function above it.
   object.children = ko.observableArray(thing.children || []);
 
   object.contents = ko.observableArray(thing.contents || []);
