@@ -1,15 +1,15 @@
 function Page(args) {
-  var page = {}
+  var my = {}
 
-  page.listing = ko.observable(args.listing);
+  my.listing = ko.observable(args.listing);
 
-  page.preview =  ko.computed(function() {
-    var firstSelected = _.find(page.listing().children(), function(child) {
+  my.preview =  ko.computed(function() {
+    var firstSelected = _.find(my.listing().children(), function(child) {
       return child.selected();
     });
 
-    return firstSelected || page.listing();
+    return firstSelected || my.listing();
   });
 
-  return page;
+  return my;
 }
