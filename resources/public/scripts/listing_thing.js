@@ -1,4 +1,4 @@
-function Thing(args) {
+function ListingThing(args) {
   var my = {};
 
   my.id = ko.observable(args.id);

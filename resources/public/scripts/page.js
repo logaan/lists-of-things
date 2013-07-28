@@ -4,7 +4,7 @@ function Page(listingId) {
   my.listingId = ko.observable(listingId);
 
   my.listing = ko.computed(function() {
-    return Thing(repository()[my.listingId()]);
+    return ListingThing(repository()[my.listingId()]);
   });
 
   my.preview = ko.computed(function() {

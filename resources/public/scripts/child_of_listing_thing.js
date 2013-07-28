@@ -14,7 +14,7 @@ function ChildOfListingThing(listingParent, args) {
   );
 
   my.children = ko.observableArray(
-    args.children ? _.map(args.children, Thing) : []
+    args.children ? args.children : []
   );
 
   my.otherParents = ko.computed(function() {
