@@ -2,6 +2,8 @@
 
   api = {};
 
+  // NOTE: Should drop all success arguments from this and instead just return
+  // the deferred.
   function callAPI(method, url, data, success) {
     jQuery.ajax({
       type:     method,
