@@ -12,7 +12,8 @@ function Page(listingId) {
       return child.selected();
     });
 
-    return firstSelected || my.listing();
+    var previewThing = firstSelected || my.listing();
+    return PreviewThing(repository[previewThing.id()]);
   });
 
   return my;
