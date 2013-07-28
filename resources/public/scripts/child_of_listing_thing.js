@@ -1,3 +1,4 @@
+// NOTE: Should know it's parent
 function ChildOfListingThing(args) {
   // NOTE: var my = Thing(args);
   var my = {};
@@ -8,6 +9,7 @@ function ChildOfListingThing(args) {
 
   my.selected = ko.observable(args.selected);
 
+  // NOTE: Should be a list of ids.
   my.parents = ko.observableArray(
       args.parents ? _.map(args.parents, _.partial(Parent, my)) : []
   );
@@ -16,13 +18,11 @@ function ChildOfListingThing(args) {
     args.children ? _.map(args.children, Thing) : []
   );
 
-  // NOTE: This can be done away with as you can do the same with underscore
-  // using _.without(parents(), parentToExclude)
+  // NOTE: This should be derived.
   my.parentsWithout = function(parentToExclude) {
-    var smallerParents = my.parents().slice(0);
-    var index = smallerParents.indexOf(parentToExclude);
-    smallerParents.splice(index, 1);
-    return smallerParents;
+    return _.reject(my.parents(), function(parent) {
+      return parent.id == parentToExclude.id();
+    });
   };
 
   my.toggleSelection = function() {
