@@ -21,27 +21,28 @@ jQuery(function() {
 function loadThing(urlPart) {
   var url = baseUrl + urlPart;
 
-  jQuery.getJSON(url).done(function(response) {
-    setPreviewAndListing(createThingFromResponse(response));
+  jQuery.getJSON(url).done(function(thing) {
+    if(!thing.id) { thing.id = "orphans"; }
+    populateRepository(thing);
+    setListing(Thing(thing));
   });
 }
 
-function setPreviewAndListing(thing) {
+var repository = {};
+
+function populateRepository(thing) {
+  repository[thing.id] = thing;
+  _.each(thing.parents,  populateRepository);
+  _.each(thing.children, populateRepository);
+}
+
+var listing;
+
+function setListing(thing) {
   if (typeof page === 'undefined') {
     page = Page(thing);
     ko.applyBindings(page);
   } else {
     page.listing(listing);
   }
-};
-
-function createThingFromResponse(response) {
-  var thing = Thing({
-    id:       response.id,
-    name:     response.name,
-    contents: response.contents,
-    children: response.children
-  });
-
-  return thing;
 };
