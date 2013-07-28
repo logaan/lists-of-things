@@ -60,11 +60,6 @@ function Thing(thing) {
     api.addContent(this.id(), content, function(result) {
       console.log(result);
     })
-
-  };
-
-  object.removeAsParent = function() {
-    console.log("value");
   };
 
   object.addParentPopover = ko.observable({
