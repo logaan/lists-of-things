@@ -1,9 +1,13 @@
-function Page(listingThing) {
+function Page(listingId) {
   var my = {}
 
-  my.listing = ko.observable(listingThing);
+  my.listingId = ko.observable(listingId);
 
-  my.preview =  ko.computed(function() {
+  my.listing = ko.computed(function() {
+    return Thing(repository[my.listingId()]);
+  });
+
+  my.preview = ko.computed(function() {
     var firstSelected = _.find(my.listing().children(), function(child) {
       return child.selected();
     });

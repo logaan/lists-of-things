@@ -24,25 +24,26 @@ function loadThing(urlPart) {
   jQuery.getJSON(url).done(function(thing) {
     if(!thing.id) { thing.id = "orphans"; }
     populateRepository(thing);
-    setListing(Thing(thing));
+    setListing(thing.id);
   });
 }
 
 var repository = {};
 
+// Loaded in reverse order of completeness
 function populateRepository(thing) {
-  repository[thing.id] = thing;
   _.each(thing.parents,  populateRepository);
   _.each(thing.children, populateRepository);
+  repository[thing.id] = thing;
 }
 
 var listing;
 
-function setListing(thing) {
+function setListing(id) {
   if (typeof page === 'undefined') {
-    page = Page(thing);
+    page = Page(id);
     ko.applyBindings(page);
   } else {
-    page.listing(listing);
+    page.listingId(id);
   }
 };
