@@ -49,7 +49,7 @@
           <h2 data-bind="text: listing().name">Listing name</h2>
 
           <ol class="unstyled" data-bind="foreach: listing().children" id="children">
-            <li data-bind="click: select, event: { dblclick: open }, css: {selected: selected()}">
+            <li data-bind="click: toggleSelection, event: { dblclick: open }, css: {selected: selected()}">
               <div class="row-fluid">
                 <div class="span11">
                   <h4 data-bind="text: name" class="child-name">Child name</h4>

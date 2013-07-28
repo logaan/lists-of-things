@@ -42,7 +42,7 @@ function Thing(thing) {
     Path.history.pushState({}, "", thingPart);
   };
 
-  object.select = function() {
+  object.toggleSelection = function() {
     this.selected(!this.selected());
   };
 
