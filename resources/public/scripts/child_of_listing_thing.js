@@ -1,4 +1,3 @@
-// NOTE: Should know it's parent
 function ChildOfListingThing(listingParent, args) {
   // NOTE: var my = Thing(args);
   var my = {};

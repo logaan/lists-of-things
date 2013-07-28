@@ -36,6 +36,10 @@ function addToRepository(id, thing) {
   repository(val);
 }
 
+function removeFromRepository(id) {
+  repository(_.omit(repository(), id));
+}
+
 // Loaded in reverse order of completeness
 function populateRepository(thing) {
   _.each(thing.parents,  populateRepository);

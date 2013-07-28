@@ -18,12 +18,8 @@ function PreviewThing(raw) {
   my.contents = ko.observableArray(raw.contents || []);
 
   my.deletes = function() {
-    var me = this;
-
-    api.remove(this.id()).done(function(data, textSatus, jqXHR) {
-      // NOTE: Will need to remove its self from the repository once the
-      // listing is computed.
-      page.listing().children.remove(me);
+    api.remove(my.id()).done(function(data, textSatus, jqXHR) {
+      removeFromRepository(my.id());
     });
   };
 
