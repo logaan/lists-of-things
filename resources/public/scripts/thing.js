@@ -1,23 +1,23 @@
-function Thing(thing) {
+function Thing(args) {
   var my = {};
 
-  my.id = ko.observable(thing.id);
+  my.id = ko.observable(args.id);
 
-  my.name = ko.observable(thing.name);
+  my.name = ko.observable(args.name);
 
-  my.selected = ko.observable(thing.selected);
+  my.selected = ko.observable(args.selected);
 
   my.parents = ko.observableArray(
-      thing.parents ? _.map(thing.parents, _.partial(Parent, my)) : []
+      args.parents ? _.map(args.parents, _.partial(Parent, my)) : []
   );
 
   my.children = ko.observableArray(
-    thing.children ? _.map(thing.children, ChildOfListingThing) : []
+    args.children ? _.map(args.children, ChildOfListingThing) : []
   );
 
   // NOTE: Contents will need to be moved into their own model once they
   // support actions like editing and deleting.
-  my.contents = ko.observableArray(thing.contents || []);
+  my.contents = ko.observableArray(args.contents || []);
 
   my.parentsWithout = function(parentToExclude) {
     var smallerParents = this.parents().slice(0);
