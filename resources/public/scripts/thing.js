@@ -33,6 +33,8 @@ function Thing(thing) {
     var me = this;
 
     api.remove(this.id(), function(data, textSatus, jqXHR) {
+      // REFACTOR: Will need to remove its self from the repository once the
+      // listing is computed.
       page.listing().children.remove(me);
     });
   };
