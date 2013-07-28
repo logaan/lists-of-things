@@ -1,47 +1,47 @@
 function Thing(thing) {
-  var object = {};
+  var my = {};
 
-  object.id = ko.observable(thing.id);
+  my.id = ko.observable(thing.id);
 
-  object.name = ko.observable(thing.name);
+  my.name = ko.observable(thing.name);
 
-  object.selected = ko.observable(thing.selected);
+  my.selected = ko.observable(thing.selected);
 
-  object.parents = ko.observableArray(
-      thing.parents ? _.map(thing.parents, _.partial(Parent, object)) : []
+  my.parents = ko.observableArray(
+      thing.parents ? _.map(thing.parents, _.partial(Parent, my)) : []
   );
 
-  object.children = ko.observableArray(
+  my.children = ko.observableArray(
     thing.children ? _.map(thing.children, ChildOfListingThing) : []
   );
 
   // NOTE: Contents will need to be moved into their own model once they
   // support actions like editing and deleting.
-  object.contents = ko.observableArray(thing.contents || []);
+  my.contents = ko.observableArray(thing.contents || []);
 
-  object.parentsWithout = function(parentToExclude) {
+  my.parentsWithout = function(parentToExclude) {
     var smallerParents = this.parents().slice(0);
     var index = smallerParents.indexOf(parentToExclude);
     smallerParents.splice(index, 1);
     return smallerParents;
   };
 
-  object.deletes = function() {
+  my.deletes = function() {
     var me = this;
 
     api.remove(this.id(), function(data, textSatus, jqXHR) {
-      // REFACTOR: Will need to remove its self from the repository once the
+      // NOTE: Will need to remove its self from the repository once the
       // listing is computed.
       page.listing().children.remove(me);
     });
   };
 
-  object.open = function() {
+  my.open = function() {
     var thingPart = this.id() ? "/things/" + this.id() : "/things";
     Path.history.pushState({}, "", thingPart);
   };
 
-  object.toggleSelection = function() {
+  my.toggleSelection = function() {
     this.selected(!this.selected());
   };
 
@@ -49,7 +49,7 @@ function Thing(thing) {
   // should have a newContent field which is bound to the content area. Add
   // content will pull the information out of there and reset it. Like new
   // thing name.
-  object.addContent = function(element) {
+  my.addContent = function(element) {
     var contentarea = $(element).find("#contentarea");
     var content = contentarea.val();
     contentarea.val("");
@@ -61,7 +61,7 @@ function Thing(thing) {
     })
   };
 
-  object.addParentPopover = ko.observable({
+  my.addParentPopover = ko.observable({
     visible: ko.observable(false),
     toggleVisibility: function() {
       this.visible(!this.visible());
@@ -83,7 +83,7 @@ function Thing(thing) {
   // If the parent is a sybling it's child count should be updated.
   //
   // The thing that has been given a parent should have it's parents updated.
-  object.addAsParent = function() {
+  my.addAsParent = function() {
     var currentThing = page.preview();
     currentThing.parents.push(this);
     currentThing.addParentPopover().visible(false);
@@ -99,7 +99,7 @@ function Thing(thing) {
   };
 
   // This doesn't pull back the id if the thing is newly saved.
-  object.save = function() {
+  my.save = function() {
     api.createThing(this.name(), page.listing().id(), function(result) {
       console.log(result);
     });
@@ -117,7 +117,7 @@ function Thing(thing) {
         addParentPopover.results(things);
       });
     }
-  }, object.addParentPopover())
+  }, my.addParentPopover())
 
-  return object;
+  return my;
 };
