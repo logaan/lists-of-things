@@ -1,7 +1,7 @@
-function Page(args) {
+function Page(listingThing) {
   var my = {}
 
-  my.listing = ko.observable(args.listing);
+  my.listing = ko.observable(listingThing);
 
   my.preview =  ko.computed(function() {
     var firstSelected = _.find(my.listing().children(), function(child) {

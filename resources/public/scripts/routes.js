@@ -17,11 +17,18 @@ jQuery(function() {
   });
 });
 
-function setPreviewAndListing(thing) {
-  var listing = thing;
+// NOTE: This should be using api.js
+function loadThing(urlPart) {
+  var url = baseUrl + urlPart;
 
+  jQuery.getJSON(url).done(function(response) {
+    setPreviewAndListing(createThingFromResponse(response));
+  });
+}
+
+function setPreviewAndListing(thing) {
   if (typeof page === 'undefined') {
-    page = Page({listing: listing});
+    page = Page(thing);
     ko.applyBindings(page);
   } else {
     page.listing(listing);
@@ -38,12 +45,3 @@ function createThingFromResponse(response) {
 
   return thing;
 };
-
-// This should be using api.js
-function loadThing(urlPart) {
-  var url = baseUrl + urlPart;
-
-  jQuery.getJSON(url).done(function(response) {
-    setPreviewAndListing(createThingFromResponse(response));
-  });
-}
