@@ -5,13 +5,15 @@ function PreviewThing(raw) {
 
   my.name = ko.observable(raw.name);
 
-  my.parents = ko.observableArray(
-      raw.parents ? _.map(raw.parents, _.partial(Parent, my)) : []
-  );
+  my.parentIds = ko.observableArray(_.pluck(raw.parents || [], "id"));
 
-  my.children = ko.observableArray(
-    raw.children ? _.map(raw.children, _.partial(ChildOfListingThing, my)) : []
-  );
+  my.parents = ko.computed(function() {
+    return _.chain(my.parentIds())
+            .map(getFromRepository)
+            .compact()
+            .map(_.partial(Parent, my))
+            .value();
+  });
 
   // NOTE: Contents will need to be moved into their own model once they
   // support actions like editing and deleting.
