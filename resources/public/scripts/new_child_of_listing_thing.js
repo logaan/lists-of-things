@@ -5,14 +5,13 @@ function NewChildOfListingThing(listingThing) {
 
   my.addThing = function() {
     api.createThing(my.name(), listingThing.id()).done(function(response) {
-      var newThing = ChildOfListingThing(listingThing, {
+      addToRepository(response.id, {
         name:     my.name(),
-        id:       response.id,
-        selected: false
+        id:       response.id
       });
 
       listingThing.selectNone();
-      listingThing.children.push(newThing);
+      listingThing.childrenIds.push(response.id);
 
       my.name("");
     });

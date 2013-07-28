@@ -10,7 +10,7 @@ function ChildOfListingThing(listingParent, args) {
 
   // NOTE: Should be a list of ids.
   my.parents = ko.observableArray(
-      args.parents ? _.map(args.parents, _.partial(Parent, my)) : []
+    args.parents ? _.map(args.parents, _.partial(Parent, my)) : []
   );
 
   my.children = ko.observableArray(

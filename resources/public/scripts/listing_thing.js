@@ -5,9 +5,15 @@ function ListingThing(args) {
 
   my.name = ko.observable(args.name);
 
-  my.children = ko.observableArray(
-    args.children ? _.map(args.children, _.partial(ChildOfListingThing, my)) : []
-  );
+  my.childrenIds = ko.observableArray(_.pluck(args.children || [], "id"));
+
+  my.children = ko.computed(function() {
+    return _.chain(my.childrenIds())
+            .map(getFromRepository)
+            .compact()
+            .map(_.partial(ChildOfListingThing, my))
+            .value();
+  });
 
   my.newChild = NewChildOfListingThing(my);
 

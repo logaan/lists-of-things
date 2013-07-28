@@ -37,7 +37,11 @@ function addToRepository(id, thing) {
 }
 
 function removeFromRepository(id) {
-  repository(_.omit(repository(), id));
+  repository(_.omit(repository(), id.toString()));
+}
+
+function getFromRepository(id) {
+  return repository()[id];
 }
 
 // Loaded in reverse order of completeness
