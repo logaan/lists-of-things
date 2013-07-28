@@ -1,17 +1,14 @@
-function AddParentPopoverThing(raw) {
+function AddParentPopoverThing(addParentPopover, child, raw) {
   var my = {};
 
   my.name = ko.observable(raw.name);
 
+  my.id   = ko.observable(raw.id);
+
   my.addAsParent = function() {
-    var currentThing = page.preview();
-    currentThing.parents.push(this);
-    currentThing.addParentPopover().visible(false);
+    addParentPopover.visible(false);
 
-    var childId = currentThing.id();
-    var parentId = this.id();
-
-    api.addParent(childId, parentId).done(function(result) {
+    api.addParent(child.id(), my.id()).done(function(result) {
       console.log(result);
     });
 

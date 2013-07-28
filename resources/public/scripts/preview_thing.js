@@ -41,14 +41,16 @@ function PreviewThing(raw) {
     })
   };
 
+  // NOTE: Does this actually need to be observable?
   my.addParentPopover = ko.observable(AddParentPopover());
 
+  // NOTE: Can this be moved into AddParentPopover?
   ko.computed(function() {
     var addParentPopover = this;
 
     if(addParentPopover.query() != "") {
       api.search(addParentPopover.query() + "*").done(function(results) {
-        var things = _.map(results, AddParentPopoverThing);
+        var things = _.map(results, _.partial(AddParentPopoverThing, my.addParentPopover(), my));
         addParentPopover.results(things);
       });
     }
