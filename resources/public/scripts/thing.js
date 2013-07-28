@@ -12,7 +12,7 @@ function Thing(thing) {
   );
 
   object.children = ko.observableArray(
-    thing.children ? _.map(thing.children, Thing) : []
+    thing.children ? _.map(thing.children, ChildOfListingThing) : []
   );
 
   // NOTE: Contents will need to be moved into their own model once they
