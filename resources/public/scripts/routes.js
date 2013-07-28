@@ -32,11 +32,8 @@ function createThingFromResponse(response) {
   var thing = Thing({
     id:       response.id,
     name:     response.name,
-    contents: response.contents
-  });
-
-  $(response.children).each(function(index, value) {
-    thing.children.push(Thing(value));
+    contents: response.contents,
+    children: response.children
   });
 
   return thing;
