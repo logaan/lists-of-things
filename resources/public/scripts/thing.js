@@ -8,16 +8,12 @@ function Thing(thing) {
   object.selected = ko.observable(thing.selected);
 
   object.parents = ko.observableArray(
-      thing.parents ? $(thing.parents).map(function(i, p) {
-        return Parent(p, object);
-      }).toArray() : []
+      thing.parents ? _.map(thing.parents, _.partial(Parent, object)) : []
   );
 
   object.children = ko.observableArray(
-      thing.children ? $(thing.children).map(function(index, child) {
-        return Thing(child);
-      }).toArray() : []
-    );
+    thing.children ? _.map(thing.children, Thing) : []
+  );
 
   // NOTE: Contents will need to be moved into their own model once they
   // support actions like editing and deleting.
