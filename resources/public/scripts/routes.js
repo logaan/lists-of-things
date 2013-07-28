@@ -28,13 +28,19 @@ function loadThing(urlPart) {
   });
 }
 
-var repository = {};
+var repository = ko.observable({});
+
+function addToRepository(id, thing) {
+  var val = repository();
+  val[id] = thing;
+  repository(val);
+}
 
 // Loaded in reverse order of completeness
 function populateRepository(thing) {
   _.each(thing.parents,  populateRepository);
   _.each(thing.children, populateRepository);
-  repository[thing.id] = thing;
+  addToRepository(thing.id, thing);
 }
 
 var listing;
