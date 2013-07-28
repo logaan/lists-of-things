@@ -7,15 +7,15 @@
 ; these methods return transaction data.. That'd make this module purely
 ; functional.
 (defn create [conn thing]
-  (let [id (d/tempid :db.part/user)]
-    @(d/transact conn [(merge {:db/id id} thing)])
-    id))
+  (let [id          (d/tempid :db.part/user)
+        transaction @(d/transact conn [(merge {:db/id id} thing)])]
+    (d/resolve-tempid (d/db conn) (:tempids transaction) id)))
 
 (defn create-child [conn parent-id thing]
-  (let [id (d/tempid :db.part/user)]
-    @(d/transact conn [(merge {:db/id id} thing)
-                       [:db/add parent-id :thing/children id]])
-    id))
+  (let [id           (d/tempid :db.part/user)
+        transaction @(d/transact conn [(merge {:db/id id} thing)
+                       [:db/add parent-id :thing/children id]])]
+    (d/resolve-tempid (d/db conn) (:tempids transaction) id)))
 
 (defn edit-thing [conn id old-name new-name]
   @(d/transact conn [[:db/retract id :thing/name old-name]
