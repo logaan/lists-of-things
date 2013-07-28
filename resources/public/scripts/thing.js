@@ -12,8 +12,10 @@ function Thing(args) {
   );
 
   my.children = ko.observableArray(
-    args.children ? _.map(args.children, ChildOfListingThing) : []
+    args.children ? _.map(args.children, _.partial(ChildOfListingThing, my)) : []
   );
+
+  my.newChild = NewChildOfListingThing(my);
 
   // NOTE: Contents will need to be moved into their own model once they
   // support actions like editing and deleting.
@@ -44,6 +46,12 @@ function Thing(args) {
   my.toggleSelection = function() {
     this.selected(!this.selected());
   };
+
+  my.selectNone = function() {
+    _.each(my.children(), function(child) {
+      child.selected(false);
+    });
+  }
 
   // NOTE: Add content shouldn't be using jquery for values. Instead each thing
   // should have a newContent field which is bound to the content area. Add
@@ -96,13 +104,6 @@ function Thing(args) {
     });
 
     return false;
-  };
-
-  // This doesn't pull back the id if the thing is newly saved.
-  my.save = function() {
-    api.createThing(this.name(), page.listing().id(), function(result) {
-      console.log(result);
-    });
   };
 
   ko.computed(function() {

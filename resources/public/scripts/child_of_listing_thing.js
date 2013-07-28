@@ -1,5 +1,5 @@
 // NOTE: Should know it's parent
-function ChildOfListingThing(args) {
+function ChildOfListingThing(listingParent, args) {
   // NOTE: var my = Thing(args);
   var my = {};
 
@@ -18,12 +18,11 @@ function ChildOfListingThing(args) {
     args.children ? _.map(args.children, Thing) : []
   );
 
-  // NOTE: This should be derived.
-  my.parentsWithout = function(parentToExclude) {
+  my.otherParents = ko.computed(function() {
     return _.reject(my.parents(), function(parent) {
-      return parent.id == parentToExclude.id();
+      return parent.id == listingParent.id();
     });
-  };
+  });
 
   my.toggleSelection = function() {
     my.selected(!my.selected());
