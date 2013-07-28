@@ -41,47 +41,18 @@ function PreviewThing(raw) {
     })
   };
 
-  my.addParentPopover = ko.observable({
-    visible: ko.observable(false),
-    toggleVisibility: function() {
-      this.visible(!this.visible());
-    },
-    query: ko.observable(""),
-    results: ko.observableArray([]),
-    select: function() {
-      console.log(this);
-    }
-  });
-
-  my.addAsParent = function() {
-    var currentThing = page.preview();
-    currentThing.parents.push(this);
-    currentThing.addParentPopover().visible(false);
-
-    var childId = currentThing.id();
-    var parentId = this.id();
-
-    api.addParent(childId, parentId).done(function(result) {
-      console.log(result);
-    });
-
-    return false;
-  };
+  my.addParentPopover = ko.observable(AddParentPopover());
 
   ko.computed(function() {
     var addParentPopover = this;
 
     if(addParentPopover.query() != "") {
       api.search(addParentPopover.query() + "*").done(function(results) {
-        var things = $(results).map(function(index, result) {
-          return createThingFromResponse(result);
-        }).toArray();
-
+        var things = _.map(results, AddParentPopoverThing);
         addParentPopover.results(things);
       });
     }
   }, my.addParentPopover())
-
 
   return my;
 }
