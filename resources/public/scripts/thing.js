@@ -42,7 +42,6 @@ function Thing(thing) {
     Path.history.pushState({}, "", thingPart);
   };
 
-  // Where is this being called from?
   object.select = function() {
     this.selected(!this.selected());
   };
