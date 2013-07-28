@@ -18,15 +18,13 @@ jQuery(function() {
 });
 
 function setPreviewAndListing(thing) {
-  var preview = thing;
   var listing = thing;
 
   if (typeof page === 'undefined') {
-    page = Page({listing: listing, preview: preview});
+    page = Page({listing: listing});
     ko.applyBindings(page);
   } else {
     page.listing(listing);
-    page.preview(preview);
   }
 };
 
