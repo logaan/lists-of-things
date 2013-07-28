@@ -1,4 +1,6 @@
-default: repl datomic server
+default:
+
+work: repl datomic server
 
 repl:
 	screen -t "repl" lein repl
