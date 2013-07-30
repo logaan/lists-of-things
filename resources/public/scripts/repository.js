@@ -22,4 +22,14 @@
     _.each(thing.children, repository.populate);
     repository.add(thing);
   };
+
+  repository.removeParent = function(childId, parentId) {
+    api.removeParent(childId, parentId).done(function() {
+      var child = repository.get(childId);
+      child.parents = _.reject(child.parents, function(parent) {
+        return parent.id == parentId;
+      });
+      repository.add(child);
+    });
+  }
 })();
