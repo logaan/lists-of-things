@@ -67,7 +67,7 @@
                   <ul class="unstyled pull-right" data-bind="foreach: otherParents">
                     <li class="pull-left">
                       <small>
-                        <a href="#" data-bind="text: name">Child's parent name</a>
+                        <a data-bind="click: open, text: name, attr: {href: '/things/' + id}">Child's parent name</a>
                       </small>
                       &nbsp;
                     </li>
@@ -163,6 +163,7 @@
     <script src="/scripts/vendor/markdown.js" type="text/javascript"></script>
 
     <script src="/scripts/parent.js"></script>
+    <script src="/scripts/parent_of_child_of_listing_thing.js"></script>
     <script src="/scripts/listing_thing.js"></script>
     <script src="/scripts/child_of_listing_thing.js"></script>
     <script src="/scripts/new_child_of_listing_thing.js"></script>

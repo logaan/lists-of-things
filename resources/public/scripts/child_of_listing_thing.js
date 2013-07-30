@@ -14,7 +14,7 @@ function ChildOfListingThing(listingParent, args) {
     return _.chain(my.parentIds())
             .map(repository.get)
             .compact()
-            .map(_.partial(Parent, my))
+            .map(_.partial(ParentOfChildOfListingThing, my))
             .value();
   });
 
