@@ -8,10 +8,15 @@ function ChildOfListingThing(listingParent, args) {
 
   my.selected = ko.observable(args.selected);
 
-  // NOTE: Should be a list of ids.
-  my.parents = ko.observableArray(
-    args.parents ? _.map(args.parents, _.partial(Parent, my)) : []
-  );
+  my.parentIds = ko.observableArray(_.pluck(args.parents, "id"));
+
+  my.parents = ko.computed(function() {
+    return _.chain(my.parentIds())
+            .map(repository.get)
+            .compact()
+            .map(_.partial(Parent, my))
+            .value();
+  });
 
   my.children = ko.observableArray(
     args.children ? args.children : []

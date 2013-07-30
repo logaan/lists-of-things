@@ -1,9 +1,9 @@
-function Parent(child, parnt) {
+function Parent(child, parent) {
   return {
-    name: parnt.name,
-    id: parnt.id,
+    name: parent.name,
+    id:   parent.id,
     removeAsParent: function() {
-      repository.removeParent(child.id(), parnt.id);
+      repository.removeParent(child.id(), parent.id);
     }
   }
 }
