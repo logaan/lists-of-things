@@ -20,9 +20,7 @@ function PreviewThing(raw) {
   my.contents = ko.observableArray(raw.contents || []);
 
   my.deletes = function() {
-    api.remove(my.id()).done(function(data, textSatus, jqXHR) {
-      repository.remove(my.id());
-    });
+    repository.remove(my.id());
   };
 
   // NOTE: Add content shouldn't be using jquery for values. Instead each thing
@@ -36,6 +34,7 @@ function PreviewThing(raw) {
     contentarea.focus();
     this.contents.push({text: content});
 
+    // NOTE: Should be moved into repository
     api.addContent(this.id(), content).done(function(result) {
       console.log(result);
     })
@@ -49,6 +48,7 @@ function PreviewThing(raw) {
     var addParentPopover = this;
 
     if(addParentPopover.query() != "") {
+      // NOTE: Should be moved into repository
       api.search(addParentPopover.query() + "*").done(function(results) {
         var things = _.map(results, _.partial(AddParentPopoverThing, my.addParentPopover(), my));
         addParentPopover.results(things);

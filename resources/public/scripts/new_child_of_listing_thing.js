@@ -8,6 +8,7 @@ function NewChildOfListingThing(listingThing) {
 
     // NOTE: This should probably be creating the child with the parent already
     // in it.
+    // NOTE: Should be moved into repository
     api.createThing(my.name(), parentId).done(function(response) {
       // NOTE: These three blocks could probably be a repository method.
       listingThing.selectNone();

@@ -10,7 +10,9 @@
   };
 
   repository.remove = function(id) {
-    repository.store(_.omit(repository.store(), id.toString()));
+    api.remove(id).done(function() {
+      repository.store(_.omit(repository.store(), id.toString()));
+    });
   };
 
   repository.get = function(id) {
