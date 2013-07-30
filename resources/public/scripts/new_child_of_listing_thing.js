@@ -10,7 +10,9 @@ function NewChildOfListingThing(listingThing) {
     // in it.
     api.createThing(my.name(), parentId).done(function(response) {
       // NOTE: These three blocks could probably be a repository method.
-      var newThing = {name: my.name(), id: response.id}
+      listingThing.selectNone();
+
+      var newThing = {name: my.name(), id: response.id, selected: true};
 
       repository.add(newThing);
 

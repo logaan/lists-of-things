@@ -9,8 +9,6 @@ function AddParentPopoverThing(addParentPopover, child, raw) {
     addParentPopover.visible(false);
 
     repository.addParent(child.id(), raw);
-
-    return false;
   };
   
   return my;

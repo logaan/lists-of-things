@@ -29,7 +29,13 @@
   }
 
   api.createThing = function(name, parentId) {
-    var data = {"name": name, "parent-id": parentId};
+    // NOTE: Maybe a bit jank?
+    if(parentId == "orphans") {
+      var data = {"name": name};
+    } else {
+      var data = {"name": name, "parent-id": parentId};
+    }
+
     return callAPI("post", "/things", data);
   }
 

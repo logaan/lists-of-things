@@ -31,11 +31,17 @@
 
   repository.addParent = function(childId, parent) {
     api.addParent(childId, parent.id).done(function(result) {
-      repository.add(parent);
+      // repository.add(parent);
 
       var rawChild = repository.get(childId);
       rawChild.parents.push(parent);
+      // NOTE: Jank
+      rawChild.selected = true;
       repository.add(rawChild);
+
+      var rawParent = repository.get(parent.id);
+      rawParent.children.push(rawChild);
+      repository.add(rawParent);
     });
   }
 
@@ -45,8 +51,13 @@
       child.parents = _.reject(child.parents, function(parent) {
         return parent.id == parentId;
       });
-
       repository.add(child);
+
+      var parent = repository.get(parentId);
+      parent.children = _.reject(parent.children, function(child) {
+        return child.id == childId;
+      });
+      repository.add(parent);
     });
   }
 })();
