@@ -23,32 +23,9 @@ function loadThing(urlPart) {
 
   jQuery.getJSON(url).done(function(thing) {
     if(!thing.id) { thing.id = "orphans"; }
-    populateRepository(thing);
+    repository.populate(thing);
     setListing(thing.id);
   });
-}
-
-var repository = ko.observable({});
-
-function addToRepository(thing) {
-  var val = repository();
-  val[thing.id] = thing;
-  repository(val);
-}
-
-function removeFromRepository(id) {
-  repository(_.omit(repository(), id.toString()));
-}
-
-function getFromRepository(id) {
-  return repository()[id];
-}
-
-// Loaded in reverse order of completeness
-function populateRepository(thing) {
-  _.each(thing.parents,  populateRepository);
-  _.each(thing.children, populateRepository);
-  addToRepository(thing);
 }
 
 var listing;

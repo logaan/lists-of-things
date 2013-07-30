@@ -12,11 +12,11 @@ function NewChildOfListingThing(listingThing) {
       // NOTE: These three blocks could probably be a repository method.
       var newThing = {name: my.name(), id: response.id}
 
-      addToRepository(newThing);
+      repository.add(newThing);
 
-      var parent = getFromRepository(parentId)
+      var parent = repository.get(parentId)
       parent.children.push(newThing);
-      addToRepository(parent);
+      repository.add(parent);
 
       my.name("");
     });

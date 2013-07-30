@@ -9,7 +9,7 @@ function ListingThing(args) {
 
   my.children = ko.computed(function() {
     return _.chain(my.childrenIds())
-            .map(getFromRepository)
+            .map(repository.get)
             .compact()
             .map(_.partial(ChildOfListingThing, my))
             .value();

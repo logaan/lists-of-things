@@ -9,7 +9,7 @@ function PreviewThing(raw) {
 
   my.parents = ko.computed(function() {
     return _.chain(my.parentIds())
-            .map(getFromRepository)
+            .map(repository.get)
             .compact()
             .map(_.partial(Parent, my))
             .value();
@@ -21,7 +21,7 @@ function PreviewThing(raw) {
 
   my.deletes = function() {
     api.remove(my.id()).done(function(data, textSatus, jqXHR) {
-      removeFromRepository(my.id());
+      repository.remove(my.id());
     });
   };
 
