@@ -8,14 +8,7 @@ function AddParentPopoverThing(addParentPopover, child, raw) {
   my.addAsParent = function() {
     addParentPopover.visible(false);
 
-    api.addParent(child.id(), my.id()).done(function(result) {
-      // NOTE: This could probably be a repository method.
-      repository.add(raw);
-
-      var rawChild = repository.get(child.id());
-      rawChild.parents.push(raw);
-      repository.add(rawChild);
-    });
+    repository.addParent(child.id(), raw);
 
     return false;
   };

@@ -16,6 +16,7 @@
   {:id       (:db/id thing)
    :name     (:thing/name thing)
    :parents  (map rename (:thing/_children thing))
+   :children (map rename (:thing/children thing))
    :contents (map format-content (:thing/content thing))})
 
 (defn rename-with-relations [thing]

@@ -23,6 +23,16 @@
     repository.add(thing);
   };
 
+  repository.addParent = function(childId, parent) {
+    api.addParent(childId, parent.id).done(function(result) {
+      repository.add(parent);
+
+      var rawChild = repository.get(childId);
+      rawChild.parents.push(parent);
+      repository.add(rawChild);
+    });
+  }
+
   repository.removeParent = function(childId, parentId) {
     api.removeParent(childId, parentId).done(function() {
       var child = repository.get(childId);

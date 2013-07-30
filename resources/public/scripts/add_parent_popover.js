@@ -11,9 +11,5 @@ function AddParentPopover() {
 
   my.results = ko.observableArray([]);
 
-  my.select = function() {
-    console.log(this);
-  };
-
   return my;
 }
