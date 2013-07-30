@@ -20,7 +20,13 @@
   repository.populate = function(thing) {
     _.each(thing.parents,  repository.populate);
     _.each(thing.children, repository.populate);
-    repository.add(thing);
+
+    if(existing = repository.get(thing.id)) {
+      var extended = _.extend(repository.get(thing.id), thing);
+      repository.add(extended);
+    } else {
+      repository.add(thing);
+    }
   };
 
   repository.addParent = function(childId, parent) {
@@ -39,6 +45,7 @@
       child.parents = _.reject(child.parents, function(parent) {
         return parent.id == parentId;
       });
+
       repository.add(child);
     });
   }
