@@ -61,6 +61,11 @@
     :where [?e :thing/name]
            [(lists-of-things.db/orphan? $ ?e)]])
 
+(def all
+  '[:find ?e
+    :where [?e :thing/name]])
+
+
 (def ancestor
   '[[[ancestor ?descendant ?ancestor]
      [?ancestor :thing/children ?descendant]]

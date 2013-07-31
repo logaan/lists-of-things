@@ -26,12 +26,25 @@
    :parents  (map rename (:thing/_children thing))
    :contents (map format-content (:thing/content thing))})
 
+(defn flat-rename [thing]
+  {:id           (:db/id thing)
+   :name         (:thing/name thing)
+   :childrensIds (map :db/id (:thing/children thing))
+   :parentsIds   (map :db/id (:thing/_children thing))
+   :contents     (map format-content (:thing/content thing))})
+
 (defroutes routes
   (GET "/orphans" [conn]
     (let [children  (lotsdb/entities (db conn) lotsdb/orphans)
           formatted (map rename-with-relations children)
           orphan    {:name "Orphans" :children formatted}]
        (json/generate-string orphan)))
+
+  (GET "/things" [conn]
+    (let [snapshot (db conn)
+          eids     (map first (datomic/q lotsdb/all snapshot))
+          entities (map (partial entity snapshot) eids)]
+      (json/generate-string (map flat-rename entities))))
 
   (GET "/things/:id" [id conn]
     (->> (Long/parseLong id)
