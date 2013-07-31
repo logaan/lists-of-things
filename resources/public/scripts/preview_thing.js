@@ -5,7 +5,7 @@ function PreviewThing(raw) {
 
   my.name = ko.observable(raw.name);
 
-  my.parentIds = ko.observableArray(raw.parentsIds);
+  my.parentIds = ko.observableArray(_.pluck(raw.parents || [], "id"));
 
   my.parents = ko.computed(function() {
     return _.chain(my.parentIds())

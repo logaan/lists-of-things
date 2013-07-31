@@ -10,10 +10,6 @@
     });
   }
 
-  api.allThings = function() {
-    return callAPI("get", "/things", {});
-  }
-
   api.remove = function(thingId) {
     return callAPI("delete", "/things/" + thingId, {});
   };

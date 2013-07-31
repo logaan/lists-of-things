@@ -1,8 +1,7 @@
 baseUrl = "/api";
 
 Path.map("/things").to(function(){
-  //loadThing("/orphans");
-  loadAllThings();
+  loadThing("/orphans");
 });
 
 Path.map("/things/:thing_id").to(function(){
@@ -26,25 +25,6 @@ function loadThing(urlPart) {
     if(!thing.id) { thing.id = "orphans"; }
     repository.populate(thing);
     setListing(thing.id);
-  });
-}
-
-function loadAllThings() {
-  api.allThings().done(function(things) {
-    _.each(things, repository.add);
-
-    var orphans = _.filter(things, function(thing) {
-      return thing.parentsIds.length == 0;
-    });
-
-    repository.add({
-      id: "orphans",
-      name: "orphans",
-      parentsIds: [],
-      childrensIds: _.pluck(orphans, "id"),
-      contents: []
-    });
-    setListing("orphans");
   });
 }
 
