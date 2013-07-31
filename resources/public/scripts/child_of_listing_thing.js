@@ -35,7 +35,10 @@ function ChildOfListingThing(listingParent, args) {
   });
 
   my.toggleSelection = function() {
-    my.selected(!my.selected());
+    repository.update(my.id(), function(raw) {
+      raw.selected = !raw.selected;
+      return raw;
+    });
   };
 
   my.open = function() {

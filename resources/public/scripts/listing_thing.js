@@ -19,7 +19,10 @@ function ListingThing(args) {
 
   my.selectNone = function() {
     _.each(my.children(), function(child) {
-      child.selected(false);
+      repository.update(child.id(), function(rawChild) {
+        rawChild.selected = false;
+        return rawChild;
+      });
     });
   }
 

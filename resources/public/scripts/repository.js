@@ -46,7 +46,7 @@
       rawParent.children.push(rawChild);
       repository.add(rawParent);
     });
-  }
+  };
 
   repository.removeParent = function(childId, parentId) {
     api.removeParent(childId, parentId).done(function() {
@@ -62,5 +62,10 @@
       });
       repository.add(parent);
     });
-  }
+  };
+
+  repository.update = function(id, callback) {
+    var thing = repository.get(id);
+    repository.add(callback(thing));
+  };
 })();
