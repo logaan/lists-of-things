@@ -5,7 +5,7 @@ function ListingThing(args) {
 
   my.name = ko.observable(args.name);
 
-  my.childrenIds = ko.observableArray(_.pluck(args.children || [], "id"));
+  my.childrenIds = ko.observableArray(args.childrensIds);
 
   my.children = ko.computed(function() {
     return _.chain(my.childrenIds())

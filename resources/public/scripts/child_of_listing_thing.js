@@ -8,7 +8,7 @@ function ChildOfListingThing(listingParent, args) {
 
   my.selected = ko.observable(args.selected);
 
-  my.parentIds = ko.observableArray(_.pluck(args.parents, "id"));
+  my.parentIds = ko.observableArray(args.parentsIds);
 
   my.parents = ko.computed(function() {
     return _.chain(my.parentIds())
@@ -18,7 +18,7 @@ function ChildOfListingThing(listingParent, args) {
             .value();
   });
 
-  my.childrenIds = ko.observableArray(_.pluck(args.children || [], "id"));
+  my.childrenIds = ko.observableArray(args.childrensIds);
 
   my.children = ko.computed(function() {
     return _.chain(my.childrenIds())
