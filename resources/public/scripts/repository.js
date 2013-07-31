@@ -36,6 +36,7 @@
       // repository.add(parent);
 
       var rawChild = repository.get(childId);
+      // NOTE: Sometimes doesn't have the parents array
       rawChild.parents.push(parent);
       // NOTE: Jank
       rawChild.selected = true;

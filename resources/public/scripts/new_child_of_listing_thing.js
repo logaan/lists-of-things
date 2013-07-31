@@ -13,7 +13,14 @@ function NewChildOfListingThing(listingThing) {
       // NOTE: These three blocks could probably be a repository method.
       listingThing.selectNone();
 
-      var newThing = {name: my.name(), id: response.id, selected: true};
+      var newThing = {
+        id: response.id,
+        name: my.name(),
+        parents: [],
+        children: [],
+        contents: [],
+        selected: true
+      };
 
       repository.add(newThing);
 

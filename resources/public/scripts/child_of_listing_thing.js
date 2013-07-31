@@ -18,9 +18,15 @@ function ChildOfListingThing(listingParent, args) {
             .value();
   });
 
-  my.children = ko.observableArray(
-    args.children ? args.children : []
-  );
+  my.childrenIds = ko.observableArray(_.pluck(args.children || [], "id"));
+
+  my.children = ko.computed(function() {
+    return _.chain(my.childrenIds())
+            .map(repository.get)
+            .compact()
+            .map(_.partial(ChildOfListingThing, my))
+            .value();
+  });
 
   my.otherParents = ko.computed(function() {
     return _.reject(my.parents(), function(parent) {
