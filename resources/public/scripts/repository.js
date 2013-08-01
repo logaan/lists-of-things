@@ -4,10 +4,18 @@
   repository.store = ko.observable({});
 
   repository.add = function(thing) {
+    console.log("hitting repository.add");
     var val = repository.store();
     val[thing.id] = thing;
     repository.store(val);
   };
+
+  repository.addBatch = function(things) {
+    console.log("hitting repository.addBatch");
+    var newStore = _.reduce(things, function(out, thing) {
+      out[thing.id] = thing; return out; }, repository.store());
+    repository.store(newStore);
+  }
 
   repository.remove = function(id) {
     api.remove(id).done(function() {

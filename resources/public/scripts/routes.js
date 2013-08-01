@@ -31,7 +31,7 @@ function loadThing(urlPart) {
 
 function loadAllThings() {
   api.allThings().done(function(things) {
-    _.each(things, repository.add);
+    repository.addBatch(things);
 
     var orphans = _.filter(things, function(thing) {
       return thing.parentsIds.length == 0;
