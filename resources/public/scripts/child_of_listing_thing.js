@@ -20,6 +20,13 @@ function ChildOfListingThing(listingParent, args) {
 
   my.childrenIds = ko.observableArray(_.pluck(args.children || [], "id"));
 
+  my.childCount = ko.computed(function() {
+    return _.chain(my.childrenIds())
+            .map(repository.get)
+            .compact()
+            .value().length;
+  }).extend({ throttle: repository.throttle });
+
   my.otherParents = ko.computed(function() {
     return _.reject(my.parents(), function(parent) {
       return parent.id == listingParent.id();
