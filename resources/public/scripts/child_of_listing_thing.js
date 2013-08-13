@@ -16,23 +16,15 @@ function ChildOfListingThing(listingParent, args) {
             .compact()
             .map(_.partial(ParentOfChildOfListingThing, my))
             .value();
-  });
+  }).extend({ throttle: repository.throttle });
 
   my.childrenIds = ko.observableArray(_.pluck(args.children || [], "id"));
-
-  my.children = ko.computed(function() {
-    return _.chain(my.childrenIds())
-            .map(repository.get)
-            .compact()
-            .map(_.partial(ChildOfListingThing, my))
-            .value();
-  });
 
   my.otherParents = ko.computed(function() {
     return _.reject(my.parents(), function(parent) {
       return parent.id == listingParent.id();
     });
-  });
+  }).extend({ throttle: repository.throttle });
 
   my.toggleSelection = function() {
     repository.update(my.id(), function(raw) {

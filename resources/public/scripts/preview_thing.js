@@ -13,7 +13,7 @@ function PreviewThing(raw) {
             .compact()
             .map(_.partial(Parent, my))
             .value();
-  });
+  }).extend({ throttle: repository.throttle });
 
   // NOTE: Contents will need to be moved into their own model once they
   // support actions like editing and deleting.

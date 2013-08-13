@@ -1,6 +1,8 @@
 (function() {
   repository = {};
 
+  repository.throttle = 10;
+
   repository.store = ko.observable({});
 
   repository.add = function(thing) {

@@ -13,7 +13,7 @@ function ListingThing(args) {
             .compact()
             .map(_.partial(ChildOfListingThing, my))
             .value();
-  });
+  }).extend({ throttle: repository.throttle });
 
   my.newChild = NewChildOfListingThing(my);
 
