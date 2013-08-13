@@ -27,6 +27,7 @@ function ChildOfListingThing(listingParent, args) {
   }).extend({ throttle: repository.throttle });
 
   my.toggleSelection = function() {
+    listingParent.selectNone();
     repository.update(my.id(), function(raw) {
       raw.selected = !raw.selected;
       return raw;
