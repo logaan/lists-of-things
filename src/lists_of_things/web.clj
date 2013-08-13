@@ -24,9 +24,10 @@
       wrappers/json))
 
 (defn verify [assertion]
-  (http/post "https://verifier.login.persona.org/verify"
-             {:form-params {:assertion assertion
-                            :audience "http://localhost:3000"}}))
+  (let [host (get (System/getenv) "HOST" "http://localhost:3000")]
+    (http/post "https://verifier.login.persona.org/verify"
+               {:form-params {:assertion assertion
+                              :audience host}})))
 
 (defroutes bootstrap
   (GET "/" {session :session}
@@ -58,5 +59,6 @@
       session/wrap-session))
 
 (defn -main [& args]
-  (jetty/run-jetty #'app-controller {:port 3000}))
+  (let [port (Integer/parseInt (get (System/getenv) "PORT" "3000"))]
+    (jetty/run-jetty #'app-controller {:port port})))
 
