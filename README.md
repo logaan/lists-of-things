@@ -35,6 +35,8 @@ directory).
 3. Run `make server` and `make datomic`
 4. A browser window should appear showing lists of things.
 
+In production you should set the PORT and HOST environment variables
+
 ## Roadmap
 
 Replaces reminders
