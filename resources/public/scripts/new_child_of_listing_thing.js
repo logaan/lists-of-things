@@ -27,8 +27,6 @@ function NewChildOfListingThing(listingThing) {
       var parent = repository.get(parentId)
       parent.children.push(newThing);
       repository.add(parent);
-
-      my.name("");
     });
   };
 
