@@ -22,6 +22,11 @@
       #children li {
         cursor: pointer;
       }
+      .content {
+        background-color: #EEE;
+        padding: 1em 1em 1px 1em;
+        margin: 0.3em 0;
+      }
     </style>
   </head>
   <body>
@@ -64,7 +69,7 @@
             <li data-bind="click: toggleSelection, event: { dblclick: open }, css: {selected: selected()}">
               <div class="row-fluid">
                 <div class="span11">
-                  <h4 data-bind="text: name" class="child-name">Child name</h4>
+                  <p data-bind="text: name" class="child-name">Child name</p>
                 </div>
                 <div class="span1" data-bind="click: open">
                   <span class="badge">
@@ -74,7 +79,7 @@
                 </div>
               </div>
 
-              <div class="row-fluid">
+              <div class="row-fluid" data-bind="visible: otherParents().length > 0">
                 <div class="span12">
                   <ul class="unstyled pull-right" data-bind="foreach: otherParents">
                     <li class="pull-left">
@@ -147,7 +152,7 @@
           <p class="visible-phone">&nbsp;</p>
 
           <div data-bind="foreach: contents">
-            <div class="well content" data-bind="html: markdown.toHTML(text)">
+            <div class="content" data-bind="html: markdown.toHTML(text)">
               Preview contents text
             </div>
           </div>
@@ -155,7 +160,7 @@
           <div data-bind="with: newContent">
             <div data-bind="visible: previewVisible">
               <strong>Preview only:</strong>
-              <div class="well content" data-bind="html: preview"></div>
+              <div class="content" data-bind="html: preview"></div>
             </div>
             <form data-bind="submit: add">
               <textarea data-bind="value: text, valueUpdate:'afterkeydown'" id="contentarea" rows="3" class="span12"></textarea>
