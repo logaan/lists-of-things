@@ -153,9 +153,13 @@
           </div>
 
           <div data-bind="with: newContent">
+            <div data-bind="visible: previewVisible">
+              <strong>Preview only:</strong>
+              <div class="well content" data-bind="html: preview"></div>
+            </div>
             <form data-bind="submit: add">
-              <textarea data-bind="value: text" id="contentarea" rows="3" class="span12"></textarea>
-              <button type="submit" class="btn btn-primary pull-right">Add content</button>
+              <textarea data-bind="value: text, valueUpdate:'afterkeydown'" id="contentarea" rows="3" class="span12"></textarea>
+              <button type="submit" class="btn btn-primary pull-right">Save</button>
             </form>
           </div>
         </div>
