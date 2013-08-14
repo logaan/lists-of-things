@@ -19,25 +19,10 @@ function PreviewThing(raw) {
   // support actions like editing and deleting.
   my.contents = ko.observableArray(raw.contents || []);
 
+  my.newContent = my.id() === "orphans" ? null : ko.observable(NewContent(my));
+
   my.deletes = function() {
     repository.remove(my.id());
-  };
-
-  // NOTE: Add content shouldn't be using jquery for values. Instead each thing
-  // should have a newContent field which is bound to the content area. Add
-  // content will pull the information out of there and reset it. Like new
-  // thing name.
-  my.addContent = function(element) {
-    var contentarea = $(element).find("#contentarea");
-    var content = contentarea.val();
-    contentarea.val("");
-    contentarea.focus();
-    this.contents.push({text: content});
-
-    // NOTE: Should be moved into repository
-    api.addContent(this.id(), content).done(function(result) {
-      console.log(result);
-    })
   };
 
   // NOTE: Does this actually need to be observable?

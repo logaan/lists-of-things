@@ -70,4 +70,12 @@
     var thing = repository.get(id);
     repository.add(callback(thing));
   };
+
+  repository.addContent = function(thingId, contentText) {
+    return api.addContent(thingId, contentText).done(function() {
+      var thing = repository.get(thingId);
+      thing.contents.push({text: contentText});
+      repository.add(thing);
+    });
+  };
 })();

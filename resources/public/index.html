@@ -154,10 +154,12 @@
             </div>
           </div>
 
-          <form data-bind="submit: addContent">
-            <textarea id="contentarea" rows="3" class="span12"></textarea>
-            <button type="submit" class="btn btn-primary pull-right">Add content</button>
-          </form>
+          <div data-bind="with: newContent">
+            <form data-bind="submit: add">
+              <textarea data-bind="value: text" id="contentarea" rows="3" class="span12"></textarea>
+              <button type="submit" class="btn btn-primary pull-right">Add content</button>
+            </form>
+          </div>
         </div>
 
       </div>
@@ -182,6 +184,7 @@
     <script src="/scripts/add_parent_popover.js"></script>
     <script src="/scripts/add_parent_popover_thing.js"></script>
     <script src="/scripts/preview_thing.js"></script>
+    <script src="/scripts/new_content.js"></script>
     <script src="/scripts/page.js"></script>
     <script src="/scripts/repository.js"></script>
     <script src="/scripts/routes.js"></script>
