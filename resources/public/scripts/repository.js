@@ -33,6 +33,26 @@
     }
   };
 
+  repository.createThing = function(name, parentId) {
+    return api.createThing(name, parentId).done(function(response) {
+
+      var newThing = {
+        id: response.id,
+        name: name,
+        parents: [],
+        children: [],
+        contents: [],
+        selected: true
+      };
+
+      repository.add(newThing);
+
+      var parent = repository.get(parentId)
+      parent.children.push(newThing);
+      repository.add(parent);
+    });
+  };
+
   repository.addParent = function(childId, parent) {
     api.addParent(childId, parent.id).done(function(result) {
       // repository.add(parent);
