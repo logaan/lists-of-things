@@ -22,7 +22,11 @@ function PreviewThing(raw) {
   my.newContent = my.id() === "orphans" ? null : ko.observable(NewContent(my));
 
   my.deletes = function() {
-    repository.remove(my.id());
+    repository.remove(my.id()).done(function() {
+      if(page.listing().id() == my.id()) {
+        window.history.back();
+      };
+    });
   };
 
   // NOTE: Does this actually need to be observable?
