@@ -1,0 +1,5 @@
+tmux split-window "lein repl"
+tmux new-window   ./scripts/transactor
+tmux split-window ./scripts/server
+tmux previous-window
+tmux select-pane -l

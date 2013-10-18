@@ -5,7 +5,7 @@
 
   :ring {:handler lists-of-things.web/app-controller}
 
-  :dependencies [[org.clojure/clojure "1.4.0"]
+  :dependencies [[org.clojure/clojure "1.5.1"]
                  [com.datomic/datomic-free "0.8.3438"]
                  [cheshire "4.0.4"]
                  [clj-http-lite "0.2.0"]

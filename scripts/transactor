@@ -1,0 +1,1 @@
+cd ./vendor/datomic-free-0.8.3438/ && ./bin/transactor config/samples/free-transactor-template.properties
