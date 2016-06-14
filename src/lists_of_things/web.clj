@@ -62,3 +62,8 @@
   (let [port (Integer/parseInt (get (System/getenv) "PORT" "3000"))]
     (jetty/run-jetty #'app-controller {:port port})))
 
+(comment
+
+  (-main)
+
+  )

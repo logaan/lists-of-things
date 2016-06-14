@@ -37,3 +37,9 @@
         conn (d/connect uri)]
     @(d/transact conn schema)
     conn))
+
+(comment
+
+  (seed "datomic:free://localhost:4334/lists_of_things")
+
+  )
